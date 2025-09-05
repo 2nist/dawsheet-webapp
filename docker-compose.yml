@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: dawsheet
+      POSTGRES_USER: dawsheet
+      POSTGRES_PASSWORD: dawsheet
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["sh", "-c", "alembic -c /app/alembic.ini upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://dawsheet:dawsheet@db:5432/dawsheet
+      CLOUD_RUN_PARSE_URL: https://dawsheet-proxy-service-1046102063670.us-central1.run.app/parse
+      CORS_ORIGINS: http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+  web:
+    image: node:20-alpine
+    working_dir: /app
+    command: ["sh", "-lc", "npm install && npm run dev"]
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:8000
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      WATCHPACK_POLLING_INTERVAL: "1000"
+    depends_on:
+      - api
+
+volumes:
+  db_data:

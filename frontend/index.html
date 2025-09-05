@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>DAWSheet Bridge Hub</title>
+    <style>
+      body {
+        font-family: system-ui;
+        margin: 0;
+      }
+      nav {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+        background: #f4f4f4;
+      }
+      .tab {
+        display: none;
+        padding: 16px;
+      }
+      .tab.active {
+        display: block;
+      }
+      button {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <button onclick="show('library')">Library</button>
+      <button onclick="show('song')">Song</button>
+      <button onclick="show('analysis')">Analysis</button>
+      <button onclick="show('bridge')">Bridge</button>
+    </nav>
+
+    <section id="library" class="tab active">
+      <h2>Library</h2>
+      <div id="libTable"></div>
+    </section>
+
+    <section id="song" class="tab">
+      <h2>Song</h2>
+      <div>
+        <label>Project ID <input id="projId" /></label>
+        <label style="margin-left: 12px"
+          >Sheet ID <input id="sheetId" style="width: 420px"
+        /></label>
+        <button onclick="openSheet()">Open Sheet</button>
+      </div>
+    </section>
+
+    <section id="analysis" class="tab">
+      <h2>Advanced Analysis</h2>
+      <div>
+        <label>Artist <input id="artist" /></label>
+        <label>Title <input id="title" /></label>
+        <label
+          >Snap
+          <select id="snap">
+            <option>1/4</option>
+            <option>1/8</option>
+          </select>
+        </label>
+        <button onclick="runAnalyze()">Analyze</button>
+      </div>
+      <pre id="preview"></pre>
+      <div>
+        <label><input type="checkbox" id="impLyrics" checked /> Lyrics</label>
+        <label><input type="checkbox" id="impSections" /> Sections</label>
+        <label><input type="checkbox" id="impKeymode" /> Key/Mode</label>
+        <label><input type="checkbox" id="impDrums" /> Guide Drums</label>
+        <button onclick="doImport()">Import Selected</button>
+      </div>
+    </section>
+
+    <section id="bridge" class="tab">
+      <h2>Bridge</h2>
+      <div>
+        <label>MIDI Port <input id="midiPort" /></label>
+        <label>OSC Host <input id="oscHost" value="127.0.0.1" /></label>
+        <label>OSC Port <input id="oscPort" value="9000" /></label>
+        <button onclick="saveBridgeCfg()">Save</button>
+      </div>
+      <div style="margin-top: 12px">
+        <button onclick="download('/api/export/drums_midi')">
+          Download Drums MIDI
+        </button>
+        <button onclick="download('/api/export/markers_csv')">
+          Download Markers CSV
+        </button>
+        <button onclick="download('/api/export/timeline_json')">
+          Download Timeline JSON
+        </button>
+      </div>
+      <div style="margin-top: 12px">
+        <button onclick="sendMidi()">Send MIDI (8 bars)</button>
+        <button onclick="sendOSC()">Send OSC (sections)</button>
+      </div>
+      <pre id="bridgeLog"></pre>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>
