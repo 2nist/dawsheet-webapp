@@ -8,6 +8,7 @@ from .config import settings
 from .database import get_session, engine, Base
 from . import models, schemas
 from .parser import parse_songs
+from .legacy.router import router as legacy_router
 from .importers import import_json_file, import_midi_file, import_mp3_file
 
 app = FastAPI(title="DAWSheet API")
@@ -19,6 +20,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount legacy (isolated) endpoints
+app.include_router(legacy_router, prefix="/legacy", tags=["legacy"])
 
 @app.on_event("startup")
 async def on_startup():
