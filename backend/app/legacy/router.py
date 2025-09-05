@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from .schemas_song import LegacyLine, LegacySection, LegacySong, LegacyChord
+from .ingest.lyrics import parse_lyrics_payload
 
 router = APIRouter()
 
@@ -11,13 +11,9 @@ def ping():
 
 @router.post("/lyrics/parse")
 def parse_lyrics(raw: str = Body(..., media_type="text/plain")):
-    # Simple stub: split into lines; no chord parsing yet
-    lines = []
-    for line in raw.splitlines():
-        line = line.strip("\r\n")
-        if line == "":
-            continue
-        lines.append(LegacyLine(text=line, chords=None))
-    section = LegacySection(name="Body", lines=lines)
-    song = LegacySong(title="Untitled", artist="", content=raw, sections=[section])
-    return {"songs": [song]}
+    lines = parse_lyrics_payload(raw)
+    # Force SongDoc-like shape for UI: {lines:[{ts?,text}]}
+    return {
+        "lines": [{"text": l.text, **({"ts": l.ts} if l.ts is not None else {})} for l in lines],
+        "sections": None,
+    }

@@ -13,15 +13,11 @@ def test_legacy_ping():
     assert j.get("service") == "legacy"
 
 
-def test_legacy_parse_stub():
+def test_legacy_parse_lines_shape():
     text = "Hello\nWorld\n"
     r = client.post("/legacy/lyrics/parse", data=text, headers={"content-type": "text/plain"})
     assert r.status_code == 200
     j = r.json()
-    assert "songs" in j and isinstance(j["songs"], list)
-    assert len(j["songs"]) == 1
-    sections = j["songs"][0].get("sections")
-    assert sections and len(sections) == 1
-    lines = sections[0].get("lines")
-    assert lines and len(lines) == 2
-    assert lines[0]["text"] == "Hello" and lines[1]["text"] == "World"
+    assert "lines" in j and isinstance(j["lines"], list)
+    assert len(j["lines"]) == 2
+    assert j["lines"][0]["text"] == "Hello" and j["lines"][1]["text"] == "World"

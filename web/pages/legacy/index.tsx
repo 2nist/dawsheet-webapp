@@ -4,6 +4,7 @@ export default function LegacyPage() {
   const [ping, setPing] = useState<string>('')
   const [text, setText] = useState<string>('Hello\nWorld')
   const [parsed, setParsed] = useState<number | null>(null)
+  const [sample, setSample] = useState<string[]>([])
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000'
 
@@ -19,9 +20,10 @@ export default function LegacyPage() {
       headers: { 'content-type': 'text/plain' },
       body: text,
     })
-    const j = await res.json()
-    const lines = j?.songs?.[0]?.sections?.[0]?.lines?.length ?? null
-    setParsed(lines)
+  const j = await res.json()
+  const lines = Array.isArray(j?.lines) ? j.lines : []
+  setParsed(lines.length)
+  setSample(lines.slice(0, 10).map((l: any) => l?.text ?? ''))
   }
 
   return (
@@ -36,6 +38,13 @@ export default function LegacyPage() {
         <div>
           <button onClick={doParse}>Parse</button>
           {parsed !== null && <div>Lines parsed: {parsed}</div>}
+          {parsed !== null && parsed > 0 && (
+            <ul>
+              {sample.map((t, i) => (
+                <li key={i}>{i + 1}. {t}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>
