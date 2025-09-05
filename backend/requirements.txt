@@ -9,3 +9,4 @@ httpx==0.27.2
 mido==1.3.2
 mutagen==1.47.0
 python-multipart==0.0.9
+pytest==8.3.3
