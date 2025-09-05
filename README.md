@@ -27,3 +27,9 @@ Notes
 - The API proxies parsing to your Cloud Run `/parse` endpoint.
 - Database uses Postgres in Docker. Change credentials in `docker-compose.yml` as needed.
 - For production, deploy API to Cloud Run/Render and Web to Vercel/Render; point NEXT_PUBLIC_API_BASE accordingly.
+
+## Incremental Integration Log
+- [TBD] Foundation setup (no runtime changes)
+
+- 2025-09-05 Imported curated docs/samples/tools; no runtime changes.
+- 2025-09-05 Imported curated docs/samples/tools; no runtime changes.
