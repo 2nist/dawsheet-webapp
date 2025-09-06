@@ -1,0 +1,25 @@
+@import "./tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.card {
+  @apply rounded-lg shadow p-4 border border-border;
+  background-color: color-mix(in oklab, var(--bg) 90%, transparent);
+}
+
+.btn {
+  @apply inline-flex items-center px-3 py-1.5 rounded text-black;
+  background-color: var(--primary);
+}

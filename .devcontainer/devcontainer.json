@@ -1,0 +1,48 @@
+{
+  "name": "DAWSheet Dev",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "api",
+  "workspaceFolder": "/app",
+  "runServices": ["db", "api", "web"],
+  "overrideCommand": false,
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["."],
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "postCreateCommand": "bash -lc 'pip install -r /app/requirements.txt; cd /workspaces/${localWorkspaceFolderBasename}/web && npm ci'",
+  "remoteEnv": {
+    "NEXT_PUBLIC_API_BASE": "http://localhost:8000",
+    "NEXT_PUBLIC_ENABLE_LEGACY": "true",
+    "ENABLE_LEGACY": "true"
+  },
+  "forwardPorts": [3000, 8000, 5432],
+  "portsAttributes": {
+    "3000": { "label": "Next.js" },
+    "8000": { "label": "FastAPI" },
+    "5432": { "label": "Postgres" }
+  }
+}

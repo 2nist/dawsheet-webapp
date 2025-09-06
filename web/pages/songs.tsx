@@ -1,10 +1,10 @@
 import useSWR, { mutate } from "swr";
-import axios from "axios";
+import { swrFetcher, postJSON, putJSON, del, HttpError } from "../lib/api";
 import { useState } from "react";
 import Link from "next/link";
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE;
-const fetcher = (url: string) => axios.get(url).then((r) => r.data);
+const fetcher = swrFetcher;
 
 export default function SongsPage() {
   const url = `${apiBase}/songs`;
@@ -20,13 +20,17 @@ export default function SongsPage() {
     setSubmitting(true);
     setErrMsg(null);
     try {
-      await axios.post(url, { title, artist, content });
+      await postJSON(url, { title, artist, content });
       setTitle("");
       setArtist("");
       setContent("");
       mutate(url);
     } catch (err: any) {
-      setErrMsg(err?.response?.data?.detail || String(err));
+      setErrMsg(
+        err instanceof HttpError
+          ? String(err.body?.detail || err.message)
+          : String(err)
+      );
     } finally {
       setSubmitting(false);
     }
@@ -114,7 +118,7 @@ function SongItem({
     setBusy(true);
     setErrMsg(null);
     try {
-      await axios.put(`${apiBase}/songs/${song.id}`, {
+      await putJSON(`${apiBase}/songs/${song.id}`, {
         title,
         artist,
         content,
@@ -122,7 +126,11 @@ function SongItem({
       setIsEditing(false);
       onChanged();
     } catch (err: any) {
-      setErrMsg(err?.response?.data?.detail || String(err));
+      setErrMsg(
+        err instanceof HttpError
+          ? String(err.body?.detail || err.message)
+          : String(err)
+      );
     } finally {
       setBusy(false);
     }
@@ -133,10 +141,14 @@ function SongItem({
     setBusy(true);
     setErrMsg(null);
     try {
-      await axios.delete(`${apiBase}/songs/${song.id}`);
+      await del(`${apiBase}/songs/${song.id}`);
       onChanged();
     } catch (err: any) {
-      setErrMsg(err?.response?.data?.detail || String(err));
+      setErrMsg(
+        err instanceof HttpError
+          ? String(err.body?.detail || err.message)
+          : String(err)
+      );
     } finally {
       setBusy(false);
     }

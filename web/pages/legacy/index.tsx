@@ -1,52 +1,95 @@
-import { useState } from 'react'
+import { useMemo, useState } from "react";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import { swrFetcher } from "../../lib/api";
 
 export default function LegacyPage() {
-  const [ping, setPing] = useState<string>('')
-  const [text, setText] = useState<string>('Hello\nWorld')
-  const [parsed, setParsed] = useState<number | null>(null)
-  const [sample, setSample] = useState<string[]>([])
+  const [text, setText] = useState<string>("Hello\nWorld");
+  const [parsed, setParsed] = useState<number | null>(null);
+  const [sample, setSample] = useState<string[]>([]);
 
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000'
+  // Feature flag guard (client-side)
+  const legacyEnabled = process.env.NEXT_PUBLIC_ENABLE_LEGACY === "true";
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
-  const doPing = async () => {
-    const res = await fetch(`${apiBase}/legacy/ping`)
-    const j = await res.json()
-    setPing(JSON.stringify(j))
-  }
+  const pingUrl = useMemo(() => `${apiBase}/legacy/ping`, [apiBase]);
+  const {
+    data: pingData,
+    isLoading: pingLoading,
+    error: pingError,
+    mutate: pingRefresh,
+  } = useSWR(legacyEnabled ? pingUrl : null, swrFetcher);
+
+  const parseUrl = useMemo(() => `${apiBase}/legacy/lyrics/parse`, [apiBase]);
+  const { trigger: parseTrigger, isMutating } = useSWRMutation(
+    legacyEnabled ? parseUrl : null,
+    async (url: string, { arg }: { arg: string }) => {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "text/plain" },
+        body: arg,
+      });
+      const j = await res.json();
+      return j;
+    }
+  );
 
   const doParse = async () => {
-    const res = await fetch(`${apiBase}/legacy/lyrics/parse`, {
-      method: 'POST',
-      headers: { 'content-type': 'text/plain' },
-      body: text,
-    })
-  const j = await res.json()
-  const lines = Array.isArray(j?.lines) ? j.lines : []
-  setParsed(lines.length)
-  setSample(lines.slice(0, 10).map((l: any) => l?.text ?? ''))
-  }
+    const j = await parseTrigger(text);
+    const lines = Array.isArray(j?.lines) ? j.lines : [];
+    setParsed(lines.length);
+    setSample(lines.slice(0, 10).map((l: any) => l?.text ?? ""));
+  };
 
   return (
     <div style={{ padding: 16 }}>
       <h1>Legacy</h1>
+      {!legacyEnabled && (
+        <div style={{ color: "#555", marginBottom: 12 }}>
+          Legacy sandbox is disabled. Set NEXT_PUBLIC_ENABLE_LEGACY=true to
+          enable.
+        </div>
+      )}
       <div style={{ marginBottom: 12 }}>
-        <button onClick={doPing}>Ping legacy</button>
-        <div><small>{ping}</small></div>
+        <button
+          onClick={() => pingRefresh()}
+          disabled={!legacyEnabled || pingLoading}
+        >
+          {pingLoading ? "Pinging…" : "Ping legacy"}
+        </button>
+        <div>
+          <small>
+            {pingError
+              ? String(pingError)
+              : pingData
+              ? JSON.stringify(pingData)
+              : ""}
+          </small>
+        </div>
       </div>
       <div>
-        <textarea value={text} onChange={e => setText(e.target.value)} rows={6} cols={60} />
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={6}
+          cols={60}
+        />
         <div>
-          <button onClick={doParse}>Parse</button>
+          <button onClick={doParse} disabled={!legacyEnabled || isMutating}>
+            {isMutating ? "Parsing…" : "Parse"}
+          </button>
           {parsed !== null && <div>Lines parsed: {parsed}</div>}
           {parsed !== null && parsed > 0 && (
             <ul>
               {sample.map((t, i) => (
-                <li key={i}>{i + 1}. {t}</li>
+                <li key={i}>
+                  {i + 1}. {t}
+                </li>
               ))}
             </ul>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  api:
+    volumes:
+      - ..:/workspaces/workspace:cached
+      - ../backend:/app
+      - /app/__pycache__
+services:
+  api:
+    volumes:
+  - ..:/workspaces/workspace:cached
+  - ../backend:/app
+  - /app/__pycache__
+    working_dir: /app

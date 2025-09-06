@@ -11,6 +11,9 @@ export default function Home() {
         <li>
           <Link href="/songs">Songs</Link>
         </li>
+        <li>
+          <Link href="/design">Design Tokens</Link>
+        </li>
       </ul>
     </main>
   );
