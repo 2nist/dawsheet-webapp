@@ -1,0 +1,1031 @@
+{
+  "metadata": {
+    "title": "02 - Something",
+    "artist": "The Beatles",
+    "album": "11 - Abbey_Road",
+    "key": "Key C",
+    "tempo": 67,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "11_-_abbey_road"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.35,
+      "chords": []
+    },
+    {
+      "name": "intro",
+      "start_time": 0.35,
+      "end_time": 5.055,
+      "chords": [
+        {
+          "chord": "F",
+          "start_time": 1.263742,
+          "end_time": 3.122845
+        },
+        {
+          "chord": "Eb",
+          "start_time": 3.122845,
+          "end_time": 4.074863
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 5.055,
+      "end_time": 38.101,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 5.073321,
+          "end_time": 8.846564
+        },
+        {
+          "chord": "Em",
+          "start_time": 8.846564,
+          "end_time": 12.503707
+        },
+        {
+          "chord": "C7",
+          "start_time": 12.503707,
+          "end_time": 16.18407
+        },
+        {
+          "chord": "F",
+          "start_time": 16.18407,
+          "end_time": 18.877585
+        },
+        {
+          "chord": "C",
+          "start_time": 18.877585,
+          "end_time": 19.759943
+        },
+        {
+          "chord": "D",
+          "start_time": 19.759943,
+          "end_time": 23.440306
+        },
+        {
+          "chord": "G",
+          "start_time": 23.440306,
+          "end_time": 24.470647
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 24.470647,
+          "end_time": 25.321122
+        },
+        {
+          "chord": "G",
+          "start_time": 25.321122,
+          "end_time": 27.190328
+        },
+        {
+          "chord": "Am",
+          "start_time": 27.190328,
+          "end_time": 29.024705
+        },
+        {
+          "chord": "Abaug",
+          "start_time": 29.024705,
+          "end_time": 30.824251
+        },
+        {
+          "chord": "C",
+          "start_time": 30.824251,
+          "end_time": 32.600578
+        },
+        {
+          "chord": "D7",
+          "start_time": 32.600578,
+          "end_time": 34.411734
+        },
+        {
+          "chord": "F",
+          "start_time": 34.411734,
+          "end_time": 36.234501
+        },
+        {
+          "chord": "Eb",
+          "start_time": 36.234501,
+          "end_time": 37.186519
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 38.101,
+      "end_time": 70.918,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 38.126927,
+          "end_time": 41.88856
+        },
+        {
+          "chord": "Em",
+          "start_time": 41.88856,
+          "end_time": 45.545702
+        },
+        {
+          "chord": "C7",
+          "start_time": 45.545702,
+          "end_time": 49.168015
+        },
+        {
+          "chord": "F",
+          "start_time": 49.168015,
+          "end_time": 51.87314
+        },
+        {
+          "chord": "C",
+          "start_time": 51.87314,
+          "end_time": 52.790328
+        },
+        {
+          "chord": "D",
+          "start_time": 52.790328,
+          "end_time": 56.412641
+        },
+        {
+          "chord": "G",
+          "start_time": 56.412641,
+          "end_time": 57.306609
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 57.306609,
+          "end_time": 58.258628
+        },
+        {
+          "chord": "G",
+          "start_time": 58.258628,
+          "end_time": 60.023344
+        },
+        {
+          "chord": "Am",
+          "start_time": 60.023344,
+          "end_time": 61.822891
+        },
+        {
+          "chord": "Abaug",
+          "start_time": 61.822891,
+          "end_time": 63.634047
+        },
+        {
+          "chord": "C",
+          "start_time": 63.634047,
+          "end_time": 65.398764
+        },
+        {
+          "chord": "D7",
+          "start_time": 65.398764,
+          "end_time": 67.23314
+        },
+        {
+          "chord": "F",
+          "start_time": 67.23314,
+          "end_time": 69.102346
+        },
+        {
+          "chord": "Eb",
+          "start_time": 69.102346,
+          "end_time": 70.080257
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "start_time": 70.918,
+      "end_time": 101.789,
+      "chords": [
+        {
+          "chord": "A",
+          "start_time": 71.01849,
+          "end_time": 74.628696
+        },
+        {
+          "chord": "A",
+          "start_time": 74.628696,
+          "end_time": 76.370192
+        },
+        {
+          "chord": "C#m",
+          "start_time": 76.370192,
+          "end_time": 78.045663
+        },
+        {
+          "chord": "F#m",
+          "start_time": 78.045663,
+          "end_time": 79.713866
+        },
+        {
+          "chord": "A",
+          "start_time": 79.713866,
+          "end_time": 81.443752
+        },
+        {
+          "chord": "D",
+          "start_time": 81.443752,
+          "end_time": 83.103979
+        },
+        {
+          "chord": "G",
+          "start_time": 83.103979,
+          "end_time": 84.787426
+        },
+        {
+          "chord": "A",
+          "start_time": 84.787426,
+          "end_time": 85.474936
+        },
+        {
+          "chord": "A7",
+          "start_time": 85.474936,
+          "end_time": 86.183398
+        },
+        {
+          "chord": "A7",
+          "start_time": 86.183398,
+          "end_time": 86.815269
+        },
+        {
+          "chord": "A6",
+          "start_time": 86.815269,
+          "end_time": 87.427993
+        },
+        {
+          "chord": "A6",
+          "start_time": 87.427993,
+          "end_time": 87.887535
+        },
+        {
+          "chord": "A",
+          "start_time": 87.887535,
+          "end_time": 88.282029
+        },
+        {
+          "chord": "A",
+          "start_time": 88.282029,
+          "end_time": 89.930646
+        },
+        {
+          "chord": "C#m",
+          "start_time": 89.930646,
+          "end_time": 91.614092
+        },
+        {
+          "chord": "F#m",
+          "start_time": 91.614092,
+          "end_time": 93.285929
+        },
+        {
+          "chord": "A",
+          "start_time": 93.285929,
+          "end_time": 94.980986
+        },
+        {
+          "chord": "D",
+          "start_time": 94.980986,
+          "end_time": 96.641213
+        },
+        {
+          "chord": "G",
+          "start_time": 96.641213,
+          "end_time": 98.347879
+        },
+        {
+          "chord": "C",
+          "start_time": 98.347879,
+          "end_time": 99.032868
+        },
+        {
+          "chord": "C7",
+          "start_time": 99.032868,
+          "end_time": 99.671417
+        },
+        {
+          "chord": "C6",
+          "start_time": 99.671417,
+          "end_time": 100.286746
+        },
+        {
+          "chord": "C",
+          "start_time": 100.286746,
+          "end_time": 100.960124
+        },
+        {
+          "chord": "C",
+          "start_time": 100.960124,
+          "end_time": 101.378083
+        }
+      ]
+    },
+    {
+      "name": "verse_(instrumental)",
+      "start_time": 101.789,
+      "end_time": 133.899,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 101.830873,
+          "end_time": 105.488015
+        },
+        {
+          "chord": "Em",
+          "start_time": 105.488015,
+          "end_time": 108.994229
+        },
+        {
+          "chord": "C7",
+          "start_time": 108.994229,
+          "end_time": 112.628151
+        },
+        {
+          "chord": "F",
+          "start_time": 112.628151,
+          "end_time": 115.240396
+        },
+        {
+          "chord": "C",
+          "start_time": 115.240396,
+          "end_time": 116.087925
+        },
+        {
+          "chord": "D",
+          "start_time": 116.087925,
+          "end_time": 119.710238
+        },
+        {
+          "chord": "G",
+          "start_time": 119.710238,
+          "end_time": 120.627426
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 120.627426,
+          "end_time": 121.451734
+        },
+        {
+          "chord": "G",
+          "start_time": 121.451734,
+          "end_time": 123.297721
+        },
+        {
+          "chord": "Am",
+          "start_time": 123.297721,
+          "end_time": 125.039217
+        },
+        {
+          "chord": "Abaug",
+          "start_time": 125.039217,
+          "end_time": 126.827154
+        },
+        {
+          "chord": "C",
+          "start_time": 126.827154,
+          "end_time": 128.60348
+        },
+        {
+          "chord": "D7",
+          "start_time": 128.60348,
+          "end_time": 130.298537
+        },
+        {
+          "chord": "F",
+          "start_time": 130.298537,
+          "end_time": 132.156133
+        },
+        {
+          "chord": "Eb",
+          "start_time": 132.156133,
+          "end_time": 133.038492
+        },
+        {
+          "chord": "G",
+          "start_time": 133.038492,
+          "end_time": 133.89763
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 133.899,
+      "end_time": 166.409,
+      "chords": [
+        {
+          "chord": "Em",
+          "start_time": 137.577993,
+          "end_time": 141.235136
+        },
+        {
+          "chord": "C7",
+          "start_time": 141.235136,
+          "end_time": 144.811009
+        },
+        {
+          "chord": "F",
+          "start_time": 144.811009,
+          "end_time": 147.516133
+        },
+        {
+          "chord": "C",
+          "start_time": 147.516133,
+          "end_time": 148.398492
+        },
+        {
+          "chord": "D",
+          "start_time": 148.398492,
+          "end_time": 152.009195
+        },
+        {
+          "chord": "G",
+          "start_time": 152.009195,
+          "end_time": 152.914773
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 152.914773,
+          "end_time": 153.831908
+        },
+        {
+          "chord": "G",
+          "start_time": 153.831908,
+          "end_time": 155.608287
+        },
+        {
+          "chord": "Am",
+          "start_time": 155.608287,
+          "end_time": 157.373004
+        },
+        {
+          "chord": "Abaug",
+          "start_time": 157.373004,
+          "end_time": 159.114501
+        },
+        {
+          "chord": "C",
+          "start_time": 159.114501,
+          "end_time": 160.948877
+        },
+        {
+          "chord": "D7",
+          "start_time": 160.948877,
+          "end_time": 162.748424
+        },
+        {
+          "chord": "F",
+          "start_time": 162.748424,
+          "end_time": 164.5828
+        },
+        {
+          "chord": "Eb",
+          "start_time": 164.5828,
+          "end_time": 165.476768
+        },
+        {
+          "chord": "G",
+          "start_time": 165.476768,
+          "end_time": 166.347517
+        }
+      ]
+    },
+    {
+      "name": "outro",
+      "start_time": 166.409,
+      "end_time": 179.0,
+      "chords": [
+        {
+          "chord": "F",
+          "start_time": 169.88856,
+          "end_time": 171.711326
+        },
+        {
+          "chord": "Eb",
+          "start_time": 171.711326,
+          "end_time": 172.651734
+        },
+        {
+          "chord": "G",
+          "start_time": 172.651734,
+          "end_time": 173.754682
+        },
+        {
+          "chord": "C",
+          "start_time": 173.754682,
+          "end_time": 178.838689
+        }
+      ]
+    },
+    {
+      "name": "silence",
+      "start_time": 179.0,
+      "end_time": 183.0,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 1.263742
+    },
+    {
+      "time": 1.263742,
+      "chord": "F",
+      "duration": 1.859103
+    },
+    {
+      "time": 3.122845,
+      "chord": "Eb",
+      "duration": 0.9520179999999998
+    },
+    {
+      "time": 4.074863,
+      "chord": "G",
+      "duration": 0.9984580000000003
+    },
+    {
+      "time": 5.073321,
+      "chord": "C",
+      "duration": 3.773243000000001
+    },
+    {
+      "time": 8.846564,
+      "chord": "Em",
+      "duration": 3.6571429999999996
+    },
+    {
+      "time": 12.503707,
+      "chord": "C7",
+      "duration": 3.680362999999998
+    },
+    {
+      "time": 16.18407,
+      "chord": "F",
+      "duration": 2.6935150000000014
+    },
+    {
+      "time": 18.877585,
+      "chord": "C",
+      "duration": 0.882358
+    },
+    {
+      "time": 19.759943,
+      "chord": "D",
+      "duration": 3.680363
+    },
+    {
+      "time": 23.440306,
+      "chord": "G",
+      "duration": 1.030341
+    },
+    {
+      "time": 24.470647,
+      "chord": "Gsus",
+      "duration": 0.8504749999999994
+    },
+    {
+      "time": 25.321122,
+      "chord": "G",
+      "duration": 1.869206000000002
+    },
+    {
+      "time": 27.190328,
+      "chord": "Am",
+      "duration": 1.834377
+    },
+    {
+      "time": 29.024705,
+      "chord": "Abaug",
+      "duration": 1.7995459999999994
+    },
+    {
+      "time": 30.824251,
+      "chord": "C",
+      "duration": 1.7763269999999984
+    },
+    {
+      "time": 32.600578,
+      "chord": "D7",
+      "duration": 1.811156000000004
+    },
+    {
+      "time": 34.411734,
+      "chord": "F",
+      "duration": 1.822766999999999
+    },
+    {
+      "time": 36.234501,
+      "chord": "Eb",
+      "duration": 0.9520179999999954
+    },
+    {
+      "time": 37.186519,
+      "chord": "G",
+      "duration": 0.940408000000005
+    },
+    {
+      "time": 38.126927,
+      "chord": "C",
+      "duration": 3.7616329999999962
+    },
+    {
+      "time": 41.88856,
+      "chord": "Em",
+      "duration": 3.6571420000000003
+    },
+    {
+      "time": 45.545702,
+      "chord": "C7",
+      "duration": 3.6223129999999983
+    },
+    {
+      "time": 49.168015,
+      "chord": "F",
+      "duration": 2.7051250000000024
+    },
+    {
+      "time": 51.87314,
+      "chord": "C",
+      "duration": 0.917188000000003
+    },
+    {
+      "time": 52.790328,
+      "chord": "D",
+      "duration": 3.6223129999999983
+    },
+    {
+      "time": 56.412641,
+      "chord": "G",
+      "duration": 0.893968000000001
+    },
+    {
+      "time": 57.306609,
+      "chord": "Gsus",
+      "duration": 0.952019
+    },
+    {
+      "time": 58.258628,
+      "chord": "G",
+      "duration": 1.764716
+    },
+    {
+      "time": 60.023344,
+      "chord": "Am",
+      "duration": 1.799546999999997
+    },
+    {
+      "time": 61.822891,
+      "chord": "Abaug",
+      "duration": 1.811156000000004
+    },
+    {
+      "time": 63.634047,
+      "chord": "C",
+      "duration": 1.7647169999999974
+    },
+    {
+      "time": 65.398764,
+      "chord": "D7",
+      "duration": 1.834376000000006
+    },
+    {
+      "time": 67.23314,
+      "chord": "F",
+      "duration": 1.8692059999999913
+    },
+    {
+      "time": 69.102346,
+      "chord": "Eb",
+      "duration": 0.977911000000006
+    },
+    {
+      "time": 70.080257,
+      "chord": "G",
+      "duration": 0.9382329999999968
+    },
+    {
+      "time": 71.01849,
+      "chord": "A",
+      "duration": 3.610206000000005
+    },
+    {
+      "time": 74.628696,
+      "chord": "A",
+      "duration": 1.741495999999998
+    },
+    {
+      "time": 76.370192,
+      "chord": "C#m",
+      "duration": 1.6754710000000017
+    },
+    {
+      "time": 78.045663,
+      "chord": "F#m",
+      "duration": 1.6682029999999912
+    },
+    {
+      "time": 79.713866,
+      "chord": "A",
+      "duration": 1.7298860000000076
+    },
+    {
+      "time": 81.443752,
+      "chord": "D",
+      "duration": 1.660226999999992
+    },
+    {
+      "time": 83.103979,
+      "chord": "G",
+      "duration": 1.683447000000001
+    },
+    {
+      "time": 84.787426,
+      "chord": "A",
+      "duration": 0.6875100000000032
+    },
+    {
+      "time": 85.474936,
+      "chord": "A7",
+      "duration": 0.7084619999999973
+    },
+    {
+      "time": 86.183398,
+      "chord": "A7",
+      "duration": 0.6318710000000038
+    },
+    {
+      "time": 86.815269,
+      "chord": "A6",
+      "duration": 0.612724
+    },
+    {
+      "time": 87.427993,
+      "chord": "A6",
+      "duration": 0.459541999999999
+    },
+    {
+      "time": 87.887535,
+      "chord": "A",
+      "duration": 0.39449399999999457
+    },
+    {
+      "time": 88.282029,
+      "chord": "A",
+      "duration": 1.6486170000000016
+    },
+    {
+      "time": 89.930646,
+      "chord": "C#m",
+      "duration": 1.6834460000000036
+    },
+    {
+      "time": 91.614092,
+      "chord": "F#m",
+      "duration": 1.6718369999999965
+    },
+    {
+      "time": 93.285929,
+      "chord": "A",
+      "duration": 1.6950570000000056
+    },
+    {
+      "time": 94.980986,
+      "chord": "D",
+      "duration": 1.660226999999992
+    },
+    {
+      "time": 96.641213,
+      "chord": "G",
+      "duration": 1.7066660000000127
+    },
+    {
+      "time": 98.347879,
+      "chord": "C",
+      "duration": 0.6849889999999874
+    },
+    {
+      "time": 99.032868,
+      "chord": "C7",
+      "duration": 0.6385490000000118
+    },
+    {
+      "time": 99.671417,
+      "chord": "C6",
+      "duration": 0.6153289999999885
+    },
+    {
+      "time": 100.286746,
+      "chord": "C",
+      "duration": 0.6733779999999996
+    },
+    {
+      "time": 100.960124,
+      "chord": "C",
+      "duration": 0.4179590000000104
+    },
+    {
+      "time": 101.378083,
+      "chord": "C",
+      "duration": 0.45278999999999314
+    },
+    {
+      "time": 101.830873,
+      "chord": "C",
+      "duration": 3.6571420000000074
+    },
+    {
+      "time": 105.488015,
+      "chord": "Em",
+      "duration": 3.506214
+    },
+    {
+      "time": 108.994229,
+      "chord": "C7",
+      "duration": 3.6339219999999983
+    },
+    {
+      "time": 112.628151,
+      "chord": "F",
+      "duration": 2.6122450000000015
+    },
+    {
+      "time": 115.240396,
+      "chord": "C",
+      "duration": 0.8475289999999944
+    },
+    {
+      "time": 116.087925,
+      "chord": "D",
+      "duration": 3.6223130000000054
+    },
+    {
+      "time": 119.710238,
+      "chord": "G",
+      "duration": 0.9171879999999959
+    },
+    {
+      "time": 120.627426,
+      "chord": "Gsus",
+      "duration": 0.824308000000002
+    },
+    {
+      "time": 121.451734,
+      "chord": "G",
+      "duration": 1.8459869999999938
+    },
+    {
+      "time": 123.297721,
+      "chord": "Am",
+      "duration": 1.741495999999998
+    },
+    {
+      "time": 125.039217,
+      "chord": "Abaug",
+      "duration": 1.7879369999999994
+    },
+    {
+      "time": 126.827154,
+      "chord": "C",
+      "duration": 1.7763259999999974
+    },
+    {
+      "time": 128.60348,
+      "chord": "D7",
+      "duration": 1.6950570000000198
+    },
+    {
+      "time": 130.298537,
+      "chord": "F",
+      "duration": 1.857596000000001
+    },
+    {
+      "time": 132.156133,
+      "chord": "Eb",
+      "duration": 0.8823589999999797
+    },
+    {
+      "time": 133.038492,
+      "chord": "G",
+      "duration": 0.8591380000000015
+    },
+    {
+      "time": 133.89763,
+      "chord": "C",
+      "duration": 3.680363
+    },
+    {
+      "time": 137.577993,
+      "chord": "Em",
+      "duration": 3.657143000000019
+    },
+    {
+      "time": 141.235136,
+      "chord": "C7",
+      "duration": 3.5758730000000014
+    },
+    {
+      "time": 144.811009,
+      "chord": "F",
+      "duration": 2.7051239999999837
+    },
+    {
+      "time": 147.516133,
+      "chord": "C",
+      "duration": 0.8823590000000081
+    },
+    {
+      "time": 148.398492,
+      "chord": "D",
+      "duration": 3.610703000000001
+    },
+    {
+      "time": 152.009195,
+      "chord": "G",
+      "duration": 0.9055779999999913
+    },
+    {
+      "time": 152.914773,
+      "chord": "Gsus",
+      "duration": 0.9171350000000018
+    },
+    {
+      "time": 153.831908,
+      "chord": "G",
+      "duration": 1.7763789999999915
+    },
+    {
+      "time": 155.608287,
+      "chord": "Am",
+      "duration": 1.7647170000000187
+    },
+    {
+      "time": 157.373004,
+      "chord": "Abaug",
+      "duration": 1.7414969999999812
+    },
+    {
+      "time": 159.114501,
+      "chord": "C",
+      "duration": 1.8343760000000202
+    },
+    {
+      "time": 160.948877,
+      "chord": "D7",
+      "duration": 1.7995469999999898
+    },
+    {
+      "time": 162.748424,
+      "chord": "F",
+      "duration": 1.8343759999999918
+    },
+    {
+      "time": 164.5828,
+      "chord": "Eb",
+      "duration": 0.893968000000001
+    },
+    {
+      "time": 165.476768,
+      "chord": "G",
+      "duration": 0.8707490000000178
+    },
+    {
+      "time": 166.347517,
+      "chord": "A",
+      "duration": 3.541043000000002
+    },
+    {
+      "time": 169.88856,
+      "chord": "F",
+      "duration": 1.8227660000000014
+    },
+    {
+      "time": 171.711326,
+      "chord": "Eb",
+      "duration": 0.9404079999999908
+    },
+    {
+      "time": 172.651734,
+      "chord": "G",
+      "duration": 1.1029479999999978
+    },
+    {
+      "time": 173.754682,
+      "chord": "C",
+      "duration": 5.0840069999999855
+    },
+    {
+      "time": 178.838689,
+      "chord": "N",
+      "duration": 4.175189000000017
+    }
+  ]
+}

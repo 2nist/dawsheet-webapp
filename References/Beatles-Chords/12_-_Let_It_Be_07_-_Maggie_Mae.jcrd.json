@@ -1,0 +1,175 @@
+{
+  "metadata": {
+    "title": "07 - Maggie_Mae",
+    "artist": "The Beatles",
+    "album": "12 - Let_It_Be",
+    "key": "Key G",
+    "tempo": 85,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "12_-_let_it_be"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.345,
+      "chords": [
+        {
+          "chord": "N",
+          "start_time": 0.0,
+          "end_time": 0.344657
+        }
+      ]
+    },
+    {
+      "name": "intro",
+      "start_time": 0.345,
+      "end_time": 3.02,
+      "chords": []
+    },
+    {
+      "name": "verse",
+      "start_time": 3.02,
+      "end_time": 14.233,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 3.117845,
+          "end_time": 5.79975
+        },
+        {
+          "chord": "G",
+          "start_time": 5.79975,
+          "end_time": 11.337709
+        },
+        {
+          "chord": "D",
+          "start_time": 11.337709,
+          "end_time": 14.158934
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 14.233,
+      "end_time": 25.692,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 17.003378,
+          "end_time": 19.847823
+        },
+        {
+          "chord": "D",
+          "start_time": 19.847823,
+          "end_time": 21.26424
+        },
+        {
+          "chord": "D",
+          "start_time": 21.26424,
+          "end_time": 22.680657
+        },
+        {
+          "chord": "G",
+          "start_time": 22.680657,
+          "end_time": 25.583151
+        }
+      ]
+    },
+    {
+      "name": "outro",
+      "start_time": 25.692,
+      "end_time": 38.05,
+      "chords": [
+        {
+          "chord": "G",
+          "start_time": 28.497256,
+          "end_time": 34.197755
+        }
+      ]
+    },
+    {
+      "name": "silence",
+      "start_time": 38.05,
+      "end_time": 40.6,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 0.344657
+    },
+    {
+      "time": 0.344657,
+      "chord": "G",
+      "duration": 2.773188
+    },
+    {
+      "time": 3.117845,
+      "chord": "C",
+      "duration": 2.6819050000000004
+    },
+    {
+      "time": 5.79975,
+      "chord": "G",
+      "duration": 5.537959
+    },
+    {
+      "time": 11.337709,
+      "chord": "D",
+      "duration": 2.821225
+    },
+    {
+      "time": 14.158934,
+      "chord": "G",
+      "duration": 2.844444000000001
+    },
+    {
+      "time": 17.003378,
+      "chord": "C",
+      "duration": 2.8444450000000003
+    },
+    {
+      "time": 19.847823,
+      "chord": "D",
+      "duration": 1.4164169999999991
+    },
+    {
+      "time": 21.26424,
+      "chord": "D",
+      "duration": 1.4164169999999991
+    },
+    {
+      "time": 22.680657,
+      "chord": "G",
+      "duration": 2.902494000000001
+    },
+    {
+      "time": 25.583151,
+      "chord": "C",
+      "duration": 2.9141049999999993
+    },
+    {
+      "time": 28.497256,
+      "chord": "G",
+      "duration": 5.700499000000001
+    },
+    {
+      "time": 34.197755,
+      "chord": "D",
+      "duration": 3.8868439999999964
+    },
+    {
+      "time": 38.084599,
+      "chord": "N",
+      "duration": 2.5358090000000004
+    }
+  ]
+}

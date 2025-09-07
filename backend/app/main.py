@@ -14,6 +14,10 @@ from .routers import import_lyrics as import_lyrics_router
 from .routers import import_mixed as import_mixed_router
 from .routers import import_mixed as import_mixed_router
 from .routers import import_lyrics as import_lyrics_router
+from .routers import convert as convert_router
+from .routers import lyrics_search as lyrics_search_router
+from .routers import combine as combine_router
+from .routers import songs_v1 as songs_v1_router
 from .importers import import_json_file, import_midi_file, import_mp3_file
 
 app = FastAPI(title="DAWSheet API")
@@ -33,6 +37,10 @@ app.include_router(import_lyrics_router.router)
 app.include_router(import_mixed_router.router)
 app.include_router(import_mixed_router.router)
 app.include_router(import_lyrics_router.router)
+app.include_router(convert_router.router)
+app.include_router(lyrics_search_router.router)
+app.include_router(combine_router.router)
+app.include_router(songs_v1_router.router)
 
 @app.on_event("startup")
 async def on_startup():
@@ -67,6 +75,34 @@ async def list_songs(session: AsyncSession = Depends(get_session)):
 async def create_song(payload: schemas.SongIn, session: AsyncSession = Depends(get_session)):
     song = models.Song(user_id=1, title=payload.title, artist=payload.artist or "", content=payload.content)
     session.add(song)
+    await session.commit()
+    await session.refresh(song)
+    return schemas.SongOut(id=song.id, title=song.title, artist=song.artist, content=song.content)
+
+@app.post("/songs/{song_id}/attach-lyrics", response_model=schemas.SongOut)
+async def attach_lyrics(song_id: int, payload: dict = Body(...), session: AsyncSession = Depends(get_session)):
+    """Attach fetched lyrics lines to a song by updating its content.
+    Payload: { lines: [{ ts_sec: number|null, text: string }], mode?: 'append'|'replace' }
+    """
+    result = await session.execute(select(models.Song).where(models.Song.id == song_id))
+    song = result.scalar_one_or_none()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+    lines = payload.get("lines") or []
+    mode = (payload.get("mode") or "append").lower()
+    formatted = []
+    for ln in lines:
+        txt = str(ln.get("text") or "").strip()
+        if not txt:
+            continue
+        ts = ln.get("ts_sec")
+        prefix = f"[{ts:.2f}] " if isinstance(ts, (int, float)) else ""
+        formatted.append(prefix + txt)
+    block = "\n".join(formatted)
+    if mode == "replace":
+        song.content = block
+    else:
+        song.content = (song.content or "").rstrip() + ("\n\n" if song.content else "") + block
     await session.commit()
     await session.refresh(song)
     return schemas.SongOut(id=song.id, title=song.title, artist=song.artist, content=song.content)

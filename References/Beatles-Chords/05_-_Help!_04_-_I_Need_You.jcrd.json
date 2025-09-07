@@ -1,0 +1,1099 @@
+{
+  "metadata": {
+    "title": "04 - I_Need_You",
+    "artist": "The Beatles",
+    "album": "05 - Help!",
+    "key": "Key A",
+    "tempo": 136,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "05_-_help!"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.486,
+      "chords": [
+        {
+          "chord": "N",
+          "start_time": 0.0,
+          "end_time": 0.47869
+        }
+      ]
+    },
+    {
+      "name": "intro",
+      "start_time": 0.486,
+      "end_time": 3.984,
+      "chords": [
+        {
+          "chord": "Asus",
+          "start_time": 0.861642,
+          "end_time": 2.56578
+        },
+        {
+          "chord": "Asus",
+          "start_time": 2.56578,
+          "end_time": 3.101913
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 3.984,
+      "end_time": 28.367,
+      "chords": [
+        {
+          "chord": "A",
+          "start_time": 3.988594,
+          "end_time": 5.67204
+        },
+        {
+          "chord": "D",
+          "start_time": 5.67204,
+          "end_time": 7.276092
+        },
+        {
+          "chord": "A",
+          "start_time": 7.276092,
+          "end_time": 7.754783
+        },
+        {
+          "chord": "Asus",
+          "start_time": 7.754783,
+          "end_time": 8.98023
+        },
+        {
+          "chord": "Asus",
+          "start_time": 8.98023,
+          "end_time": 9.573806
+        },
+        {
+          "chord": "A",
+          "start_time": 9.573806,
+          "end_time": 10.96619
+        },
+        {
+          "chord": "A",
+          "start_time": 10.96619,
+          "end_time": 12.696077
+        },
+        {
+          "chord": "D",
+          "start_time": 12.696077,
+          "end_time": 14.226675
+        },
+        {
+          "chord": "A",
+          "start_time": 14.226675,
+          "end_time": 14.705365
+        },
+        {
+          "chord": "A7",
+          "start_time": 14.705365,
+          "end_time": 15.911665
+        },
+        {
+          "chord": "Asus",
+          "start_time": 15.911665,
+          "end_time": 16.371208
+        },
+        {
+          "chord": "A",
+          "start_time": 16.371208,
+          "end_time": 17.839297
+        },
+        {
+          "chord": "F#m",
+          "start_time": 17.839297,
+          "end_time": 19.638843
+        },
+        {
+          "chord": "C#m",
+          "start_time": 19.638843,
+          "end_time": 21.3339
+        },
+        {
+          "chord": "F#m",
+          "start_time": 21.3339,
+          "end_time": 23.087006
+        },
+        {
+          "chord": "Bm",
+          "start_time": 23.087006,
+          "end_time": 24.623828
+        },
+        {
+          "chord": "A",
+          "start_time": 24.623828,
+          "end_time": 25.00678
+        },
+        {
+          "chord": "Asus",
+          "start_time": 25.00678,
+          "end_time": 26.423703
+        },
+        {
+          "chord": "Asus",
+          "start_time": 26.423703,
+          "end_time": 27.017279
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 28.367,
+      "end_time": 52.802,
+      "chords": [
+        {
+          "chord": "A",
+          "start_time": 28.369546,
+          "end_time": 30.099433
+        },
+        {
+          "chord": "D",
+          "start_time": 30.099433,
+          "end_time": 31.631854
+        },
+        {
+          "chord": "A",
+          "start_time": 31.631854,
+          "end_time": 32.053101
+        },
+        {
+          "chord": "Asus",
+          "start_time": 32.053101,
+          "end_time": 33.412582
+        },
+        {
+          "chord": "Asus",
+          "start_time": 33.412582,
+          "end_time": 33.833829
+        },
+        {
+          "chord": "A",
+          "start_time": 33.833829,
+          "end_time": 35.323922
+        },
+        {
+          "chord": "A",
+          "start_time": 35.323922,
+          "end_time": 37.065419
+        },
+        {
+          "chord": "D",
+          "start_time": 37.065419,
+          "end_time": 38.620732
+        },
+        {
+          "chord": "A",
+          "start_time": 38.620732,
+          "end_time": 39.080275
+        },
+        {
+          "chord": "Asus",
+          "start_time": 39.080275,
+          "end_time": 40.420607
+        },
+        {
+          "chord": "Asus",
+          "start_time": 40.420607,
+          "end_time": 40.822707
+        },
+        {
+          "chord": "A",
+          "start_time": 40.822707,
+          "end_time": 42.324739
+        },
+        {
+          "chord": "F#m",
+          "start_time": 42.324739,
+          "end_time": 44.019795
+        },
+        {
+          "chord": "C#m",
+          "start_time": 44.019795,
+          "end_time": 45.761292
+        },
+        {
+          "chord": "F#m",
+          "start_time": 45.761292,
+          "end_time": 47.502789
+        },
+        {
+          "chord": "Bm",
+          "start_time": 47.502789,
+          "end_time": 49.13277
+        },
+        {
+          "chord": "A",
+          "start_time": 49.13277,
+          "end_time": 49.573165
+        },
+        {
+          "chord": "Asus",
+          "start_time": 49.573165,
+          "end_time": 50.894351
+        },
+        {
+          "chord": "Asus",
+          "start_time": 50.894351,
+          "end_time": 51.315598
+        },
+        {
+          "chord": "A",
+          "start_time": 51.315598,
+          "end_time": 52.750498
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "start_time": 52.802,
+      "end_time": 68.669,
+      "chords": [
+        {
+          "chord": "E",
+          "start_time": 54.526825,
+          "end_time": 56.291541
+        },
+        {
+          "chord": "A",
+          "start_time": 56.291541,
+          "end_time": 59.809365
+        },
+        {
+          "chord": "D",
+          "start_time": 59.809365,
+          "end_time": 61.516031
+        },
+        {
+          "chord": "E",
+          "start_time": 61.516031,
+          "end_time": 63.292358
+        },
+        {
+          "chord": "B",
+          "start_time": 63.292358,
+          "end_time": 65.103514
+        },
+        {
+          "chord": "E",
+          "start_time": 65.103514,
+          "end_time": 68.586507
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 68.669,
+      "end_time": 93.363,
+      "chords": [
+        {
+          "chord": "D",
+          "start_time": 70.397664,
+          "end_time": 71.937575
+        },
+        {
+          "chord": "A",
+          "start_time": 71.937575,
+          "end_time": 72.358823
+        },
+        {
+          "chord": "Asus",
+          "start_time": 72.358823,
+          "end_time": 73.772057
+        },
+        {
+          "chord": "Asus",
+          "start_time": 73.772057,
+          "end_time": 74.181598
+        },
+        {
+          "chord": "A",
+          "start_time": 74.181598,
+          "end_time": 75.691814
+        },
+        {
+          "chord": "A",
+          "start_time": 75.691814,
+          "end_time": 77.47975
+        },
+        {
+          "chord": "D",
+          "start_time": 77.47975,
+          "end_time": 79.027838
+        },
+        {
+          "chord": "A",
+          "start_time": 79.027838,
+          "end_time": 79.437379
+        },
+        {
+          "chord": "Asus",
+          "start_time": 79.437379,
+          "end_time": 80.761563
+        },
+        {
+          "chord": "Asus",
+          "start_time": 80.761563,
+          "end_time": 81.185872
+        },
+        {
+          "chord": "A",
+          "start_time": 81.185872,
+          "end_time": 82.72746
+        },
+        {
+          "chord": "F#m",
+          "start_time": 82.72746,
+          "end_time": 84.445736
+        },
+        {
+          "chord": "C#m",
+          "start_time": 84.445736,
+          "end_time": 86.198843
+        },
+        {
+          "chord": "F#m",
+          "start_time": 86.198843,
+          "end_time": 87.97517
+        },
+        {
+          "chord": "Bm",
+          "start_time": 87.97517,
+          "end_time": 89.566703
+        },
+        {
+          "chord": "A",
+          "start_time": 89.566703,
+          "end_time": 89.962593
+        },
+        {
+          "chord": "Asus",
+          "start_time": 89.962593,
+          "end_time": 91.353253
+        },
+        {
+          "chord": "Asus",
+          "start_time": 91.353253,
+          "end_time": 91.851091
+        },
+        {
+          "chord": "A",
+          "start_time": 91.851091,
+          "end_time": 93.338979
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "start_time": 93.363,
+      "end_time": 109.388,
+      "chords": [
+        {
+          "chord": "E",
+          "start_time": 95.126916,
+          "end_time": 96.868412
+        },
+        {
+          "chord": "A",
+          "start_time": 96.868412,
+          "end_time": 100.409455
+        },
+        {
+          "chord": "D",
+          "start_time": 100.409455,
+          "end_time": 102.209002
+        },
+        {
+          "chord": "E",
+          "start_time": 102.209002,
+          "end_time": 103.996938
+        },
+        {
+          "chord": "B",
+          "start_time": 103.996938,
+          "end_time": 105.796485
+        },
+        {
+          "chord": "E",
+          "start_time": 105.796485,
+          "end_time": 109.360748
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 109.388,
+      "end_time": 134.371,
+      "chords": [
+        {
+          "chord": "D",
+          "start_time": 111.171904,
+          "end_time": 112.760397
+        },
+        {
+          "chord": "A",
+          "start_time": 112.760397,
+          "end_time": 113.197241
+        },
+        {
+          "chord": "Asus",
+          "start_time": 113.197241,
+          "end_time": 114.521863
+        },
+        {
+          "chord": "Asus",
+          "start_time": 114.521863,
+          "end_time": 114.94311
+        },
+        {
+          "chord": "A",
+          "start_time": 114.94311,
+          "end_time": 116.512494
+        },
+        {
+          "chord": "A",
+          "start_time": 116.512494,
+          "end_time": 118.31204
+        },
+        {
+          "chord": "D",
+          "start_time": 118.31204,
+          "end_time": 119.886417
+        },
+        {
+          "chord": "A",
+          "start_time": 119.886417,
+          "end_time": 120.323262
+        },
+        {
+          "chord": "Asus",
+          "start_time": 120.323262,
+          "end_time": 121.568184
+        },
+        {
+          "chord": "Asus",
+          "start_time": 121.568184,
+          "end_time": 122.046874
+        },
+        {
+          "chord": "A",
+          "start_time": 122.046874,
+          "end_time": 123.64102
+        },
+        {
+          "chord": "F#m",
+          "start_time": 123.64102,
+          "end_time": 125.324467
+        },
+        {
+          "chord": "C#m",
+          "start_time": 125.324467,
+          "end_time": 127.216893
+        },
+        {
+          "chord": "F#m",
+          "start_time": 127.216893,
+          "end_time": 128.93517
+        },
+        {
+          "chord": "Bm",
+          "start_time": 128.93517,
+          "end_time": 130.548145
+        },
+        {
+          "chord": "A",
+          "start_time": 130.548145,
+          "end_time": 130.957686
+        },
+        {
+          "chord": "Asus",
+          "start_time": 130.957686,
+          "end_time": 132.418384
+        },
+        {
+          "chord": "Asus",
+          "start_time": 132.418384,
+          "end_time": 132.882531
+        },
+        {
+          "chord": "A",
+          "start_time": 132.882531,
+          "end_time": 134.333809
+        }
+      ]
+    },
+    {
+      "name": "outro",
+      "start_time": 134.371,
+      "end_time": 147.307,
+      "chords": [
+        {
+          "chord": "D",
+          "start_time": 137.781972,
+          "end_time": 141.369455
+        },
+        {
+          "chord": "A",
+          "start_time": 141.369455,
+          "end_time": 141.960389
+        },
+        {
+          "chord": "Asus",
+          "start_time": 141.960389,
+          "end_time": 143.312185
+        },
+        {
+          "chord": "Asus",
+          "start_time": 143.312185,
+          "end_time": 143.99331
+        }
+      ]
+    },
+    {
+      "name": "silence",
+      "start_time": 147.307,
+      "end_time": 151.493,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 0.47869
+    },
+    {
+      "time": 0.47869,
+      "chord": "A",
+      "duration": 0.382952
+    },
+    {
+      "time": 0.861642,
+      "chord": "Asus",
+      "duration": 1.7041380000000002
+    },
+    {
+      "time": 2.56578,
+      "chord": "Asus",
+      "duration": 0.536133
+    },
+    {
+      "time": 3.101913,
+      "chord": "A",
+      "duration": 0.8866809999999998
+    },
+    {
+      "time": 3.988594,
+      "chord": "A",
+      "duration": 1.683446
+    },
+    {
+      "time": 5.67204,
+      "chord": "D",
+      "duration": 1.6040520000000003
+    },
+    {
+      "time": 7.276092,
+      "chord": "A",
+      "duration": 0.47869099999999953
+    },
+    {
+      "time": 7.754783,
+      "chord": "Asus",
+      "duration": 1.2254470000000008
+    },
+    {
+      "time": 8.98023,
+      "chord": "Asus",
+      "duration": 0.5935759999999988
+    },
+    {
+      "time": 9.573806,
+      "chord": "A",
+      "duration": 1.3923839999999998
+    },
+    {
+      "time": 10.96619,
+      "chord": "A",
+      "duration": 1.7298870000000015
+    },
+    {
+      "time": 12.696077,
+      "chord": "D",
+      "duration": 1.5305979999999995
+    },
+    {
+      "time": 14.226675,
+      "chord": "A",
+      "duration": 0.4786900000000003
+    },
+    {
+      "time": 14.705365,
+      "chord": "A7",
+      "duration": 1.2062999999999988
+    },
+    {
+      "time": 15.911665,
+      "chord": "Asus",
+      "duration": 0.45954300000000003
+    },
+    {
+      "time": 16.371208,
+      "chord": "A",
+      "duration": 1.468088999999999
+    },
+    {
+      "time": 17.839297,
+      "chord": "F#m",
+      "duration": 1.799546000000003
+    },
+    {
+      "time": 19.638843,
+      "chord": "C#m",
+      "duration": 1.6950569999999985
+    },
+    {
+      "time": 21.3339,
+      "chord": "F#m",
+      "duration": 1.753105999999999
+    },
+    {
+      "time": 23.087006,
+      "chord": "Bm",
+      "duration": 1.5368220000000008
+    },
+    {
+      "time": 24.623828,
+      "chord": "A",
+      "duration": 0.3829519999999995
+    },
+    {
+      "time": 25.00678,
+      "chord": "Asus",
+      "duration": 1.4169230000000006
+    },
+    {
+      "time": 26.423703,
+      "chord": "Asus",
+      "duration": 0.5935759999999988
+    },
+    {
+      "time": 27.017279,
+      "chord": "A",
+      "duration": 1.3522670000000012
+    },
+    {
+      "time": 28.369546,
+      "chord": "A",
+      "duration": 1.7298870000000015
+    },
+    {
+      "time": 30.099433,
+      "chord": "D",
+      "duration": 1.5324209999999994
+    },
+    {
+      "time": 31.631854,
+      "chord": "A",
+      "duration": 0.4212469999999975
+    },
+    {
+      "time": 32.053101,
+      "chord": "Asus",
+      "duration": 1.3594810000000024
+    },
+    {
+      "time": 33.412582,
+      "chord": "Asus",
+      "duration": 0.42124700000000104
+    },
+    {
+      "time": 33.833829,
+      "chord": "A",
+      "duration": 1.4900930000000017
+    },
+    {
+      "time": 35.323922,
+      "chord": "A",
+      "duration": 1.7414969999999954
+    },
+    {
+      "time": 37.065419,
+      "chord": "D",
+      "duration": 1.5553129999999982
+    },
+    {
+      "time": 38.620732,
+      "chord": "A",
+      "duration": 0.4595430000000036
+    },
+    {
+      "time": 39.080275,
+      "chord": "Asus",
+      "duration": 1.3403319999999965
+    },
+    {
+      "time": 40.420607,
+      "chord": "Asus",
+      "duration": 0.40210000000000434
+    },
+    {
+      "time": 40.822707,
+      "chord": "A",
+      "duration": 1.5020319999999998
+    },
+    {
+      "time": 42.324739,
+      "chord": "F#m",
+      "duration": 1.695056000000001
+    },
+    {
+      "time": 44.019795,
+      "chord": "C#m",
+      "duration": 1.7414969999999954
+    },
+    {
+      "time": 45.761292,
+      "chord": "F#m",
+      "duration": 1.7414970000000025
+    },
+    {
+      "time": 47.502789,
+      "chord": "Bm",
+      "duration": 1.6299810000000008
+    },
+    {
+      "time": 49.13277,
+      "chord": "A",
+      "duration": 0.4403950000000023
+    },
+    {
+      "time": 49.573165,
+      "chord": "Asus",
+      "duration": 1.3211859999999973
+    },
+    {
+      "time": 50.894351,
+      "chord": "Asus",
+      "duration": 0.42124700000000104
+    },
+    {
+      "time": 51.315598,
+      "chord": "A",
+      "duration": 1.434899999999999
+    },
+    {
+      "time": 52.750498,
+      "chord": "D",
+      "duration": 1.776327000000002
+    },
+    {
+      "time": 54.526825,
+      "chord": "E",
+      "duration": 1.764716
+    },
+    {
+      "time": 56.291541,
+      "chord": "A",
+      "duration": 3.5178239999999974
+    },
+    {
+      "time": 59.809365,
+      "chord": "D",
+      "duration": 1.7066659999999985
+    },
+    {
+      "time": 61.516031,
+      "chord": "E",
+      "duration": 1.776327000000002
+    },
+    {
+      "time": 63.292358,
+      "chord": "B",
+      "duration": 1.811156000000004
+    },
+    {
+      "time": 65.103514,
+      "chord": "E",
+      "duration": 3.4829929999999933
+    },
+    {
+      "time": 68.586507,
+      "chord": "A",
+      "duration": 1.8111570000000086
+    },
+    {
+      "time": 70.397664,
+      "chord": "D",
+      "duration": 1.5399109999999894
+    },
+    {
+      "time": 71.937575,
+      "chord": "A",
+      "duration": 0.4212480000000056
+    },
+    {
+      "time": 72.358823,
+      "chord": "Asus",
+      "duration": 1.4132340000000028
+    },
+    {
+      "time": 73.772057,
+      "chord": "Asus",
+      "duration": 0.40954099999999016
+    },
+    {
+      "time": 74.181598,
+      "chord": "A",
+      "duration": 1.5102159999999998
+    },
+    {
+      "time": 75.691814,
+      "chord": "A",
+      "duration": 1.787936000000002
+    },
+    {
+      "time": 77.47975,
+      "chord": "D",
+      "duration": 1.548088000000007
+    },
+    {
+      "time": 79.027838,
+      "chord": "A",
+      "duration": 0.4095410000000044
+    },
+    {
+      "time": 79.437379,
+      "chord": "Asus",
+      "duration": 1.3241839999999883
+    },
+    {
+      "time": 80.761563,
+      "chord": "Asus",
+      "duration": 0.42430900000000804
+    },
+    {
+      "time": 81.185872,
+      "chord": "A",
+      "duration": 1.5415879999999902
+    },
+    {
+      "time": 82.72746,
+      "chord": "F#m",
+      "duration": 1.718276000000003
+    },
+    {
+      "time": 84.445736,
+      "chord": "C#m",
+      "duration": 1.753107
+    },
+    {
+      "time": 86.198843,
+      "chord": "F#m",
+      "duration": 1.776327000000009
+    },
+    {
+      "time": 87.97517,
+      "chord": "Bm",
+      "duration": 1.5915329999999983
+    },
+    {
+      "time": 89.566703,
+      "chord": "A",
+      "duration": 0.3958899999999943
+    },
+    {
+      "time": 89.962593,
+      "chord": "Asus",
+      "duration": 1.390659999999997
+    },
+    {
+      "time": 91.353253,
+      "chord": "Asus",
+      "duration": 0.49783800000000156
+    },
+    {
+      "time": 91.851091,
+      "chord": "A",
+      "duration": 1.487887999999998
+    },
+    {
+      "time": 93.338979,
+      "chord": "D",
+      "duration": 1.7879369999999994
+    },
+    {
+      "time": 95.126916,
+      "chord": "E",
+      "duration": 1.7414960000000121
+    },
+    {
+      "time": 96.868412,
+      "chord": "A",
+      "duration": 3.5410429999999877
+    },
+    {
+      "time": 100.409455,
+      "chord": "D",
+      "duration": 1.799547000000004
+    },
+    {
+      "time": 102.209002,
+      "chord": "E",
+      "duration": 1.787936000000002
+    },
+    {
+      "time": 103.996938,
+      "chord": "B",
+      "duration": 1.799547000000004
+    },
+    {
+      "time": 105.796485,
+      "chord": "E",
+      "duration": 3.564262999999997
+    },
+    {
+      "time": 109.360748,
+      "chord": "A",
+      "duration": 1.8111559999999969
+    },
+    {
+      "time": 111.171904,
+      "chord": "D",
+      "duration": 1.5884929999999997
+    },
+    {
+      "time": 112.760397,
+      "chord": "A",
+      "duration": 0.4368440000000078
+    },
+    {
+      "time": 113.197241,
+      "chord": "Asus",
+      "duration": 1.3246219999999909
+    },
+    {
+      "time": 114.521863,
+      "chord": "Asus",
+      "duration": 0.42124700000000814
+    },
+    {
+      "time": 114.94311,
+      "chord": "A",
+      "duration": 1.5693839999999994
+    },
+    {
+      "time": 116.512494,
+      "chord": "A",
+      "duration": 1.7995459999999923
+    },
+    {
+      "time": 118.31204,
+      "chord": "D",
+      "duration": 1.5743769999999984
+    },
+    {
+      "time": 119.886417,
+      "chord": "A",
+      "duration": 0.43684500000000526
+    },
+    {
+      "time": 120.323262,
+      "chord": "Asus",
+      "duration": 1.2449220000000025
+    },
+    {
+      "time": 121.568184,
+      "chord": "Asus",
+      "duration": 0.4786900000000003
+    },
+    {
+      "time": 122.046874,
+      "chord": "A",
+      "duration": 1.594145999999995
+    },
+    {
+      "time": 123.64102,
+      "chord": "F#m",
+      "duration": 1.683447000000001
+    },
+    {
+      "time": 125.324467,
+      "chord": "C#m",
+      "duration": 1.8924260000000004
+    },
+    {
+      "time": 127.216893,
+      "chord": "F#m",
+      "duration": 1.7182770000000005
+    },
+    {
+      "time": 128.93517,
+      "chord": "Bm",
+      "duration": 1.6129750000000058
+    },
+    {
+      "time": 130.548145,
+      "chord": "A",
+      "duration": 0.40954099999999016
+    },
+    {
+      "time": 130.957686,
+      "chord": "Asus",
+      "duration": 1.4606980000000078
+    },
+    {
+      "time": 132.418384,
+      "chord": "Asus",
+      "duration": 0.464146999999997
+    },
+    {
+      "time": 132.882531,
+      "chord": "A",
+      "duration": 1.451278000000002
+    },
+    {
+      "time": 134.333809,
+      "chord": "F#m",
+      "duration": 3.448162999999994
+    },
+    {
+      "time": 137.781972,
+      "chord": "D",
+      "duration": 3.5874829999999918
+    },
+    {
+      "time": 141.369455,
+      "chord": "A",
+      "duration": 0.5909340000000043
+    },
+    {
+      "time": 141.960389,
+      "chord": "Asus",
+      "duration": 1.3517960000000073
+    },
+    {
+      "time": 143.312185,
+      "chord": "Asus",
+      "duration": 0.6811250000000086
+    },
+    {
+      "time": 143.99331,
+      "chord": "A",
+      "duration": 3.5390339999999867
+    },
+    {
+      "time": 147.532344,
+      "chord": "N",
+      "duration": 3.9778599999999926
+    }
+  ]
+}

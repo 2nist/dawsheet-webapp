@@ -1,0 +1,282 @@
+{
+  "metadata": {
+    "title": "04 - Blue_Jay_Way",
+    "artist": "The Beatles",
+    "album": "09 - Magical_Mystery_Tour",
+    "key": "Key C",
+    "tempo": 96,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "09_-_magical_mystery_tour"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.743,
+      "chords": []
+    },
+    {
+      "name": "intro",
+      "start_time": 0.743,
+      "end_time": 24.181,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 1.665842,
+          "end_time": 22.268672
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 24.181,
+      "end_time": 48.927,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 24.259614,
+          "end_time": 28.172176
+        },
+        {
+          "chord": "D#dim7",
+          "start_time": 28.172176,
+          "end_time": 30.645102
+        },
+        {
+          "chord": "C",
+          "start_time": 30.645102,
+          "end_time": 34.662154
+        },
+        {
+          "chord": "D#dim7",
+          "start_time": 34.662154,
+          "end_time": 43.543786
+        }
+      ]
+    },
+    {
+      "name": "refrain",
+      "start_time": 48.927,
+      "end_time": 70.519,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 48.941294,
+          "end_time": 68.548448
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 70.519,
+      "end_time": 92.163,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 70.548594,
+          "end_time": 74.182517
+        },
+        {
+          "chord": "D#dim7",
+          "start_time": 74.182517,
+          "end_time": 76.272312
+        },
+        {
+          "chord": "C",
+          "start_time": 76.272312,
+          "end_time": 79.826391
+        },
+        {
+          "chord": "D#dim7",
+          "start_time": 79.826391,
+          "end_time": 87.6617
+        }
+      ]
+    },
+    {
+      "name": "refrain",
+      "start_time": 92.163,
+      "end_time": 112.718,
+      "chords": []
+    },
+    {
+      "name": "verse",
+      "start_time": 112.718,
+      "end_time": 133.747,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 112.739251,
+          "end_time": 116.222244
+        },
+        {
+          "chord": "D#dim7",
+          "start_time": 116.222244,
+          "end_time": 118.30043
+        },
+        {
+          "chord": "C",
+          "start_time": 118.30043,
+          "end_time": 121.713764
+        },
+        {
+          "chord": "D#dim7",
+          "start_time": 121.713764,
+          "end_time": 129.120929
+        }
+      ]
+    },
+    {
+      "name": "refrain",
+      "start_time": 133.747,
+      "end_time": 151.324,
+      "chords": []
+    },
+    {
+      "name": "refrain",
+      "start_time": 151.324,
+      "end_time": 168.882,
+      "chords": []
+    },
+    {
+      "name": "refrain",
+      "start_time": 168.882,
+      "end_time": 186.58,
+      "chords": []
+    },
+    {
+      "name": "outro_refrain",
+      "start_time": 186.58,
+      "end_time": 233.327,
+      "chords": []
+    },
+    {
+      "name": "silence",
+      "start_time": 233.327,
+      "end_time": 236.707,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 1.665842
+    },
+    {
+      "time": 1.665842,
+      "chord": "C",
+      "duration": 20.602829999999997
+    },
+    {
+      "time": 22.268672,
+      "chord": "D#dim7",
+      "duration": 1.9909420000000004
+    },
+    {
+      "time": 24.259614,
+      "chord": "C",
+      "duration": 3.912562000000001
+    },
+    {
+      "time": 28.172176,
+      "chord": "D#dim7",
+      "duration": 2.472926000000001
+    },
+    {
+      "time": 30.645102,
+      "chord": "C",
+      "duration": 4.017052
+    },
+    {
+      "time": 34.662154,
+      "chord": "D#dim7",
+      "duration": 8.881631999999996
+    },
+    {
+      "time": 43.543786,
+      "chord": "C",
+      "duration": 5.397508000000002
+    },
+    {
+      "time": 48.941294,
+      "chord": "C",
+      "duration": 19.607153999999994
+    },
+    {
+      "time": 68.548448,
+      "chord": "D#dim7",
+      "duration": 2.000146000000001
+    },
+    {
+      "time": 70.548594,
+      "chord": "C",
+      "duration": 3.63392300000001
+    },
+    {
+      "time": 74.182517,
+      "chord": "D#dim7",
+      "duration": 2.089794999999995
+    },
+    {
+      "time": 76.272312,
+      "chord": "C",
+      "duration": 3.5540790000000015
+    },
+    {
+      "time": 79.826391,
+      "chord": "D#dim7",
+      "duration": 7.835308999999995
+    },
+    {
+      "time": 87.6617,
+      "chord": "C",
+      "duration": 23.241264
+    },
+    {
+      "time": 110.902964,
+      "chord": "D#dim7",
+      "duration": 1.8362869999999987
+    },
+    {
+      "time": 112.739251,
+      "chord": "C",
+      "duration": 3.4829930000000076
+    },
+    {
+      "time": 116.222244,
+      "chord": "D#dim7",
+      "duration": 2.0781860000000023
+    },
+    {
+      "time": 118.30043,
+      "chord": "C",
+      "duration": 3.413333999999992
+    },
+    {
+      "time": 121.713764,
+      "chord": "D#dim7",
+      "duration": 7.407164999999992
+    },
+    {
+      "time": 129.120929,
+      "chord": "C",
+      "duration": 4.6442830000000015
+    },
+    {
+      "time": 133.765212,
+      "chord": "C",
+      "duration": 98.22724500000001
+    },
+    {
+      "time": 231.992457,
+      "chord": "N",
+      "duration": 4.729175999999995
+    }
+  ]
+}

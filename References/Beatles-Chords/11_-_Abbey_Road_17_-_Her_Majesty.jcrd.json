@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "title": "17 - Her_Majesty",
+    "artist": "The Beatles",
+    "album": "11 - Abbey_Road",
+    "key": "Key D",
+    "tempo": 101,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "11_-_abbey_road"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.32,
+      "chords": []
+    },
+    {
+      "name": "intro",
+      "start_time": 0.32,
+      "end_time": 2.071,
+      "chords": []
+    },
+    {
+      "name": "verse",
+      "start_time": 2.071,
+      "end_time": 23.267,
+      "chords": [
+        {
+          "chord": "D",
+          "start_time": 2.072947,
+          "end_time": 2.607006
+        },
+        {
+          "chord": "D7",
+          "start_time": 2.607006,
+          "end_time": 3.175895
+        },
+        {
+          "chord": "D6",
+          "start_time": 3.175895,
+          "end_time": 3.756394
+        },
+        {
+          "chord": "D",
+          "start_time": 3.756394,
+          "end_time": 4.348503
+        },
+        {
+          "chord": "E9",
+          "start_time": 4.348503,
+          "end_time": 4.975442
+        },
+        {
+          "chord": "A",
+          "start_time": 4.975442,
+          "end_time": 5.532721
+        },
+        {
+          "chord": "D",
+          "start_time": 5.532721,
+          "end_time": 6.774988
+        },
+        {
+          "chord": "D",
+          "start_time": 6.774988,
+          "end_time": 7.390317
+        },
+        {
+          "chord": "D7",
+          "start_time": 7.390317,
+          "end_time": 7.982426
+        },
+        {
+          "chord": "D6",
+          "start_time": 7.982426,
+          "end_time": 8.586145
+        },
+        {
+          "chord": "D",
+          "start_time": 8.586145,
+          "end_time": 9.155034
+        },
+        {
+          "chord": "E9",
+          "start_time": 9.155034,
+          "end_time": 10.374081
+        },
+        {
+          "chord": "A",
+          "start_time": 10.374081,
+          "end_time": 11.581519
+        },
+        {
+          "chord": "Bm",
+          "start_time": 11.581519,
+          "end_time": 12.765736
+        },
+        {
+          "chord": "Bsus",
+          "start_time": 12.765736,
+          "end_time": 13.949954
+        },
+        {
+          "chord": "D7",
+          "start_time": 13.949954,
+          "end_time": 15.134172
+        },
+        {
+          "chord": "G",
+          "start_time": 15.134172,
+          "end_time": 16.341609
+        },
+        {
+          "chord": "Edim",
+          "start_time": 16.341609,
+          "end_time": 17.525827
+        },
+        {
+          "chord": "D",
+          "start_time": 17.525827,
+          "end_time": 18.094716
+        },
+        {
+          "chord": "B",
+          "start_time": 18.094716,
+          "end_time": 18.710045
+        },
+        {
+          "chord": "E7",
+          "start_time": 18.710045,
+          "end_time": 19.313764
+        },
+        {
+          "chord": "A",
+          "start_time": 19.313764,
+          "end_time": 19.917482
+        },
+        {
+          "chord": "D",
+          "start_time": 19.917482,
+          "end_time": 20.463151
+        },
+        {
+          "chord": "B",
+          "start_time": 20.463151,
+          "end_time": 21.00882
+        },
+        {
+          "chord": "E7",
+          "start_time": 21.00882,
+          "end_time": 21.635759
+        },
+        {
+          "chord": "A",
+          "start_time": 21.635759,
+          "end_time": 22.204648
+        },
+        {
+          "chord": "D",
+          "start_time": 22.204648,
+          "end_time": 22.575034
+        },
+        {
+          "chord": "A",
+          "start_time": 22.575034,
+          "end_time": 23.14449
+        }
+      ]
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 0.325509
+    },
+    {
+      "time": 0.325509,
+      "chord": "D",
+      "duration": 1.747438
+    },
+    {
+      "time": 2.072947,
+      "chord": "D",
+      "duration": 0.5340590000000001
+    },
+    {
+      "time": 2.607006,
+      "chord": "D7",
+      "duration": 0.568889
+    },
+    {
+      "time": 3.175895,
+      "chord": "D6",
+      "duration": 0.5804989999999997
+    },
+    {
+      "time": 3.756394,
+      "chord": "D",
+      "duration": 0.5921090000000002
+    },
+    {
+      "time": 4.348503,
+      "chord": "E9",
+      "duration": 0.6269390000000001
+    },
+    {
+      "time": 4.975442,
+      "chord": "A",
+      "duration": 0.5572789999999994
+    },
+    {
+      "time": 5.532721,
+      "chord": "D",
+      "duration": 1.242267
+    },
+    {
+      "time": 6.774988,
+      "chord": "D",
+      "duration": 0.615329
+    },
+    {
+      "time": 7.390317,
+      "chord": "D7",
+      "duration": 0.5921090000000007
+    },
+    {
+      "time": 7.982426,
+      "chord": "D6",
+      "duration": 0.6037189999999999
+    },
+    {
+      "time": 8.586145,
+      "chord": "D",
+      "duration": 0.5688890000000004
+    },
+    {
+      "time": 9.155034,
+      "chord": "E9",
+      "duration": 1.2190469999999998
+    },
+    {
+      "time": 10.374081,
+      "chord": "A",
+      "duration": 1.2074379999999998
+    },
+    {
+      "time": 11.581519,
+      "chord": "Bm",
+      "duration": 1.1842170000000003
+    },
+    {
+      "time": 12.765736,
+      "chord": "Bsus",
+      "duration": 1.1842179999999995
+    },
+    {
+      "time": 13.949954,
+      "chord": "D7",
+      "duration": 1.1842179999999995
+    },
+    {
+      "time": 15.134172,
+      "chord": "G",
+      "duration": 1.2074369999999988
+    },
+    {
+      "time": 16.341609,
+      "chord": "Edim",
+      "duration": 1.1842180000000013
+    },
+    {
+      "time": 17.525827,
+      "chord": "D",
+      "duration": 0.5688889999999986
+    },
+    {
+      "time": 18.094716,
+      "chord": "B",
+      "duration": 0.6153290000000027
+    },
+    {
+      "time": 18.710045,
+      "chord": "E7",
+      "duration": 0.6037189999999981
+    },
+    {
+      "time": 19.313764,
+      "chord": "A",
+      "duration": 0.6037180000000006
+    },
+    {
+      "time": 19.917482,
+      "chord": "D",
+      "duration": 0.5456690000000002
+    },
+    {
+      "time": 20.463151,
+      "chord": "B",
+      "duration": 0.5456690000000002
+    },
+    {
+      "time": 21.00882,
+      "chord": "E7",
+      "duration": 0.6269390000000001
+    },
+    {
+      "time": 21.635759,
+      "chord": "A",
+      "duration": 0.5688889999999986
+    },
+    {
+      "time": 22.204648,
+      "chord": "D",
+      "duration": 0.3703859999999999
+    },
+    {
+      "time": 22.575034,
+      "chord": "A",
+      "duration": 0.5694560000000024
+    }
+  ]
+}

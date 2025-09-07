@@ -1,0 +1,695 @@
+{
+  "metadata": {
+    "title": "06 - The_Word",
+    "artist": "The Beatles",
+    "album": "06 - Rubber_Soul",
+    "key": "Key D",
+    "tempo": 122,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "06_-_rubber_soul"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.424,
+      "chords": [
+        {
+          "chord": "N",
+          "start_time": 0.0,
+          "end_time": 0.4021
+        }
+      ]
+    },
+    {
+      "name": "intro",
+      "start_time": 0.424,
+      "end_time": 5.355,
+      "chords": [
+        {
+          "chord": "D7",
+          "start_time": 1.302038,
+          "end_time": 5.346961
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 5.355,
+      "end_time": 28.784,
+      "chords": [
+        {
+          "chord": "G7",
+          "start_time": 13.323015,
+          "end_time": 17.293628
+        },
+        {
+          "chord": "D7",
+          "start_time": 17.293628,
+          "end_time": 21.26424
+        },
+        {
+          "chord": "Asus",
+          "start_time": 21.26424,
+          "end_time": 21.972448
+        },
+        {
+          "chord": "A",
+          "start_time": 21.972448,
+          "end_time": 23.191496
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 23.191496,
+          "end_time": 23.818435
+        },
+        {
+          "chord": "G",
+          "start_time": 23.818435,
+          "end_time": 24.991043
+        },
+        {
+          "chord": "D7",
+          "start_time": 24.991043,
+          "end_time": 28.764285
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "start_time": 28.784,
+      "end_time": 36.649,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 30.703151,
+          "end_time": 32.676848
+        },
+        {
+          "chord": "F",
+          "start_time": 32.676848,
+          "end_time": 34.650544
+        },
+        {
+          "chord": "G",
+          "start_time": 34.650544,
+          "end_time": 36.64746
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 36.649,
+      "end_time": 60.102,
+      "chords": [
+        {
+          "chord": "G7",
+          "start_time": 44.623514,
+          "end_time": 48.582517
+        },
+        {
+          "chord": "D7",
+          "start_time": 48.582517,
+          "end_time": 52.553129
+        },
+        {
+          "chord": "Asus",
+          "start_time": 52.553129,
+          "end_time": 53.307777
+        },
+        {
+          "chord": "A",
+          "start_time": 53.307777,
+          "end_time": 54.410725
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 54.410725,
+          "end_time": 55.153764
+        },
+        {
+          "chord": "G",
+          "start_time": 55.153764,
+          "end_time": 56.268321
+        },
+        {
+          "chord": "D7",
+          "start_time": 56.268321,
+          "end_time": 60.088004
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "start_time": 60.102,
+      "end_time": 67.943,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 62.03848,
+          "end_time": 63.977346
+        },
+        {
+          "chord": "F",
+          "start_time": 63.977346,
+          "end_time": 65.916213
+        },
+        {
+          "chord": "G",
+          "start_time": 65.916213,
+          "end_time": 67.936349
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 67.943,
+      "end_time": 91.382,
+      "chords": [
+        {
+          "chord": "G7",
+          "start_time": 75.900793,
+          "end_time": 79.836575
+        },
+        {
+          "chord": "D7",
+          "start_time": 79.836575,
+          "end_time": 83.830408
+        },
+        {
+          "chord": "Asus",
+          "start_time": 83.830408,
+          "end_time": 84.585056
+        },
+        {
+          "chord": "A",
+          "start_time": 84.585056,
+          "end_time": 85.666413
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 85.666413,
+          "end_time": 86.431043
+        },
+        {
+          "chord": "G",
+          "start_time": 86.431043,
+          "end_time": 87.65009
+        },
+        {
+          "chord": "D7",
+          "start_time": 87.65009,
+          "end_time": 91.376893
+        }
+      ]
+    },
+    {
+      "name": "bridge",
+      "start_time": 91.382,
+      "end_time": 99.257,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 93.269319,
+          "end_time": 95.254625
+        },
+        {
+          "chord": "F",
+          "start_time": 95.254625,
+          "end_time": 97.239931
+        },
+        {
+          "chord": "G",
+          "start_time": 97.239931,
+          "end_time": 99.213628
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 99.257,
+      "end_time": 122.896,
+      "chords": [
+        {
+          "chord": "G7",
+          "start_time": 107.212902,
+          "end_time": 111.183514
+        },
+        {
+          "chord": "D7",
+          "start_time": 111.183514,
+          "end_time": 115.130907
+        },
+        {
+          "chord": "Asus",
+          "start_time": 115.130907,
+          "end_time": 115.873945
+        },
+        {
+          "chord": "A",
+          "start_time": 115.873945,
+          "end_time": 117.069773
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 117.069773,
+          "end_time": 117.859251
+        },
+        {
+          "chord": "G",
+          "start_time": 117.859251,
+          "end_time": 119.031859
+        }
+      ]
+    },
+    {
+      "name": "bridge_(instrumental)",
+      "start_time": 122.896,
+      "end_time": 130.759,
+      "chords": [
+        {
+          "chord": "D",
+          "start_time": 122.956031,
+          "end_time": 124.836848
+        },
+        {
+          "chord": "Cm9",
+          "start_time": 124.836848,
+          "end_time": 126.810544
+        },
+        {
+          "chord": "Fm6",
+          "start_time": 126.810544,
+          "end_time": 128.78424
+        },
+        {
+          "chord": "G",
+          "start_time": 128.78424,
+          "end_time": 130.734716
+        }
+      ]
+    },
+    {
+      "name": "verse_(partly_instrumental)",
+      "start_time": 130.759,
+      "end_time": 154.291,
+      "chords": [
+        {
+          "chord": "D7",
+          "start_time": 134.728548,
+          "end_time": 138.78043
+        },
+        {
+          "chord": "G7",
+          "start_time": 138.78043,
+          "end_time": 142.727823
+        },
+        {
+          "chord": "D7",
+          "start_time": 142.727823,
+          "end_time": 146.686825
+        },
+        {
+          "chord": "Asus",
+          "start_time": 146.686825,
+          "end_time": 147.499523
+        },
+        {
+          "chord": "A",
+          "start_time": 147.499523,
+          "end_time": 148.567641
+        },
+        {
+          "chord": "Gsus",
+          "start_time": 148.567641,
+          "end_time": 149.36873
+        },
+        {
+          "chord": "G",
+          "start_time": 149.36873,
+          "end_time": 150.506507
+        }
+      ]
+    },
+    {
+      "name": "bridge_outro_(fade-out)",
+      "start_time": 154.291,
+      "end_time": 160.719,
+      "chords": [
+        {
+          "chord": "D",
+          "start_time": 154.3378,
+          "end_time": 156.241836
+        },
+        {
+          "chord": "Cm9",
+          "start_time": 156.241836,
+          "end_time": 158.192312
+        },
+        {
+          "chord": "Fm6",
+          "start_time": 158.192312,
+          "end_time": 160.189229
+        }
+      ]
+    },
+    {
+      "name": "silence",
+      "start_time": 160.719,
+      "end_time": 163.693,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 0.4021
+    },
+    {
+      "time": 0.4021,
+      "chord": "G",
+      "duration": 0.899938
+    },
+    {
+      "time": 1.302038,
+      "chord": "D7",
+      "duration": 4.044923000000001
+    },
+    {
+      "time": 5.346961,
+      "chord": "D7",
+      "duration": 7.9760539999999995
+    },
+    {
+      "time": 13.323015,
+      "chord": "G7",
+      "duration": 3.9706129999999984
+    },
+    {
+      "time": 17.293628,
+      "chord": "D7",
+      "duration": 3.9706120000000027
+    },
+    {
+      "time": 21.26424,
+      "chord": "Asus",
+      "duration": 0.7082079999999991
+    },
+    {
+      "time": 21.972448,
+      "chord": "A",
+      "duration": 1.2190480000000008
+    },
+    {
+      "time": 23.191496,
+      "chord": "Gsus",
+      "duration": 0.6269390000000001
+    },
+    {
+      "time": 23.818435,
+      "chord": "G",
+      "duration": 1.1726080000000003
+    },
+    {
+      "time": 24.991043,
+      "chord": "D7",
+      "duration": 3.7732419999999998
+    },
+    {
+      "time": 28.764285,
+      "chord": "D",
+      "duration": 1.9388659999999973
+    },
+    {
+      "time": 30.703151,
+      "chord": "C",
+      "duration": 1.9736970000000014
+    },
+    {
+      "time": 32.676848,
+      "chord": "F",
+      "duration": 1.9736959999999968
+    },
+    {
+      "time": 34.650544,
+      "chord": "G",
+      "duration": 1.996916000000006
+    },
+    {
+      "time": 36.64746,
+      "chord": "D7",
+      "duration": 7.976053999999998
+    },
+    {
+      "time": 44.623514,
+      "chord": "G7",
+      "duration": 3.9590030000000027
+    },
+    {
+      "time": 48.582517,
+      "chord": "D7",
+      "duration": 3.9706119999999956
+    },
+    {
+      "time": 52.553129,
+      "chord": "Asus",
+      "duration": 0.7546480000000031
+    },
+    {
+      "time": 53.307777,
+      "chord": "A",
+      "duration": 1.1029479999999978
+    },
+    {
+      "time": 54.410725,
+      "chord": "Gsus",
+      "duration": 0.7430390000000031
+    },
+    {
+      "time": 55.153764,
+      "chord": "G",
+      "duration": 1.1145569999999978
+    },
+    {
+      "time": 56.268321,
+      "chord": "D7",
+      "duration": 3.8196829999999977
+    },
+    {
+      "time": 60.088004,
+      "chord": "D",
+      "duration": 1.9504760000000019
+    },
+    {
+      "time": 62.03848,
+      "chord": "C",
+      "duration": 1.9388659999999973
+    },
+    {
+      "time": 63.977346,
+      "chord": "F",
+      "duration": 1.938867000000002
+    },
+    {
+      "time": 65.916213,
+      "chord": "G",
+      "duration": 2.020136000000008
+    },
+    {
+      "time": 67.936349,
+      "chord": "D7",
+      "duration": 7.964443999999986
+    },
+    {
+      "time": 75.900793,
+      "chord": "G7",
+      "duration": 3.9357820000000032
+    },
+    {
+      "time": 79.836575,
+      "chord": "D7",
+      "duration": 3.9938330000000093
+    },
+    {
+      "time": 83.830408,
+      "chord": "Asus",
+      "duration": 0.7546479999999889
+    },
+    {
+      "time": 84.585056,
+      "chord": "A",
+      "duration": 1.0813570000000112
+    },
+    {
+      "time": 85.666413,
+      "chord": "Gsus",
+      "duration": 0.7646299999999968
+    },
+    {
+      "time": 86.431043,
+      "chord": "G",
+      "duration": 1.2190470000000033
+    },
+    {
+      "time": 87.65009,
+      "chord": "D7",
+      "duration": 3.7268029999999897
+    },
+    {
+      "time": 91.376893,
+      "chord": "D",
+      "duration": 1.8924260000000004
+    },
+    {
+      "time": 93.269319,
+      "chord": "C",
+      "duration": 1.9853060000000085
+    },
+    {
+      "time": 95.254625,
+      "chord": "F",
+      "duration": 1.9853059999999942
+    },
+    {
+      "time": 97.239931,
+      "chord": "G",
+      "duration": 1.9736970000000014
+    },
+    {
+      "time": 99.213628,
+      "chord": "D7",
+      "duration": 7.999274
+    },
+    {
+      "time": 107.212902,
+      "chord": "G7",
+      "duration": 3.9706120000000027
+    },
+    {
+      "time": 111.183514,
+      "chord": "D7",
+      "duration": 3.947392999999991
+    },
+    {
+      "time": 115.130907,
+      "chord": "Asus",
+      "duration": 0.7430380000000127
+    },
+    {
+      "time": 115.873945,
+      "chord": "A",
+      "duration": 1.1958279999999917
+    },
+    {
+      "time": 117.069773,
+      "chord": "Gsus",
+      "duration": 0.7894780000000026
+    },
+    {
+      "time": 117.859251,
+      "chord": "G",
+      "duration": 1.1726079999999968
+    },
+    {
+      "time": 119.031859,
+      "chord": "D7",
+      "duration": 3.9241719999999987
+    },
+    {
+      "time": 122.956031,
+      "chord": "D",
+      "duration": 1.8808170000000075
+    },
+    {
+      "time": 124.836848,
+      "chord": "Cm9",
+      "duration": 1.9736959999999897
+    },
+    {
+      "time": 126.810544,
+      "chord": "Fm6",
+      "duration": 1.973696000000018
+    },
+    {
+      "time": 128.78424,
+      "chord": "G",
+      "duration": 1.9504759999999806
+    },
+    {
+      "time": 130.734716,
+      "chord": "D",
+      "duration": 3.9938319999999976
+    },
+    {
+      "time": 134.728548,
+      "chord": "D7",
+      "duration": 4.051882000000006
+    },
+    {
+      "time": 138.78043,
+      "chord": "G7",
+      "duration": 3.9473930000000053
+    },
+    {
+      "time": 142.727823,
+      "chord": "D7",
+      "duration": 3.959001999999998
+    },
+    {
+      "time": 146.686825,
+      "chord": "Asus",
+      "duration": 0.8126980000000117
+    },
+    {
+      "time": 147.499523,
+      "chord": "A",
+      "duration": 1.0681179999999983
+    },
+    {
+      "time": 148.567641,
+      "chord": "Gsus",
+      "duration": 0.8010889999999904
+    },
+    {
+      "time": 149.36873,
+      "chord": "G",
+      "duration": 1.1377769999999998
+    },
+    {
+      "time": 150.506507,
+      "chord": "D7",
+      "duration": 3.831292999999988
+    },
+    {
+      "time": 154.3378,
+      "chord": "D",
+      "duration": 1.9040360000000192
+    },
+    {
+      "time": 156.241836,
+      "chord": "Cm9",
+      "duration": 1.9504759999999806
+    },
+    {
+      "time": 158.192312,
+      "chord": "Fm6",
+      "duration": 1.9969170000000247
+    },
+    {
+      "time": 160.189229,
+      "chord": "G",
+      "duration": 1.8343759999999918
+    },
+    {
+      "time": 162.023605,
+      "chord": "N",
+      "duration": 1.6857829999999865
+    }
+  ]
+}

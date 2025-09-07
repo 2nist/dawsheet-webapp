@@ -1,0 +1,172 @@
+from __future__ import annotations
+
+from typing import Any, Dict, List, Tuple
+
+from ..utils.timeline import seconds_to_beats, beats_to_bars, quantize_beats, align_chords_to_grid
+
+
+def analyze_songdoc(jcrd_like: Dict[str, Any]) -> Dict[str, Any]:
+    meta = jcrd_like.get("metadata") or {}
+    bpm = float(meta.get("tempo") or meta.get("bpm") or jcrd_like.get("bpm") or 120.0)
+    time_sig = str(meta.get("time_signature") or jcrd_like.get("timeSignature") or "4/4")
+
+    # Collect chords from chord_progression or sections
+    chords: List[Dict[str, Any]] = []
+    # direct chord list with startBeat (as in tests)
+    for ch in jcrd_like.get("chords", []) or []:
+        if not isinstance(ch, dict):
+            continue
+        if "startBeat" in ch:
+            chords.append({"symbol": ch.get("name") or ch.get("symbol"), "startBeat": float(ch.get("startBeat", 0.0))})
+        else:
+            chords.append({"symbol": ch.get("name") or ch.get("symbol"), "start_sec": float(ch.get("start_sec") or ch.get("time") or 0.0)})
+    # fallbacks
+    if not chords:
+        for it in jcrd_like.get("chord_progression", []) or []:
+            if not isinstance(it, dict):
+                continue
+            chords.append({"symbol": it.get("chord"), "start_sec": float(it.get("time", 0.0))})
+    if not chords:
+        for sec in jcrd_like.get("sections", []) or []:
+            for ch in sec.get("chords", []) or []:
+                chords.append({"symbol": ch.get("chord"), "start_sec": float(ch.get("start_time", 0.0))})
+
+    # Quantized chord beats
+    chords_q_in = []
+    for c in chords:
+        if "startBeat" in c:
+            chords_q_in.append({"symbol": c.get("symbol"), "startBeat": c.get("startBeat")})
+        else:
+            chords_q_in.append({"symbol": c.get("symbol"), "start_sec": c.get("start_sec")})
+    chords_q = align_chords_to_grid(chords_q_in, bpm=bpm, time_sig=time_sig, grid="1/4")
+    chords_q = [{"symbol": c.get("symbol"), "startBeat": c.get("startBeat")} for c in chords_q]
+
+    # Lyrics from jcrd_like. If separate, caller can inject before calling this.
+    lyrics = []
+    lyr_in = jcrd_like.get("lyrics") or []
+    if isinstance(lyr_in, dict):
+        lyr_in = lyr_in.get("lines") or []
+    for ln in lyr_in:
+        if not isinstance(ln, dict):
+            continue
+        lyrics.append({"ts_sec": ln.get("ts_sec"), "text": ln.get("text")})
+
+    # Sections heuristic: every N bars or by gaps in chords
+    sections: List[Dict[str, Any]] = []
+    if chords_q:
+        # simple heuristic: new section every 32 beats (8 bars of 4/4), label alternates Verse/Chorus
+        beats_per_section = 32 if time_sig.startswith("4/") else 24
+        names = ["Verse", "Chorus"]
+        start = 0.0
+        i = 0
+        # rough song length estimate from last chord
+        end_guess = (chords_q[-1]["startBeat"] or 0.0) + 16
+        while start < end_guess:
+            sections.append({
+                "name": names[i % len(names)],
+                "startBeat": round(start, 3),
+                "lengthBeats": beats_per_section,
+                "color": "#5B8DEF" if (i % 2 == 0) else "#F59E0B",
+            })
+            i += 1
+            start += beats_per_section
+
+    # Issues
+    issues: List[str] = []
+    # Overlaps (chords with same startBeat)
+    seen = {}
+    for c in chords_q:
+        sb = c.get("startBeat")
+        if sb in seen:
+            issues.append(f"overlapping chords at beat {sb}")
+        seen[sb] = True
+
+    # Output shape
+    doc = {
+        "title": meta.get("title") or jcrd_like.get("title"),
+        "artist": meta.get("artist") or jcrd_like.get("artist"),
+        "bpm": bpm,
+        "timeSignature": time_sig,
+        "sections": sections,
+        "chords": chords_q,
+        "lyrics": lyrics,
+    }
+    return {**doc, "issues": issues}
+
+
+def analyze_from_content(title: str, artist: str, content: str, *, bpm: float = 120.0, time_sig: str = "4/4") -> Dict[str, Any]:
+    """Heuristic analysis from saved content (No Reply-style).
+    Assumptions: numeric group markers, chord lines above lyric lines, double-space between chords.
+    """
+    chords: List[Dict[str, Any]] = []
+    lyrics: List[Dict[str, Any]] = []
+    current_bar = 1
+    beats_per_bar = 4 if time_sig.startswith("4/") else 3
+    beat_stride = beats_per_bar  # place each chord on new bar by default
+    next_start_beat = 0.0
+    for raw in (content or "").splitlines():
+        s = raw.strip()
+        if not s:
+            continue
+        # group marker line
+        if s.isdigit():
+            try:
+                current_bar = int(s)
+                next_start_beat = (current_bar - 1) * beats_per_bar
+                continue
+            except Exception:
+                pass
+        # crude chord line detection: multiple tokens with letters/numbers separated by double space
+        if "  " in s and not s.startswith("["):
+            parts = [p for p in s.split("  ") if p.strip()]
+            placed = False
+            for p in parts:
+                name = p.strip()
+                if not name or any(c in name for c in "[]:"):
+                    continue
+                chords.append({"symbol": name, "startBeat": round(next_start_beat, 3)})
+                next_start_beat += beat_stride
+                placed = True
+            if placed:
+                continue
+        # else treat as lyric line
+        lyrics.append({"ts_sec": None, "text": s})
+
+    # Sections heuristic: blocks of N bars
+    beats_per_section = 32 if time_sig.startswith("4/") else 24
+    sections: List[Dict[str, Any]] = []
+    if chords:
+        names = ["Verse", "Chorus"]
+        start = 0.0
+        i = 0
+        end_guess = (chords[-1]["startBeat"] or 0.0) + beats_per_section
+        while start < end_guess:
+            sections.append({
+                "name": names[i % len(names)],
+                "startBeat": round(start, 3),
+                "lengthBeats": beats_per_section,
+                "color": "#5B8DEF" if (i % 2 == 0) else "#F59E0B",
+            })
+            start += beats_per_section
+            i += 1
+
+    # Issues
+    issues: List[str] = []
+    seen = set()
+    for c in chords:
+        sb = c["startBeat"]
+        if sb in seen:
+            issues.append(f"overlapping chords at beat {sb}")
+        seen.add(sb)
+
+    doc = {
+        "title": title,
+        "artist": artist,
+        "bpm": bpm,
+        "timeSignature": time_sig,
+        "sections": sections,
+        "chords": chords,
+        "lyrics": lyrics,
+        "issues": issues,
+    }
+    return doc

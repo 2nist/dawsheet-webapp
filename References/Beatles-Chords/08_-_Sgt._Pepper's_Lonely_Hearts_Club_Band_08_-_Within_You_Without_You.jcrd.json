@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "title": "08 - Within_You_Without_You",
+    "artist": "The Beatles",
+    "album": "08 - Sgt._Pepper's_Lonely_Hearts_Club_Band",
+    "key": "Key C#:modal",
+    "tempo": 122,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "08_-_sgt._peppers_lonely_hearts_club_band"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 1.824,
+      "chords": [
+        {
+          "chord": "N",
+          "start_time": 0.0,
+          "end_time": 1.2063
+        }
+      ]
+    },
+    {
+      "name": "intro",
+      "start_time": 1.824,
+      "end_time": 23.328,
+      "chords": []
+    },
+    {
+      "name": "verse",
+      "start_time": 23.328,
+      "end_time": 76.134,
+      "chords": [
+        {
+          "chord": "C#",
+          "start_time": 31.46941,
+          "end_time": 60.391566
+        },
+        {
+          "chord": "F#",
+          "start_time": 60.391566,
+          "end_time": 64.139886
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 76.134,
+      "end_time": 118.926,
+      "chords": []
+    },
+    {
+      "name": "refrain",
+      "start_time": 118.926,
+      "end_time": 143.555,
+      "chords": [
+        {
+          "chord": "C#",
+          "start_time": 127.006105,
+          "end_time": 130.815986
+        },
+        {
+          "chord": "F#",
+          "start_time": 130.815986,
+          "end_time": 135.564467
+        },
+        {
+          "chord": "C#sus",
+          "start_time": 135.564467,
+          "end_time": 136.062925
+        }
+      ]
+    },
+    {
+      "name": "verse_instr",
+      "start_time": 143.555,
+      "end_time": 211.448,
+      "chords": []
+    },
+    {
+      "name": "intro",
+      "start_time": 211.448,
+      "end_time": 221.282,
+      "chords": []
+    },
+    {
+      "name": "verse",
+      "start_time": 221.282,
+      "end_time": 273.463,
+      "chords": []
+    },
+    {
+      "name": "refrain",
+      "start_time": 273.463,
+      "end_time": 304.001,
+      "chords": [
+        {
+          "chord": "F#",
+          "start_time": 273.485331,
+          "end_time": 281.240113
+        },
+        {
+          "chord": "C#",
+          "start_time": 281.240113,
+          "end_time": 284.961655
+        },
+        {
+          "chord": "F#",
+          "start_time": 284.961655,
+          "end_time": 289.594036
+        },
+        {
+          "chord": "C#sus",
+          "start_time": 289.594036,
+          "end_time": 290.028867
+        }
+      ]
+    },
+    {
+      "name": "silence",
+      "start_time": 304.001,
+      "end_time": 305.067,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 1.2063
+    },
+    {
+      "time": 1.2063,
+      "chord": "C#",
+      "duration": 30.26311
+    },
+    {
+      "time": 31.46941,
+      "chord": "C#",
+      "duration": 28.922155999999998
+    },
+    {
+      "time": 60.391566,
+      "chord": "F#",
+      "duration": 3.7483200000000068
+    },
+    {
+      "time": 64.139886,
+      "chord": "C#",
+      "duration": 54.785927
+    },
+    {
+      "time": 118.925813,
+      "chord": "F#",
+      "duration": 8.080292
+    },
+    {
+      "time": 127.006105,
+      "chord": "C#",
+      "duration": 3.8098810000000043
+    },
+    {
+      "time": 130.815986,
+      "chord": "F#",
+      "duration": 4.748480999999998
+    },
+    {
+      "time": 135.564467,
+      "chord": "C#sus",
+      "duration": 0.4984579999999994
+    },
+    {
+      "time": 136.062925,
+      "chord": "C#",
+      "duration": 137.42240599999997
+    },
+    {
+      "time": 273.485331,
+      "chord": "F#",
+      "duration": 7.754782000000034
+    },
+    {
+      "time": 281.240113,
+      "chord": "C#",
+      "duration": 3.7215419999999995
+    },
+    {
+      "time": 284.961655,
+      "chord": "F#",
+      "duration": 4.632381000000009
+    },
+    {
+      "time": 289.594036,
+      "chord": "C#sus",
+      "duration": 0.4348309999999742
+    },
+    {
+      "time": 290.028867,
+      "chord": "C#",
+      "duration": 14.437298999999996
+    },
+    {
+      "time": 304.466166,
+      "chord": "N",
+      "duration": 0.6179160000000365
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "metadata": {
+    "title": "03 - Flying",
+    "artist": "The Beatles",
+    "album": "09 - Magical_Mystery_Tour",
+    "key": "Key C",
+    "tempo": 93,
+    "time_signature": "4/4",
+    "tags": [
+      "beatles",
+      "rock",
+      "09_-_magical_mystery_tour"
+    ],
+    "source": "Isophonics Beatles Dataset"
+  },
+  "sections": [
+    {
+      "name": "silence",
+      "start_time": 0.0,
+      "end_time": 0.383,
+      "chords": []
+    },
+    {
+      "name": "intro",
+      "start_time": 0.383,
+      "end_time": 31.533,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 0.4021,
+          "end_time": 10.885011
+        },
+        {
+          "chord": "F7",
+          "start_time": 10.885011,
+          "end_time": 15.935351
+        },
+        {
+          "chord": "C",
+          "start_time": 15.935351,
+          "end_time": 21.148231
+        },
+        {
+          "chord": "G",
+          "start_time": 21.148231,
+          "end_time": 23.714036
+        },
+        {
+          "chord": "F",
+          "start_time": 23.714036,
+          "end_time": 26.314671
+        },
+        {
+          "chord": "C",
+          "start_time": 26.314671,
+          "end_time": 28.899196
+        },
+        {
+          "chord": "G7",
+          "start_time": 28.899196,
+          "end_time": 31.527551
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 31.533,
+      "end_time": 62.392,
+      "chords": [
+        {
+          "chord": "C7",
+          "start_time": 39.386636,
+          "end_time": 41.89526
+        },
+        {
+          "chord": "F",
+          "start_time": 41.89526,
+          "end_time": 47.02687
+        },
+        {
+          "chord": "C",
+          "start_time": 47.02687,
+          "end_time": 52.14687
+        },
+        {
+          "chord": "G",
+          "start_time": 52.14687,
+          "end_time": 54.712675
+        },
+        {
+          "chord": "F",
+          "start_time": 54.712675,
+          "end_time": 57.27848
+        },
+        {
+          "chord": "C",
+          "start_time": 57.27848,
+          "end_time": 59.802639
+        }
+      ]
+    },
+    {
+      "name": "verse",
+      "start_time": 62.392,
+      "end_time": 93.337,
+      "chords": [
+        {
+          "chord": "C",
+          "start_time": 62.41009,
+          "end_time": 70.095895
+        },
+        {
+          "chord": "C7",
+          "start_time": 70.095895,
+          "end_time": 72.63848
+        },
+        {
+          "chord": "F",
+          "start_time": 72.63848,
+          "end_time": 77.7817
+        },
+        {
+          "chord": "C",
+          "start_time": 77.7817,
+          "end_time": 82.87848
+        },
+        {
+          "chord": "G",
+          "start_time": 82.87848,
+          "end_time": 85.467505
+        },
+        {
+          "chord": "F",
+          "start_time": 85.467505,
+          "end_time": 88.09136
+        }
+      ]
+    },
+    {
+      "name": "outro",
+      "start_time": 93.337,
+      "end_time": 131.749,
+      "chords": [
+        {
+          "chord": "Am",
+          "start_time": 98.205452,
+          "end_time": 110.939281
+        },
+        {
+          "chord": "F#dim",
+          "start_time": 110.939281,
+          "end_time": 130.065191
+        }
+      ]
+    },
+    {
+      "name": "silence",
+      "start_time": 131.749,
+      "end_time": 136.96,
+      "chords": []
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0.0,
+      "chord": "N",
+      "duration": 0.4021
+    },
+    {
+      "time": 0.4021,
+      "chord": "C",
+      "duration": 10.482911
+    },
+    {
+      "time": 10.885011,
+      "chord": "F7",
+      "duration": 5.05034
+    },
+    {
+      "time": 15.935351,
+      "chord": "C",
+      "duration": 5.212879999999998
+    },
+    {
+      "time": 21.148231,
+      "chord": "G",
+      "duration": 2.565805000000001
+    },
+    {
+      "time": 23.714036,
+      "chord": "F",
+      "duration": 2.6006350000000005
+    },
+    {
+      "time": 26.314671,
+      "chord": "C",
+      "duration": 2.5845249999999993
+    },
+    {
+      "time": 28.899196,
+      "chord": "G7",
+      "duration": 2.628354999999999
+    },
+    {
+      "time": 31.527551,
+      "chord": "C",
+      "duration": 7.859085000000004
+    },
+    {
+      "time": 39.386636,
+      "chord": "C7",
+      "duration": 2.5086239999999975
+    },
+    {
+      "time": 41.89526,
+      "chord": "F",
+      "duration": 5.131610000000002
+    },
+    {
+      "time": 47.02687,
+      "chord": "C",
+      "duration": 5.119999999999997
+    },
+    {
+      "time": 52.14687,
+      "chord": "G",
+      "duration": 2.5658049999999974
+    },
+    {
+      "time": 54.712675,
+      "chord": "F",
+      "duration": 2.5658050000000046
+    },
+    {
+      "time": 57.27848,
+      "chord": "C",
+      "duration": 2.5241589999999974
+    },
+    {
+      "time": 59.802639,
+      "chord": "G",
+      "duration": 2.6074509999999975
+    },
+    {
+      "time": 62.41009,
+      "chord": "C",
+      "duration": 7.685805000000002
+    },
+    {
+      "time": 70.095895,
+      "chord": "C7",
+      "duration": 2.5425850000000025
+    },
+    {
+      "time": 72.63848,
+      "chord": "F",
+      "duration": 5.1432199999999995
+    },
+    {
+      "time": 77.7817,
+      "chord": "C",
+      "duration": 5.096779999999995
+    },
+    {
+      "time": 82.87848,
+      "chord": "G",
+      "duration": 2.5890250000000066
+    },
+    {
+      "time": 85.467505,
+      "chord": "F",
+      "duration": 2.623854999999992
+    },
+    {
+      "time": 88.09136,
+      "chord": "C",
+      "duration": 10.114092
+    },
+    {
+      "time": 98.205452,
+      "chord": "Am",
+      "duration": 12.733829
+    },
+    {
+      "time": 110.939281,
+      "chord": "F#dim",
+      "duration": 19.125910000000005
+    },
+    {
+      "time": 130.065191,
+      "chord": "N",
+      "duration": 6.920930999999996
+    }
+  ]
+}

@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import { postJSON, request, errorMessage } from "../lib/api";
 import useSWRMutation from "swr/mutation";
 
 export default function ImportPage() {
+  const router = useRouter();
   const [text, setText] = useState("");
   const [status, setStatus] = useState("");
   const [files, setFiles] = useState<FileList | null>(null);
@@ -10,6 +12,7 @@ export default function ImportPage() {
   const parseUrl = useMemo(() => `${apiBase}/legacy/lyrics/parse`, [apiBase]);
   const importLyricsUrl = useMemo(() => `${apiBase}/import/lyrics`, [apiBase]);
   const importMultiUrl = useMemo(() => `${apiBase}/import/multi`, [apiBase]);
+  const importJsonUrl = useMemo(() => `${apiBase}/import/json`, [apiBase]);
   const { trigger: previewParse, isMutating: previewing } = useSWRMutation(
     importLyricsUrl,
     async (
@@ -31,9 +34,86 @@ export default function ImportPage() {
     sampleTs: (number | null)[];
   } | null>(null);
 
+  // Preview-and-edit state for multi-file imports (JSON, MIDI, TXT, etc.)
+  type SongDraft = { title: string; artist: string; content: string };
+  const [importedSongs, setImportedSongs] = useState<SongDraft[]>([]);
+  const [importErrors, setImportErrors] = useState<string[] | null>(null);
+  const [jsonPreview, setJsonPreview] = useState<any | null>(null);
+  const [lyricsPreview, setLyricsPreview] = useState<any | null>(null);
+  const [lyricsError, setLyricsError] = useState<string | null>(null);
+  const [includeLyrics, setIncludeLyrics] = useState(true);
+  const [barStart, setBarStart] = useState<"auto" | "zero">("auto");
+  const combineUrl = useMemo(
+    () => `${apiBase}/combine/jcrd-lyrics?save=true`,
+    [apiBase]
+  );
+  const combinePreviewUrl = useMemo(
+    () => `${apiBase}/combine/jcrd-lyrics?save=false`,
+    [apiBase]
+  );
+  const [combinedPreview, setCombinedPreview] = useState<any | null>(null);
+  const [lastCombinePayload, setLastCombinePayload] = useState<any | null>(
+    null
+  );
+  const [showBarBeat, setShowBarBeat] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const v = window.localStorage.getItem("showBarBeat");
+      if (v === "true") return true;
+      if (v === "false") return false;
+    }
+    return true; // default to showing bar/beat hints
+  });
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("showBarBeat", String(showBarBeat));
+      }
+    } catch {}
+  }, [showBarBeat]);
+
+  const fetchLyrics = async (title: string, artist: string) => {
+    setLyricsError(null);
+    try {
+      const url = new URL(`${apiBase}/lyrics/search`);
+      url.searchParams.set("title", title);
+      url.searchParams.set("artist", artist);
+      const res = await fetch(url.toString());
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.detail || "Lyrics search failed");
+      return data;
+    } catch (e: any) {
+      setLyricsError(e.message || String(e));
+      return null;
+    }
+  };
+
   const onParse = async () => {
     try {
-      setStatus("Parsing...");
+      // If no pasted text but files are selected (e.g., .json), route through /import/multi
+      if ((!text || text.trim().length === 0) && files && files.length > 0) {
+        setStatus("Importing selected files...");
+        const fd = new FormData();
+        Array.from(files).forEach((f: File) => fd.append("files", f));
+        const r = await request<any>(apiBase + "/import/multi", {
+          method: "POST",
+          body: fd,
+        });
+        const songs = r?.songs || [];
+        setStatus(`Imported ${songs.length} songs. Saving...`);
+        for (const s of songs) {
+          await postJSON(apiBase + "/songs", s);
+        }
+        setStatus("Saved.");
+        return;
+      }
+
+      if (!text || text.trim().length === 0) {
+        setStatus("Nothing to parse. Paste text or choose files.");
+        return;
+      }
+
+      setStatus("Parsing pasted text...");
       const r = await request<any>(apiBase + "/parse", {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
@@ -45,10 +125,20 @@ export default function ImportPage() {
         await postJSON(apiBase + "/songs", s);
       }
       setStatus("Saved.");
+      // After saving parsed text, go to library
+      router.push("/library");
     } catch (e: any) {
       setStatus("Error: " + errorMessage(e));
     }
   };
+
+  // Auto-run combined preview whenever JSON preview is available or settings change
+  useEffect(() => {
+    if (jsonPreview?.preview) {
+      onPreviewCombine();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jsonPreview?.preview, includeLyrics, lyricsPreview]);
 
   const onImportFile = async () => {
     if (!files || files.length === 0) return;
@@ -56,16 +146,64 @@ export default function ImportPage() {
       setStatus("Uploading & parsing files...");
       const fd = new FormData();
       Array.from(files).forEach((f: File) => fd.append("files", f));
-      const r = await request<any>(importMultiUrl, {
-        method: "POST",
-        body: fd,
-      });
-      const songs = r?.songs || [];
-      setStatus(`Imported ${songs.length} songs. Saving...`);
-      for (const s of songs) {
-        await postJSON(apiBase + "/songs", s);
+      const r = await request<any>(
+        importMultiUrl + `?include_lyrics=${includeLyrics ? "true" : "false"}`,
+        {
+          method: "POST",
+          body: fd,
+        }
+      );
+      const songs = (r?.songs || []) as SongDraft[];
+      setImportedSongs(songs);
+      setImportErrors(r?.errors || null);
+      setStatus(
+        `Ready: ${songs.length} songs. Review & Edit below, then Save.`
+      );
+    } catch (e: any) {
+      setStatus("Error: " + errorMessage(e));
+    }
+  };
+
+  // One-click best-effort: get chords+lyrics, sync, and save
+  const onAutoBuildBestEffort = async () => {
+    try {
+      setStatus("Building best-effort version…");
+      // 1) If files selected, let backend do best-effort combine and return songs, then save all
+      if (files && files.length > 0) {
+        const fd = new FormData();
+        Array.from(files).forEach((f: File) => fd.append("files", f));
+        const r = await request<any>(importMultiUrl + `?include_lyrics=true`, {
+          method: "POST",
+          body: fd,
+        });
+        const songs = (r?.songs || []) as SongDraft[];
+        for (const s of songs) {
+          await postJSON(apiBase + "/songs", s);
+        }
+        setStatus(`Built & saved ${songs.length} song(s).`);
+        router.push("/library");
+        return;
       }
-      setStatus("Saved.");
+      // 2) If JSON preview exists (single file path), combine and save with include_lyrics=true
+      if (jsonPreview?.preview) {
+        const payload = {
+          jcrd: jsonPreview.preview,
+          lyrics: { lines: lyricsPreview?.lines || [] },
+          title: jsonPreview.summary?.title || "Untitled",
+          artist: jsonPreview.summary?.artist || "",
+          include_lyrics: true,
+        };
+        const res = await postJSON(combineUrl, payload);
+        setStatus(`Built & saved: ${res?.song?.id ?? "ok"}`);
+        router.push("/library");
+        return;
+      }
+      // 3) Fallback: pasted text -> parse & save
+      if (text && text.trim().length > 0) {
+        await onParse();
+        return;
+      }
+      setStatus("Nothing to build. Upload files or paste/preview first.");
     } catch (e: any) {
       setStatus("Error: " + errorMessage(e));
     }
@@ -83,19 +221,45 @@ export default function ImportPage() {
       ) {
         const first = (files[0] as File) || (Array.from(files) as File[])[0];
         const name = first.name.toLowerCase();
+        if (name.endsWith(".json")) {
+          const fd = new FormData();
+          fd.append("file", first);
+          const res = await fetch(
+            importJsonUrl +
+              `?include_lyrics=${includeLyrics ? "true" : "false"}`,
+            { method: "POST", body: fd }
+          );
+          const data = await res.json();
+          setJsonPreview(data);
+          // Auto-populate lyricsPreview if backend auto_combined included lines
+          const auto = (data && data.auto_combined) || null;
+          if (auto && includeLyrics && Array.isArray(auto.lines)) {
+            setLyricsPreview({
+              lines: auto.lines.map((l: any) => ({
+                ts_sec: l.ts_sec ?? null,
+                text: l.text ?? "",
+              })),
+            });
+          }
+          if (auto && auto.content) {
+            setCombinedPreview(auto);
+          } else {
+            setCombinedPreview(null);
+          }
+          setPreview(null);
+          return;
+        }
         const isTextLyrics = [".lrc", ".vtt", ".txt", ".csv"].some((ext) =>
           name.endsWith(ext)
         );
         if (isTextLyrics) {
           payload = await first.text();
           fname = first.name;
-        } else if (name.endsWith(".json") || name.endsWith(".jcrd.json")) {
-          payload = await first.text();
-          fname = first.name;
         }
       }
       const r = await previewParse({ text: payload || "", filename: fname });
       const lines = Array.isArray(r?.lines) ? r.lines : [];
+      setJsonPreview(null);
       setPreview({
         count: lines.length,
         sample: lines.slice(0, 10).map((l: any) => l?.text ?? ""),
@@ -105,6 +269,115 @@ export default function ImportPage() {
       });
     } catch (e) {
       setPreview({ count: 0, sample: [], sampleTs: [] });
+    }
+  };
+
+  const onSaveAll = async () => {
+    if (!importedSongs.length) return;
+    try {
+      setStatus("Saving songs...");
+      for (const s of importedSongs) {
+        await postJSON(apiBase + "/songs", s);
+      }
+      setStatus("Saved.");
+      setImportedSongs([]);
+      // Navigate to library after successful save
+      router.push("/library");
+    } catch (e: any) {
+      setStatus("Error: " + errorMessage(e));
+    }
+  };
+
+  const onAttachFetchedLyrics = async () => {
+    try {
+      if (!lyricsPreview || !jsonPreview?.summary?.title) return;
+      const title = jsonPreview.summary.title as string;
+      const artist = (jsonPreview.summary.artist || "") as string;
+      const lines = (lyricsPreview.lines || []) as {
+        ts_sec: number | null;
+        text: string;
+      }[];
+      const content = lines
+        .filter((l) => (l.text || "").trim().length > 0)
+        .map((l) =>
+          typeof l.ts_sec === "number"
+            ? `[${l.ts_sec.toFixed(2)}] ${l.text}`
+            : l.text
+        )
+        .join("\n");
+      const song = await postJSON(apiBase + "/songs", {
+        title,
+        artist,
+        content,
+      });
+      setStatus(`Created song #${song.id} with fetched lyrics`);
+      router.push("/library");
+    } catch (e: any) {
+      setStatus("Error: " + errorMessage(e));
+    }
+  };
+
+  const onCombineAndSave = async () => {
+    try {
+      if (!jsonPreview?.preview) return;
+      const payload = {
+        jcrd: jsonPreview.preview,
+        lyrics: { lines: lyricsPreview?.lines || [] },
+        title: jsonPreview.summary?.title || "Untitled",
+        artist: jsonPreview.summary?.artist || "",
+        include_lyrics: includeLyrics,
+      };
+      const res = await postJSON(combineUrl, payload);
+      setStatus(`Combined and saved: ${res?.song?.id ?? "ok"}`);
+      router.push("/library");
+    } catch (e: any) {
+      setStatus("Error: " + errorMessage(e));
+    }
+  };
+
+  const onPreviewCombine = async () => {
+    try {
+      if (!jsonPreview?.preview) return;
+      const payload = {
+        jcrd: jsonPreview.preview,
+        lyrics: { lines: lyricsPreview?.lines || [] },
+        title: jsonPreview.summary?.title || "Untitled",
+        artist: jsonPreview.summary?.artist || "",
+        include_lyrics: includeLyrics,
+      };
+      setLastCombinePayload(payload);
+      const res = await postJSON(combinePreviewUrl, {
+        ...payload,
+        bar_start: barStart,
+      });
+      setCombinedPreview(res);
+      setStatus("Preview ready");
+    } catch (e: any) {
+      setStatus("Error: " + errorMessage(e));
+      setCombinedPreview(null);
+    }
+  };
+
+  const onSaveCombinedPreview = async () => {
+    try {
+      const payload =
+        lastCombinePayload ||
+        (jsonPreview?.preview && {
+          jcrd: jsonPreview.preview,
+          lyrics: { lines: lyricsPreview?.lines || [] },
+          title: jsonPreview.summary?.title || "Untitled",
+          artist: jsonPreview.summary?.artist || "",
+          include_lyrics: includeLyrics,
+        });
+      if (!payload) return;
+      const res = await postJSON(combineUrl, {
+        ...payload,
+        bar_start: barStart,
+      });
+      setStatus(`Saved: ${res?.song?.id ?? "ok"}`);
+      router.push("/library");
+    } catch (e: any) {
+      setStatus("Error: " + errorMessage(e));
     }
   };
 
@@ -149,6 +422,13 @@ export default function ImportPage() {
               >
                 Import Files
               </button>
+              <button
+                className="btn"
+                style={{ marginLeft: 8 }}
+                onClick={onAutoBuildBestEffort}
+              >
+                Auto Build & Save (best effort)
+              </button>
             </div>
           </section>
 
@@ -176,6 +456,12 @@ export default function ImportPage() {
               <span className="text-sm" style={{ color: "#6b7280" }}>
                 {status}
               </span>
+              {!text && files && files.length > 0 && (
+                <span className="text-xs" style={{ color: "#9ca3af" }}>
+                  Tip: With no pasted text, Parse & Save will import selected
+                  files.
+                </span>
+              )}
             </div>
           </section>
 
@@ -208,6 +494,279 @@ export default function ImportPage() {
                   No previewable lines for this input.
                 </div>
               )}
+            </div>
+          )}
+
+          {jsonPreview && (
+            <div
+              className="card mt-4"
+              style={{ background: "#fff", color: "#111" }}
+            >
+              <div className="mb-2 text-lg font-medium">JSON preview</div>
+              <div className="text-sm" style={{ color: "#4b5563" }}>
+                File: {jsonPreview?.filename} • Size: {jsonPreview?.size_bytes}{" "}
+                bytes
+              </div>
+              <div className="mt-2 text-sm">Summary:</div>
+              <pre
+                className="mt-1 text-xs overflow-auto"
+                style={{ maxHeight: 240 }}
+              >
+                {JSON.stringify(jsonPreview?.summary, null, 2)}
+              </pre>
+              <div className="mt-2 flex items-center gap-4">
+                <input
+                  id="includeLyrics"
+                  type="checkbox"
+                  checked={includeLyrics}
+                  onChange={(e) => setIncludeLyrics(e.target.checked)}
+                />
+                <label htmlFor="includeLyrics" className="text-sm">
+                  Include lyrics (auto-fetch on import)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="showBarBeat"
+                    type="checkbox"
+                    checked={showBarBeat}
+                    onChange={(e) => setShowBarBeat(e.target.checked)}
+                  />
+                  <label htmlFor="showBarBeat" className="text-sm">
+                    Show bar/beat hints
+                  </label>
+                </div>
+                {/* Hidden/advanced: bar start mode; keep default to auto */}
+                <div className="hidden items-center gap-2">
+                  <label className="text-sm">Bar start:</label>
+                  <select
+                    value={barStart}
+                    onChange={(e) => setBarStart(e.target.value as any)}
+                    className="text-sm"
+                  >
+                    <option value="auto">Auto</option>
+                    <option value="zero">Zero</option>
+                  </select>
+                </div>
+              </div>
+              <div className="mt-2 flex items-center gap-2">
+                <button className="btn" onClick={onPreviewCombine}>
+                  Preview Combined
+                </button>
+                <button className="btn" onClick={onSaveCombinedPreview}>
+                  Save Combined
+                </button>
+              </div>
+              {jsonPreview?.summary?.title && (
+                <div className="mt-3">
+                  <button
+                    className="btn"
+                    onClick={async () => {
+                      const data = await fetchLyrics(
+                        jsonPreview.summary.title,
+                        jsonPreview.summary.artist || ""
+                      );
+                      if (data) setLyricsPreview(data);
+                    }}
+                  >
+                    Fetch Timestamped Lyrics
+                  </button>
+                  {lyricsError && (
+                    <div className="text-sm mt-2" style={{ color: "#b91c1c" }}>
+                      {lyricsError}
+                    </div>
+                  )}
+                  {lyricsPreview && (
+                    <div className="mt-2 text-sm">
+                      <div>
+                        Matched: <b>{String(lyricsPreview.matched)}</b>, Synced:{" "}
+                        <b>{String(lyricsPreview.synced)}</b>
+                      </div>
+                      <pre className="mt-2 p-3 rounded-lg bg-black/80 text-white overflow-auto text-xs max-h-64">
+                        {JSON.stringify(
+                          (lyricsPreview.lines || []).slice(0, 30),
+                          null,
+                          2
+                        )}
+                      </pre>
+                      <div className="mt-2">
+                        <button className="btn" onClick={onAttachFetchedLyrics}>
+                          Save as New Song
+                        </button>
+                        <button
+                          className="btn"
+                          style={{ marginLeft: 8 }}
+                          onClick={onCombineAndSave}
+                        >
+                          Combine Chords + Lyrics & Save
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {combinedPreview?.content && (
+                <div className="mt-3">
+                  <div className="text-sm font-medium">
+                    Combined master preview
+                  </div>
+                  <pre className="mt-2 p-3 rounded-lg bg-black/80 text-white overflow-auto text-xs max-h-80">
+                    {(() => {
+                      if (
+                        !showBarBeat ||
+                        !Array.isArray(combinedPreview?.lines)
+                      ) {
+                        return combinedPreview.content;
+                      }
+                      try {
+                        const lines = combinedPreview.lines as Array<any>;
+                        const out: string[] = [];
+                        for (const cl of lines) {
+                          const chords = Array.isArray(cl?.chords)
+                            ? cl.chords
+                            : [];
+                          const header = chords
+                            .filter((c: any) => c && c.chord)
+                            .map((c: any) => {
+                              const chord = String(c.chord);
+                              const b =
+                                typeof c.bar === "number" ? c.bar : null;
+                              const bi =
+                                typeof c.beat_in_bar === "number"
+                                  ? c.beat_in_bar
+                                  : null;
+                              if (b && bi !== null)
+                                return `${chord} (${b}:${(bi as number).toFixed(
+                                  1
+                                )})`;
+                              return chord;
+                            })
+                            .join("  ");
+                          if (header) out.push(header);
+                          const text = String(cl?.text ?? "");
+                          out.push(text);
+                        }
+                        return out.join("\n");
+                      } catch {
+                        return combinedPreview.content;
+                      }
+                    })()}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
+
+          {importedSongs.length > 0 && (
+            <div
+              className="card mt-4"
+              style={{ background: "#fff", color: "#111" }}
+            >
+              <div className="mb-2 text-lg font-medium">Review & Edit</div>
+              {importErrors && (
+                <div className="text-sm mb-2" style={{ color: "#b91c1c" }}>
+                  {importErrors.join("; ")}
+                </div>
+              )}
+              <div className="space-y-4">
+                {importedSongs.map((s, idx) => (
+                  <div key={idx} className="border border-border rounded p-3">
+                    <div
+                      className="grid gap-2"
+                      style={{ gridTemplateColumns: "1fr 1fr" }}
+                    >
+                      <div>
+                        <label className="block text-xs text-gray-500">
+                          Title
+                        </label>
+                        <input
+                          className="w-full"
+                          style={{
+                            background: "#fafafa",
+                            color: "#111",
+                            borderRadius: "var(--radius)",
+                            padding: 8,
+                          }}
+                          value={s.title}
+                          onChange={(e) => {
+                            const v = e.target.value;
+                            setImportedSongs((prev) =>
+                              prev.map((it, i) =>
+                                i === idx ? { ...it, title: v } : it
+                              )
+                            );
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-500">
+                          Artist
+                        </label>
+                        <input
+                          className="w-full"
+                          style={{
+                            background: "#fafafa",
+                            color: "#111",
+                            borderRadius: "var(--radius)",
+                            padding: 8,
+                          }}
+                          value={s.artist}
+                          onChange={(e) => {
+                            const v = e.target.value;
+                            setImportedSongs((prev) =>
+                              prev.map((it, i) =>
+                                i === idx ? { ...it, artist: v } : it
+                              )
+                            );
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <label className="block text-xs text-gray-500">
+                        Content
+                      </label>
+                      <textarea
+                        className="w-full mt-1"
+                        style={{
+                          height: 120,
+                          background: "#fafafa",
+                          color: "#111",
+                          borderRadius: "var(--radius)",
+                          padding: 8,
+                        }}
+                        value={s.content}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setImportedSongs((prev) =>
+                            prev.map((it, i) =>
+                              i === idx ? { ...it, content: v } : it
+                            )
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3">
+                <button className="btn" onClick={onSaveAll}>
+                  Save All
+                </button>
+                <button
+                  className="btn"
+                  style={{ marginLeft: 8 }}
+                  onClick={() => router.push("/library")}
+                >
+                  Go to Library
+                </button>
+                <button
+                  className="btn"
+                  style={{ marginLeft: 8 }}
+                  onClick={() => router.push("/")}
+                >
+                  Back to Home
+                </button>
+              </div>
             </div>
           )}
         </div>
