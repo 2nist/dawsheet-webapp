@@ -9,14 +9,11 @@ type Song = { id: number; title: string; artist: string; content: string };
 
 export default function LibraryPage() {
   const url = `${apiBase}/songs`;
-  const { data, error, isLoading } = useSWR<Song[]>(
-    url,
-    async (u) => {
-      const res = await fetch(u);
-      if (!res.ok) throw new Error(await res.text());
-      return res.json();
-    }
-  );
+  const { data, error, isLoading } = useSWR<Song[]>(url, async (u) => {
+    const res = await fetch(u);
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  });
   const songs = data || [];
   return (
     <main style={{ padding: 24 }}>
@@ -35,7 +32,15 @@ export default function LibraryPage() {
           Error: {String(error)}
         </div>
       )}
-      <ul style={{ marginTop: 16, listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+      <ul
+        style={{
+          marginTop: 16,
+          listStyle: "none",
+          padding: 0,
+          display: "grid",
+          gap: 8,
+        }}
+      >
         {songs.map((s) => (
           <li
             key={s.id}
@@ -48,7 +53,11 @@ export default function LibraryPage() {
               padding: 12,
             }}
           >
-            <LibraryItem song={s} apiBase={apiBase} onChanged={() => mutate(url)} />
+            <LibraryItem
+              song={s}
+              apiBase={apiBase}
+              onChanged={() => mutate(url)}
+            />
           </li>
         ))}
       </ul>
@@ -142,7 +151,14 @@ function LibraryItem({
 
   return (
     <div style={{ display: "grid", gap: 8 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
         <div>
           <strong>
             <Link href={`/songs/${song.id}`}>{song.title}</Link>
@@ -156,10 +172,18 @@ function LibraryItem({
           <button onClick={() => setIsEditing(true)} disabled={busy}>
             Edit
           </button>
-          <button onClick={onDelete} disabled={busy} style={{ color: "#fca5a5" }}>
+          <button
+            onClick={onDelete}
+            disabled={busy}
+            style={{ color: "#fca5a5" }}
+          >
             Delete
           </button>
-          <button onClick={() => setExpanded((v) => !v)} aria-expanded={expanded} aria-controls={`lib-${song.id}-content`}>
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            aria-controls={`lib-${song.id}-content`}
+          >
             {expanded ? "Collapse" : "Expand"}
           </button>
         </div>

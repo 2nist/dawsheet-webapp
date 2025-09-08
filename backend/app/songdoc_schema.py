@@ -1,0 +1,156 @@
+SONG_DRAFT_SCHEMA = {
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://dawsheet.dev/spec/song_draft.schema.json",
+	"title": "DAWSheet SongDocDraft v1",
+	"type": "object",
+	"required": ["v", "draftId", "status", "createdAt", "source"],
+	"additionalProperties": False,
+	"properties": {
+		"v": {"const": 1},
+		"draftId": {"type": "string", "minLength": 1},
+		"status": {"type": "string", "enum": ["pending", "analyzing", "draft_ready", "error", "promoted"]},
+		"createdAt": {"type": "string", "format": "date-time"},
+		"updatedAt": {"type": "string", "format": "date-time"},
+		"source": {
+			"type": "object",
+			"additionalProperties": False,
+			"properties": {
+				"recordingId": {"type": "string"},
+				"filePath": {"type": "string"},
+				"storage": {"type": "string", "enum": ["local", "supabase", "s3", "gdrive"]},
+				"format": {"type": "string", "enum": ["wav", "webm", "mp3", "flac", "aiff", "other"]},
+				"durationSec": {"type": "number", "minimum": 0},
+				"sampleRate": {"type": "integer", "minimum": 8000},
+				"channels": {"type": "integer", "minimum": 1},
+			},
+		},
+		"meta": {
+			"type": "object",
+			"additionalProperties": False,
+			"properties": {
+				"title": {"type": "string"},
+				"artist": {"type": "string"},
+				"album": {"type": "string"},
+				"key": {"type": "string"},
+				"mode": {"type": "string"},
+				"timeSig": {"type": "string", "pattern": r"^\d+/\d+$"},
+				"bpm": {
+					"type": "object",
+					"additionalProperties": False,
+					"properties": {
+						"value": {"type": "number", "minimum": 1},
+						"confidence": {"type": "number", "minimum": 0, "maximum": 1},
+						"candidates": {"type": "array", "items": {"type": "number", "minimum": 1}},
+					},
+				},
+			},
+		},
+		"sections": {"type": "array", "items": {"$ref": "#/$defs/section"}},
+		"chords": {"type": "array", "items": {"$ref": "#/$defs/chord"}},
+		"lyrics": {"type": "array", "items": {"$ref": "#/$defs/lyricLine"}},
+		"tempoMap": {
+			"type": "object",
+			"additionalProperties": False,
+			"properties": {
+				"bpmBase": {"type": "number", "minimum": 1},
+				"timeSig": {"type": "string", "pattern": r"^\d+/\d+$"},
+				"beats": {"type": "array", "items": {"$ref": "#/$defs/beat"}},
+				"markers": {"type": "array", "items": {"$ref": "#/$defs/marker"}},
+			},
+		},
+		"analysis": {
+			"type": "object",
+			"additionalProperties": False,
+			"properties": {
+				"jobId": {"type": "string"},
+				"startedAt": {"type": "string", "format": "date-time"},
+				"completedAt": {"type": "string", "format": "date-time"},
+				"providers": {
+					"type": "object",
+					"additionalProperties": False,
+					"properties": {
+						"id": {"type": "string", "enum": ["acrcloud", "audd", "none"]},
+						"lyrics": {"type": "string", "enum": ["lrclib", "stt_whisper", "none"]},
+						"tempo": {"type": "string", "enum": ["librosa", "madmom", "other"]},
+						"chords": {"type": "string", "enum": ["chordino", "essentia", "none"]},
+					},
+				},
+				"errors": {"type": "array", "items": {"$ref": "#/$defs/analysisError"}},
+			},
+		},
+		"notes": {"type": "string"},
+	},
+	"$defs": {
+		"section": {
+			"type": "object",
+			"additionalProperties": False,
+			"required": ["name", "startBeat", "lengthBeats"],
+			"properties": {
+				"name": {"type": "string", "enum": [
+					"Intro", "Verse", "Pre", "Chorus", "Post", "Bridge", "Solo", "Outro", "Break", "Other"
+				]},
+				"startBeat": {"type": "number", "minimum": 0},
+				"lengthBeats": {"type": "number", "minimum": 1},
+				"color": {"type": "string", "pattern": r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"},
+				"confidence": {"type": "number", "minimum": 0, "maximum": 1},
+				"source": {"type": "string", "enum": ["analysis", "import", "user"]},
+			},
+		},
+		"chord": {
+			"type": "object",
+			"additionalProperties": False,
+			"required": ["symbol", "startBeat"],
+			"properties": {
+				"symbol": {"type": "string"},
+				"startBeat": {"type": "number", "minimum": 0},
+				"lengthBeats": {"type": "number", "minimum": 0},
+				"degree": {"type": "string"},
+				"confidence": {"type": "number", "minimum": 0, "maximum": 1},
+				"source": {"type": "string", "enum": ["analysis", "import", "user"]},
+			},
+		},
+		"lyricLine": {
+			"type": "object",
+			"additionalProperties": False,
+			"required": ["text"],
+			"properties": {
+				"ts_sec": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+				"text": {"type": "string"},
+				"beat": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+				"source": {"type": "string", "enum": ["lrclib", "stt_whisper", "import", "user"]},
+				"confidence": {"type": "number", "minimum": 0, "maximum": 1},
+			},
+		},
+		"beat": {
+			"type": "object",
+			"additionalProperties": False,
+			"required": ["i", "timeSec"],
+			"properties": {
+				"i": {"type": "integer", "minimum": 0},
+				"timeSec": {"type": "number", "minimum": 0},
+				"bar": {"type": "integer", "minimum": 1},
+				"beatInBar": {"type": "integer", "minimum": 1},
+			},
+		},
+		"marker": {
+			"type": "object",
+			"additionalProperties": False,
+			"required": ["name", "timeSec"],
+			"properties": {
+				"name": {"type": "string"},
+				"timeSec": {"type": "number", "minimum": 0},
+				"bar": {"type": "integer", "minimum": 1},
+				"beatInBar": {"type": "integer", "minimum": 1},
+			},
+		},
+		"analysisError": {
+			"type": "object",
+			"additionalProperties": False,
+			"properties": {
+				"stage": {"type": "string", "enum": ["id", "lyrics", "tempo", "sections", "chords", "other"]},
+				"message": {"type": "string"},
+				"fatal": {"type": "boolean"},
+			},
+		},
+	},
+}

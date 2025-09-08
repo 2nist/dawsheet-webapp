@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
+import re
 
 from ..utils.timeline import seconds_to_beats, beats_to_bars, quantize_beats, align_chords_to_grid
 
@@ -104,6 +105,28 @@ def analyze_from_content(title: str, artist: str, content: str, *, bpm: float = 
     beats_per_bar = 4 if time_sig.startswith("4/") else 3
     beat_stride = beats_per_bar  # place each chord on new bar by default
     next_start_beat = 0.0
+    # Chord token matcher (e.g., C, F#m7, Bbmaj7/G)
+    chord_re = re.compile(r"^(?:N|[A-G](?:#|b)?(?:(?:maj|min|m|dim|aug|sus(?:2|4)?|add\d+|M7|maj7|m7|dim7|\+|°)?\d*(?:sus\d+)?)?(?:/[A-G](?:#|b)?)?)$")
+
+    def parse_chord_line(s: str) -> List[str]:
+        # Remove barlines and extra punctuation used for grids
+        s_clean = s.replace("|", " ").replace("‖", " ").replace("·", " ").replace("—", " ")
+        s_clean = re.sub(r"\s+", " ", s_clean.strip())
+        if not s_clean:
+            return []
+        parts = [p for p in s_clean.split(" ") if p]
+        # Consider it a chord line if all tokens look like chords and at least 1-2 tokens exist
+        chord_like = [p for p in parts if chord_re.match(p)]
+        if chord_like and len(chord_like) == len(parts):
+            return chord_like
+        # Fallback to double-space heuristic (legacy No Reply-style)
+        if "  " in s and not s.startswith("["):
+            parts2 = [p for p in s.split("  ") if p.strip()]
+            chord_like2 = [p.strip() for p in parts2 if chord_re.match(p.strip())]
+            if chord_like2 and len(chord_like2) == len(parts2):
+                return chord_like2
+        return []
+
     for raw in (content or "").splitlines():
         s = raw.strip()
         if not s:
@@ -116,19 +139,13 @@ def analyze_from_content(title: str, artist: str, content: str, *, bpm: float = 
                 continue
             except Exception:
                 pass
-        # crude chord line detection: multiple tokens with letters/numbers separated by double space
-        if "  " in s and not s.startswith("["):
-            parts = [p for p in s.split("  ") if p.strip()]
-            placed = False
-            for p in parts:
-                name = p.strip()
-                if not name or any(c in name for c in "[]:"):
-                    continue
+        # chord line detection (supports single- or multi-space separated tokens, with optional barlines)
+        chord_tokens = parse_chord_line(s)
+        if chord_tokens:
+            for name in chord_tokens:
                 chords.append({"symbol": name, "startBeat": round(next_start_beat, 3)})
                 next_start_beat += beat_stride
-                placed = True
-            if placed:
-                continue
+            continue
         # else treat as lyric line
         lyrics.append({"ts_sec": None, "text": s})
 

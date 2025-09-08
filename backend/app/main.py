@@ -12,12 +12,13 @@ from .legacy.router import router as legacy_router
 from .routers import import_json as import_json_router
 from .routers import import_lyrics as import_lyrics_router
 from .routers import import_mixed as import_mixed_router
-from .routers import import_mixed as import_mixed_router
 from .routers import import_lyrics as import_lyrics_router
 from .routers import convert as convert_router
 from .routers import lyrics_search as lyrics_search_router
 from .routers import combine as combine_router
 from .routers import songs_v1 as songs_v1_router
+from .routers import recordings as recordings_router
+from .routers import drafts as drafts_router
 from .importers import import_json_file, import_midi_file, import_mp3_file
 
 app = FastAPI(title="DAWSheet API")
@@ -35,18 +36,32 @@ app.include_router(legacy_router, prefix="/legacy", tags=["legacy"])
 app.include_router(import_json_router.router)
 app.include_router(import_lyrics_router.router)
 app.include_router(import_mixed_router.router)
-app.include_router(import_mixed_router.router)
 app.include_router(import_lyrics_router.router)
 app.include_router(convert_router.router)
 app.include_router(lyrics_search_router.router)
 app.include_router(combine_router.router)
 app.include_router(songs_v1_router.router)
+app.include_router(recordings_router.router)
+app.include_router(drafts_router.router)
 
 @app.on_event("startup")
 async def on_startup():
     # Auto-create tables for dev; in prod use Alembic migrations
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Light-touch dev migration: ensure new columns exist on song_drafts
+        try:
+            await conn.exec_driver_sql(
+                """
+                ALTER TABLE song_drafts ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP;
+                ALTER TABLE song_drafts ADD COLUMN IF NOT EXISTS status VARCHAR(32) DEFAULT 'draft_ready';
+                ALTER TABLE song_drafts ADD COLUMN IF NOT EXISTS song_id INTEGER REFERENCES songs(id);
+                ALTER TABLE song_drafts ADD COLUMN IF NOT EXISTS notes TEXT;
+                """
+            )
+        except Exception:
+            # Ignore errors in dev migration
+            pass
 
 @app.get("/")
 async def health():

@@ -6,8 +6,10 @@ from typing import List, Dict, Tuple, Any
 
 try:
     from .utils.tempo import convert_jcrd as _convert_jcrd
+    from .utils.align import chords_only_text as _chords_only
 except Exception:  # pragma: no cover - fallback for import contexts
     _convert_jcrd = None  # type: ignore
+    _chords_only = None  # type: ignore
 
 
 def _decode_bytes(data: bytes) -> str:
@@ -24,10 +26,18 @@ def import_json_file(filename: str, data: bytes) -> Tuple[List[Dict[str, str]], 
     try:
         obj = json.loads(text)
         if isinstance(obj, dict):
-            # Special case: JCRD chord JSON with timing and tempo -> convert to beats/bars
-            if _looks_like_jcrd(obj) and _convert_jcrd:
-                converted = _convert_jcrd(obj)
-                songs.extend(_render_converted_jcrd(filename, converted, warnings))
+            # Special case: JCRD chord JSON with timing and tempo -> render No Reply-style content
+            if _looks_like_jcrd(obj) and _chords_only:
+                try:
+                    chord_text = _chords_only(obj)
+                    meta = obj.get("metadata") or {}
+                    title = str(meta.get("title") or obj.get("title") or "Untitled").strip()
+                    artist = str(meta.get("artist") or obj.get("artist") or "").strip()
+                    content = chord_text.get("content") or f"Converted from {filename}"
+                    songs.append({"title": title or "Untitled", "artist": artist, "content": content})
+                except Exception as e:
+                    warnings.append(f"{filename}: JCRD conversion failed: {e}")
+                    songs.extend(_normalize_song_obj(obj, warnings))
             elif "songs" in obj and isinstance(obj["songs"], list):
                 for s in obj["songs"]:
                     songs.extend(_normalize_song_obj(s, warnings))
@@ -53,44 +63,15 @@ def _looks_like_jcrd(obj: Dict[str, Any]) -> bool:
 
 
 def _render_converted_jcrd(filename: str, conv: Dict[str, Any], warnings: List[str]) -> List[Dict[str, str]]:
-    """Render converted JCRD object to a Song dict with human-readable content."""
-    meta = conv.get("metadata") or {}
-    title = str(meta.get("title") or meta.get("name") or "Untitled").strip()
-    artist = str(meta.get("artist") or "").strip()
-    header = [
-        f"Title: {title}",
-        f"Artist: {artist}",
-        f"Time: {meta.get('time_signature', '4/4')}  BPM: {meta.get('bpm')}  qBPM: {meta.get('qbpm')}  qBeats/Bar: {meta.get('quarter_beats_per_bar')}",
-        "",
-    ]
-
-    lines: List[str] = []
-    sections = conv.get("sections") or []
-    if isinstance(sections, list) and sections:
-        for sec in sections:
-            name = sec.get("name") or "section"
-            lines.append(f"[{name}]")
-            for ch in sec.get("chords", []) or []:
-                lines.append(
-                    f"{ch.get('chord')}  @ bar {ch.get('start_bar')} beat {ch.get('start_beat_in_bar')}  "
-                    f"for {ch.get('duration_bars')} bars ({ch.get('duration_qbeats')} qbeats)"
-                )
-            lines.append("")
-
-    prog = conv.get("chord_progression") or []
-    if isinstance(prog, list) and prog:
-        lines.append("[progression]")
-        for it in prog:
-            lines.append(
-                f"{it.get('chord')}  @ bar {it.get('start_bar')} beat {it.get('start_beat_in_bar')}  "
-                f"for {it.get('duration_bars')} bars ({it.get('duration_qbeats')} qbeats)"
-            )
-        lines.append("")
-
-    content = "\n".join(header + lines).strip()
-    if not content:
+    """Deprecated pretty renderer retained for compatibility; prefer chords_only pipeline."""
+    try:
+        meta = conv.get("metadata") or {}
+        title = str(meta.get("title") or meta.get("name") or "Untitled").strip()
+        artist = str(meta.get("artist") or "").strip()
         content = f"Converted from {filename}"
-    return [{"title": title or "Untitled", "artist": artist, "content": content}]
+        return [{"title": title or "Untitled", "artist": artist, "content": content}]
+    except Exception:
+        return [{"title": "Untitled", "artist": "", "content": f"Converted from {filename}"}]
 
 
 def _normalize_song_obj(o: dict, warnings: List[str]) -> List[Dict[str, str]]:
@@ -101,6 +82,48 @@ def _normalize_song_obj(o: dict, warnings: List[str]) -> List[Dict[str, str]]:
     title = str(o.get("title") or o.get("name") or "Untitled").strip()
     artist = str(o.get("artist") or o.get("composer") or "").strip()
     content = str(o.get("content") or o.get("lyrics") or "").strip()
+    # If chords exist in a SongDoc-like shape, synthesize analyzable content
+    try:
+        chords = o.get("chords")
+        if isinstance(chords, list) and chords and not content:
+            # Determine beats-per-bar from metadata/timeSig fields
+            meta = o.get("metadata") if isinstance(o.get("metadata"), dict) else {}
+            ts = str(meta.get("time_signature") or o.get("timeSignature") or o.get("time_sig") or "4/4")
+            try:
+                num = int(str(ts).split("/", 1)[0])
+            except Exception:
+                num = 4
+            beats_per_bar = max(1, num)
+            # Extract symbols + startBeat
+            rows: List[Tuple[str, float]] = []
+            for ch in chords:
+                if not isinstance(ch, dict):
+                    continue
+                sym = ch.get("symbol") or ch.get("name") or ch.get("chord")
+                sb = ch.get("startBeat") if ch.get("startBeat") is not None else ch.get("start")
+                if sym is None or sb is None:
+                    continue
+                try:
+                    rows.append((str(sym), float(sb)))
+                except Exception:
+                    continue
+            rows.sort(key=lambda x: x[1])
+            # Render as No Reply-style: group markers at bar starts, chord names per line
+            lines: List[str] = []
+            last_group_start = None
+            for sym, sb in rows:
+                bar = int(sb // beats_per_bar) + 1
+                group_start = ((bar - 1) // beats_per_bar) * beats_per_bar + 1
+                if group_start != last_group_start:
+                    if last_group_start is not None:
+                        lines.append("")
+                    lines.append(str(group_start))
+                    last_group_start = group_start
+                lines.append(str(sym))
+            content = "\n".join(lines).strip()
+    except Exception:
+        # If anything goes wrong, fall back to existing behavior
+        pass
     if not content and "sections" in o and isinstance(o["sections"], list):
         # Join section lines if provided
         content_lines: List[str] = []

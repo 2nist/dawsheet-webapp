@@ -32,3 +32,39 @@ class Line(Base):
     text: Mapped[str] = mapped_column(Text)
     chords_json: Mapped[str] = mapped_column(Text, default="[]")
     order_index: Mapped[int] = mapped_column(Integer)
+
+# New models for recording pipeline
+class Job(Base):
+    __tablename__ = "jobs"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    kind: Mapped[str] = mapped_column(String(64))  # e.g., 'analysis'
+    status: Mapped[str] = mapped_column(String(32), default="pending")  # pending|running|done|error
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+class Recording(Base):
+    __tablename__ = "recordings"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(Integer, default=1)
+    file_path: Mapped[str] = mapped_column(String(512))
+    mime_type: Mapped[str] = mapped_column(String(128), default="audio/webm")
+    status: Mapped[str] = mapped_column(String(32), default="uploaded")  # uploaded|processing|done|error
+    job_id: Mapped[int | None] = mapped_column(ForeignKey("jobs.id"), nullable=True)
+    analysis_result: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON string
+    created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
+
+class SongDraft(Base):
+    __tablename__ = "song_drafts"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    recording_id: Mapped[int | None] = mapped_column(ForeignKey("recordings.id"), nullable=True)
+    meta: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON string
+    bpm: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    sections: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON string
+    chords: Mapped[str | None] = mapped_column(Text, nullable=True)
+    lyrics: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[DateTime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+    status: Mapped[str] = mapped_column(String(32), default="draft_ready")  # pending|analyzing|draft_ready|error|promoted
+    song_id: Mapped[int | None] = mapped_column(ForeignKey("songs.id"), nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
