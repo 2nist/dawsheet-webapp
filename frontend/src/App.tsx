@@ -6,6 +6,7 @@ import { SectionChordLyricChart } from '@/components/timeline/SectionChordLyricC
 import { BarRuler } from '@/components/timeline/BarRuler'
 import { InspectorPanel } from '@/components/timeline/InspectorPanel'
 import { useTimelineStore } from '@/lib/timelineStore'
+import { DataPanel } from '@/views/DataView'
 
 export default function App() {
   const preset = useTimelineStore((s) => s.viewPreset)
@@ -26,9 +27,7 @@ export default function App() {
           {preset === 'Chord' && <ChordsLane />}
           {preset === 'Lyric' && <LyricsLane />}
           {preset === 'ChordLyric' && <SectionChordLyricChart />}
-          {preset === 'Data' && (
-            <div style={{ padding: 12 }}>Data view (placeholder)</div>
-          )}
+          {preset === 'Data' && <DataPanel />}
         </main>
         <InspectorPanel />
       </div>
