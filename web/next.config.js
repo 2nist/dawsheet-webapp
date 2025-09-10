@@ -19,11 +19,6 @@ const nextConfig = {
         destination: "/songs",
         permanent: false,
       },
-      {
-        source: "/songs/:id",
-        destination: "/songs/:id/timeline",
-        permanent: false,
-      },
     ];
   },
 };

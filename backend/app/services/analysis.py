@@ -99,6 +99,27 @@ def analyze_from_content(title: str, artist: str, content: str, *, bpm: float = 
     """Heuristic analysis from saved content (No Reply-style).
     Assumptions: numeric group markers, chord lines above lyric lines, double-space between chords.
     """
+    # Fast path: if content itself looks like a JCRD-style JSON blob, parse and passthrough minimal fields
+    c_strip = (content or "").lstrip()
+    if c_strip.startswith("{") and ("\"metadata\"" in c_strip or "\"chord_progression\"" in c_strip or "\"sections\"" in c_strip):
+        import json
+        try:
+            obj = json.loads(content)
+            if isinstance(obj, dict):
+                meta = obj.get("metadata") or {}
+                fast_bpm = meta.get("tempo") or meta.get("bpm") or obj.get("bpm") or bpm
+                fast_ts = meta.get("time_signature") or obj.get("timeSignature") or time_sig
+                return {
+                    **obj,
+                    "title": meta.get("title") or obj.get("title") or title,
+                    "artist": meta.get("artist") or obj.get("artist") or artist,
+                    # Normalize for mapper expectations
+                    "bpm": fast_bpm,
+                    "timeSignature": fast_ts,
+                }
+        except Exception:
+            # fall back to heuristic parsing
+            pass
     chords: List[Dict[str, Any]] = []
     lyrics: List[Dict[str, Any]] = []
     current_bar = 1

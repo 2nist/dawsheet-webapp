@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import type { SongTimeline } from "@/types/timeline";
+import { sectionChordProgressions } from "@/lib/timelineUtils";
 
 export type Section = {
   id: string;
@@ -6,6 +8,27 @@ export type Section = {
   startBeat: number;
   lengthBeats: number;
   color?: string;
+  progressionMeta?: {
+    main?: {
+      presetId?: string;
+      degrees?: string[];
+      confidence?: number; // 0..1
+      startIndex?: number; // start position within section chord list
+      userLocked?: boolean;
+    };
+    cadence?: {
+      presetId?: string; // e.g. "ii-V-I", "IV-V-I", "V-I"
+      degrees?: string[];
+      kind?: "authentic" | "plagal" | "half";
+    };
+    intro?: {
+      lengthBeats?: number;
+      kind?: "intro";
+    };
+    transition?: {
+      kind?: "none" | "half-cadence" | "modulation";
+    };
+  };
 };
 export type Chord = {
   id: string;
@@ -48,6 +71,16 @@ export type Selection = {
 export type TimelineState = {
   zoom: number; // px per beat
   snap: number; // beats per grid unit
+  songId?: string;
+  beatsPerLine: number;
+  editLayout: boolean;
+  help: boolean;
+  timeline?: SongTimeline; // canonical mapped data
+  sectionChordSlices?: ReturnType<typeof sectionChordProgressions>;
+  warnings: { code: string; message: string }[];
+  dataStatus: "idle" | "loading" | "ok" | "error";
+  dataError?: string;
+  validationErrors?: { code: string; message: string }[];
   sections: Section[];
   chords: Chord[];
   lyrics: LyricLine[];
@@ -55,6 +88,17 @@ export type TimelineState = {
   selection: Selection;
   setZoom: (z: number) => void;
   setSnap: (s: number) => void;
+  setBeatsPerLine: (b: number) => void;
+  toggleEditLayout: () => void;
+  toggleHelp: () => void;
+  setTimeline: (
+    t: SongTimeline,
+    warnings?: { code: string; message: string }[]
+  ) => void;
+  setValidationErrors: (
+    errs: { code: string; message: string }[] | undefined
+  ) => void;
+  setDataStatus: (st: TimelineState["dataStatus"], err?: string) => void;
   setData: (
     data: Partial<
       Pick<TimelineState, "sections" | "chords" | "lyrics" | "euclids">
@@ -62,11 +106,21 @@ export type TimelineState = {
   ) => void;
   updateItem: (kind: Selection["kind"], id: string, patch: any) => void;
   select: (kind: Selection["kind"], id?: string | null) => void;
+  saveDraftChanges: () => any;
 };
 
 export const useTimelineStore = create<TimelineState>((set, get) => ({
   zoom: 8,
   snap: 1,
+  beatsPerLine: 16,
+  editLayout: false,
+  help: false,
+  songId: undefined,
+  timeline: undefined,
+  warnings: [],
+  dataStatus: "idle",
+  dataError: undefined,
+  validationErrors: undefined,
   sections: [],
   chords: [],
   lyrics: [],
@@ -74,6 +128,18 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
   selection: { kind: null },
   setZoom: (z) => set({ zoom: Math.max(1, Math.min(64, Math.round(z))) }),
   setSnap: (s) => set({ snap: Math.max(0.125, Math.min(4, s)) }),
+  setBeatsPerLine: (b) => set({ beatsPerLine: b }),
+  toggleEditLayout: () => set((st) => ({ editLayout: !st.editLayout })),
+  toggleHelp: () => set((st) => ({ help: !st.help })),
+  setTimeline: (t, warnings = []) =>
+    set({
+      timeline: t,
+      warnings,
+      sectionChordSlices: sectionChordProgressions(t),
+    }),
+  // Optionally compute and cache per-section chord progressions (derived view)
+  setValidationErrors: (errs) => set({ validationErrors: errs }),
+  setDataStatus: (st, err) => set({ dataStatus: st, dataError: err }),
   setData: (data) => set(data as any),
   updateItem: (kind, id, patch) => {
     const state = get();
@@ -93,7 +159,52 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
     set({ [key]: next } as any);
   },
   select: (kind, id) => set({ selection: { kind, id: id ?? null } }),
+  saveDraftChanges: () => saveDraftChanges("draft", get()),
 }));
+
+// Persistence helpers
+const PREF_KEY = "timeline:prefs:v1";
+export function loadTimelinePrefs() {
+  if (typeof window === "undefined") return;
+  try {
+    const raw = localStorage.getItem(PREF_KEY);
+    if (!raw) return;
+    const obj = JSON.parse(raw);
+    const { beatsPerLine, snap, editLayout } = obj || {};
+    const st = useTimelineStore.getState();
+    if (typeof beatsPerLine === "number") st.setBeatsPerLine(beatsPerLine);
+    if (typeof snap === "number") st.setSnap(snap);
+    if (typeof editLayout === "boolean")
+      useTimelineStore.setState({ editLayout });
+  } catch {}
+}
+
+export function saveTimelinePrefs() {
+  if (typeof window === "undefined") return;
+  const st = useTimelineStore.getState();
+  const payload = {
+    beatsPerLine: st.beatsPerLine,
+    snap: st.snap,
+    editLayout: st.editLayout,
+  };
+  try {
+    localStorage.setItem(PREF_KEY, JSON.stringify(payload));
+  } catch {}
+}
+
+// Auto-subscribe changes
+if (typeof window !== "undefined") {
+  loadTimelinePrefs();
+  useTimelineStore.subscribe((state, prev) => {
+    if (
+      state.beatsPerLine !== prev.beatsPerLine ||
+      state.snap !== prev.snap ||
+      state.editLayout !== prev.editLayout
+    ) {
+      saveTimelinePrefs();
+    }
+  });
+}
 
 export function beatPx(beat: number, zoom: number) {
   return beat * zoom;
@@ -164,4 +275,10 @@ export function saveDraftChanges(draftId: string, state: TimelineState) {
     meta: { zoom: state.zoom, snap: state.snap },
   };
   return patch;
+}
+
+export function firstWords(text: string, maxWords = 3) {
+  const words = (text || "").trim().split(/\s+/);
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(" ") + "…";
 }

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Body, Depends, HTTPException
+import json
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Any, Dict, Optional
@@ -62,7 +63,23 @@ async def combine_jcrd_lyrics(
     result = {"title": title, "artist": artist, **merged}
 
     if save:
-        song = models.Song(user_id=1, title=title, artist=artist, content=merged.get("content", ""))  # type: ignore[index]
+        # Persist full JSON so downstream analysis can retain BPM, time signature, and sections
+        save_payload = {
+            "metadata": merged.get("metadata") or jcrd.get("metadata") or {},
+            "sections": jcrd.get("sections") or [],
+            "chord_progression": jcrd.get("chord_progression") or [],
+            "lyrics": {"lines": lines} if include_lyrics else {"lines": []},
+            "title": title,
+            "artist": artist,
+            # Keep the rendered content for reference/debug
+            "content_text": merged.get("content", ""),
+        }
+        song = models.Song(
+            user_id=1,
+            title=title,
+            artist=artist,
+            content=json.dumps(save_payload),  # type: ignore[arg-type]
+        )  # type: ignore[index]
         session.add(song)
         await session.commit()
         await session.refresh(song)

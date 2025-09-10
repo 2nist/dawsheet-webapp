@@ -3,13 +3,15 @@ import React, { useMemo } from "react";
 import { useTimelineStore } from "@/lib/timelineStore";
 
 export function SectionReader() {
-  const { sections, chords, lyrics, select, selection } = useTimelineStore((s) => ({
-    sections: s.sections,
-    chords: s.chords,
-    lyrics: s.lyrics,
-    select: s.select,
-    selection: s.selection,
-  }));
+  const { sections, chords, lyrics, select, selection } = useTimelineStore(
+    (s) => ({
+      sections: s.sections,
+      chords: s.chords,
+      lyrics: s.lyrics,
+      select: s.select,
+      selection: s.selection,
+    })
+  );
 
   const grouped = useMemo(() => {
     return sections.map((s) => {
@@ -27,7 +29,10 @@ export function SectionReader() {
   return (
     <div className="space-y-4">
       {grouped.map(({ s, chordsIn, lyricsIn }) => (
-        <div key={s.id} className="rounded border border-border bg-slate-900/60">
+        <div
+          key={s.id}
+          className="rounded border border-border bg-slate-900/60"
+        >
           <div className="px-3 py-2 flex items-center justify-between bg-slate-800/70">
             <div className="font-medium text-sm">
               {s.name}

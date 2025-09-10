@@ -1,0 +1,31 @@
+{
+  "jcrd": {
+    "metadata": {
+      "title": "Demo",
+      "artist": "Tester",
+      "tempo": 120,
+      "time_signature": "4/4"
+    },
+    "sections": [
+      {
+        "name": "verse",
+        "start_time": 0.0,
+        "end_time": 4.0,
+        "chords": [
+          { "chord": "C", "start_time": 0.0, "end_time": 2.0 },
+          { "chord": "G", "start_time": 2.0, "end_time": 4.0 }
+        ]
+      }
+    ],
+    "chord_progression": [{ "time": 4.0, "chord": "Am", "duration": 2.0 }]
+  },
+  "lyrics": {
+    "lines": [
+      { "ts_sec": 0.5, "text": "Hello" },
+      { "ts_sec": 2.5, "text": "World" }
+    ]
+  },
+  "title": "Demo",
+  "artist": "Tester",
+  "include_lyrics": true
+}

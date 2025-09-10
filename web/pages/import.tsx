@@ -143,9 +143,57 @@ export default function ImportPage() {
   const onImportFile = async () => {
     if (!files || files.length === 0) return;
     try {
-      setStatus("Uploading & parsing files...");
+      // If any JSON files are selected, prefer the Combine & Save flow to preserve metadata
+      const selected = Array.from(files);
+      const jsonFiles = selected.filter((f) =>
+        f.name.toLowerCase().endsWith(".json")
+      );
+      if (jsonFiles.length > 0) {
+        setStatus(
+          `Combining ${jsonFiles.length} JSON file(s) with lyrics (if available) and saving…`
+        );
+        let okCount = 0;
+        let errCount = 0;
+        for (const jf of jsonFiles) {
+          try {
+            const fdSingle = new FormData();
+            fdSingle.append("file", jf);
+            // Ask backend to inspect JSON and optionally fetch lyrics (non-destructive)
+            const res = await fetch(
+              importJsonUrl +
+                `?include_lyrics=${includeLyrics ? "true" : "false"}`,
+              { method: "POST", body: fdSingle }
+            );
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.detail || "JSON preview failed");
+            const auto = (data && data.auto_combined) || null;
+            const payload = {
+              jcrd: data.preview,
+              lyrics: { lines: (auto?.lines as any[]) || [] },
+              title:
+                data.summary?.title ||
+                (jf.name || "Untitled").replace(/\.json$/i, ""),
+              artist: data.summary?.artist || "",
+              include_lyrics: includeLyrics,
+            };
+            await postJSON(combineUrl, payload);
+            okCount++;
+          } catch (e) {
+            errCount++;
+          }
+        }
+        setStatus(
+          `Saved ${okCount} JSON song(s)` +
+            (errCount ? `, ${errCount} failed` : "")
+        );
+        router.push("/library");
+        return;
+      }
+
+      // Fallback for non-JSON: use mixed importer for MIDI/MP3/TXT/etc.
+      setStatus("Uploading & parsing files…");
       const fd = new FormData();
-      Array.from(files).forEach((f: File) => fd.append("files", f));
+      selected.forEach((f: File) => fd.append("files", f));
       const r = await request<any>(
         importMultiUrl + `?include_lyrics=${includeLyrics ? "true" : "false"}`,
         {
@@ -168,19 +216,62 @@ export default function ImportPage() {
   const onAutoBuildBestEffort = async () => {
     try {
       setStatus("Building best-effort version…");
-      // 1) If files selected, let backend do best-effort combine and return songs, then save all
+      // 1) If files selected, prefer Combine & Save for any JSONs; fallback to mixed importer for others
       if (files && files.length > 0) {
-        const fd = new FormData();
-        Array.from(files).forEach((f: File) => fd.append("files", f));
-        const r = await request<any>(importMultiUrl + `?include_lyrics=true`, {
-          method: "POST",
-          body: fd,
-        });
-        const songs = (r?.songs || []) as SongDraft[];
-        for (const s of songs) {
-          await postJSON(apiBase + "/songs", s);
+        const selected = Array.from(files);
+        const jsonFiles = selected.filter((f) =>
+          f.name.toLowerCase().endsWith(".json")
+        );
+        const otherFiles = selected.filter(
+          (f) => !f.name.toLowerCase().endsWith(".json")
+        );
+
+        // Process JSONs via combine to preserve metadata
+        let okCount = 0;
+        for (const jf of jsonFiles) {
+          try {
+            const fdSingle = new FormData();
+            fdSingle.append("file", jf);
+            const res = await fetch(importJsonUrl + `?include_lyrics=true`, {
+              method: "POST",
+              body: fdSingle,
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.detail || "JSON preview failed");
+            const auto = (data && data.auto_combined) || null;
+            const payload = {
+              jcrd: data.preview,
+              lyrics: { lines: (auto?.lines as any[]) || [] },
+              title:
+                data.summary?.title ||
+                (jf.name || "Untitled").replace(/\.json$/i, ""),
+              artist: data.summary?.artist || "",
+              include_lyrics: true,
+            };
+            await postJSON(combineUrl, payload);
+            okCount++;
+          } catch {}
         }
-        setStatus(`Built & saved ${songs.length} song(s).`);
+
+        // Handle non-JSON via mixed importer
+        if (otherFiles.length > 0) {
+          const fd = new FormData();
+          otherFiles.forEach((f: File) => fd.append("files", f));
+          const r = await request<any>(
+            importMultiUrl + `?include_lyrics=true`,
+            {
+              method: "POST",
+              body: fd,
+            }
+          );
+          const songs = (r?.songs || []) as SongDraft[];
+          for (const s of songs) {
+            await postJSON(apiBase + "/songs", s);
+          }
+          setStatus(`Built & saved ${okCount + songs.length} song(s).`);
+        } else {
+          setStatus(`Built & saved ${okCount} song(s).`);
+        }
         router.push("/library");
         return;
       }
@@ -425,10 +516,35 @@ export default function ImportPage() {
               <button
                 className="btn"
                 style={{ marginLeft: 8 }}
+                disabled={
+                  !files ||
+                  Array.from(files).filter((f) =>
+                    f.name.toLowerCase().endsWith(".json")
+                  ).length === 0
+                }
+                onClick={async () => {
+                  // Reuse onImportFile which now prefers Combine for JSON
+                  await onImportFile();
+                }}
+              >
+                Import JSON (Combine & Save)
+              </button>
+              <button
+                className="btn"
+                style={{ marginLeft: 8 }}
                 onClick={onAutoBuildBestEffort}
               >
                 Auto Build & Save (best effort)
               </button>
+              {status && (
+                <div className="mt-2 text-sm" style={{ color: "#6b7280" }}>
+                  {status}
+                </div>
+              )}
+              <div className="text-xs mt-2" style={{ color: "#9ca3af" }}>
+                Tip: JSON chord files are combined and saved with metadata by
+                default to prevent data loss.
+              </div>
             </div>
           </section>
 
