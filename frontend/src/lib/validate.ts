@@ -66,7 +66,8 @@ export function validateSong(input: unknown): { ok: boolean; doc?: any; issues: 
   if (hasOverlap(doc.chords)) issues.push({ path: 'chords', message: 'Chord overlaps detected' })
   if (hasOverlap(doc.lyrics)) issues.push({ path: 'lyrics', message: 'Lyric overlaps detected' })
   if (hasOverlap(doc.euclid)) issues.push({ path: 'euclid', message: 'Euclid overlaps detected' })
-  if (hasOverlap(doc.sections)) issues.push({ path: 'sections', message: 'Section overlaps detected' })
+  if (hasOverlap(doc.sections))
+    issues.push({ path: 'sections', message: 'Section overlaps detected' })
 
   // Non-contiguous sections (gaps) – check if next.t === prev.t + prev.len
   const secs = [...doc.sections].sort((a, b) => a.t - b.t)
@@ -75,7 +76,10 @@ export function validateSong(input: unknown): { ok: boolean; doc?: any; issues: 
     const b = secs[i + 1]
     const aEnd = a.t + a.len
     if (aEnd !== b.t) {
-      issues.push({ path: `sections[${i+1}].t`, message: `Non-contiguous sections: prev ends at ${aEnd}, next starts at ${b.t}` })
+      issues.push({
+        path: `sections[${i + 1}].t`,
+        message: `Non-contiguous sections: prev ends at ${aEnd}, next starts at ${b.t}`,
+      })
     }
   }
 

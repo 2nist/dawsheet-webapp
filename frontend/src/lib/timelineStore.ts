@@ -12,7 +12,9 @@ export interface TimelineState {
   setViewPreset: (v: ViewPreset) => void
   setZoom: (z: number) => void
   setSnap: (s: number) => void
-  loadFromText: (text: string) => Promise<{ ok: boolean; issues: { path: string; message: string }[] }>
+  loadFromText: (
+    text: string,
+  ) => Promise<{ ok: boolean; issues: { path: string; message: string }[] }>
 }
 
 const creator: StateCreator<TimelineState> = (set) => ({
@@ -28,10 +30,10 @@ const creator: StateCreator<TimelineState> = (set) => ({
     try {
       const data = JSON.parse(text)
       // dynamic import to avoid circular
-  const mod = await import('@/lib/validate')
-  const res = mod.validateSong(data)
+      const mod = await import('@/lib/validate')
+      const res = mod.validateSong(data)
       set({ doc: res.doc ?? data, issues: res.issues })
-  return { ok: res.ok, issues: res.issues }
+      return { ok: res.ok, issues: res.issues }
     } catch (e: any) {
       const msg = e?.message ?? String(e)
       const issues = [{ path: '(root)', message: `JSON parse error: ${msg}` }]

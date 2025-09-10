@@ -16,11 +16,17 @@ export function DataPanel() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder='Paste .jrcd.json here'
-          style={{ width: '100%', minHeight: 260, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
+          placeholder="Paste .jrcd.json here"
+          style={{
+            width: '100%',
+            minHeight: 260,
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          }}
         />
         <div style={{ marginTop: 8 }}>
-          <button onClick={onValidate} style={{ padding: '6px 10px' }}>Validate</button>
+          <button onClick={onValidate} style={{ padding: '6px 10px' }}>
+            Validate
+          </button>
           <button style={{ padding: '6px 10px', marginLeft: 8 }} disabled>
             Fix overlaps (coming soon)
           </button>
