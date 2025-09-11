@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "title": "Demo Song",
+    "artist": "Example Band",
+    "tempo": 96,
+    "time_signature": "4/4"
+  },
+  "sections": [
+    {
+      "name": "Intro",
+      "start_time": 0.0,
+      "end_time": 4.0,
+      "chords": [
+        { "symbol": "C", "start_time": 0.0, "end_time": 2.0 },
+        { "symbol": "F", "start_time": 2.0, "end_time": 4.0 }
+      ]
+    },
+    { "name": "Verse 1", "start_time": 4.0, "end_time": 20.0 }
+  ],
+  "chord_progression": [
+    { "symbol": "C", "time": 4.0, "duration": 2.0 },
+    { "symbol": "G", "time": 6.0, "duration": 2.0 },
+    { "symbol": "Am", "time": 8.0, "duration": 2.0 },
+    { "symbol": "F", "time": 10.0, "duration": 2.0 }
+  ],
+  "lyrics": {
+    "lines": [
+      { "ts_sec": 4.0, "text": "When the night is cold" },
+      { "ts_sec": 8.0, "text": "And the lights are low" }
+    ]
+  }
+}

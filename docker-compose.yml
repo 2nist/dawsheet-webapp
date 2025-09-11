@@ -23,7 +23,7 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://dawsheet:dawsheet@db:5432/dawsheet
       CLOUD_RUN_PARSE_URL: https://dawsheet-proxy-service-1046102063670.us-central1.run.app/parse
-      CORS_ORIGINS: http://localhost:3000
+      CORS_ORIGINS: "http://localhost:3000,http://localhost:3001"
     volumes:
       - ./backend:/app
       - /app/__pycache__
@@ -37,7 +37,7 @@ services:
     working_dir: /app
     command: ["sh", "-lc", "npm install && npm run dev"]
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./web:/app
       - /app/node_modules

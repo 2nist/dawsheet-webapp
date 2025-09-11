@@ -30,7 +30,7 @@ db_data/
 
 # Alembic cache
 backend/migrations/versions/__pycache__/
- 
+
 # Archives & binaries
 *.zip
 *.tar

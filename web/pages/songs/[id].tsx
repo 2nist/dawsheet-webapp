@@ -28,24 +28,56 @@ export default function SongDetailPage() {
   );
   const [editMode, setEditMode] = React.useState(false);
 
-  const url = React.useMemo(() => {
-    if (!id) return null;
-    const sid = Array.isArray(id) ? id[0] : id;
-    return `${apiBase}/v1/songs/${sid}/doc`;
-  }, [id, apiBase]);
+  const sid = React.useMemo(
+    () => (id ? (Array.isArray(id) ? id[0] : id) : null),
+    [id]
+  );
+  const docUrl = React.useMemo(
+    () => (sid ? `${apiBase}/v1/songs/${sid}/doc` : null),
+    [sid, apiBase]
+  );
+  const timelineUrl = React.useMemo(
+    () => (sid ? `${apiBase}/v1/songs/${sid}/timeline` : null),
+    [sid, apiBase]
+  );
 
-  const { data, error, isLoading, mutate } = useSWR(url, swrFetcher);
+  const { data: docData } = useSWR(docUrl, swrFetcher);
+  // Fetch timeline always (cheap) so we can fallback if doc missing chords/lyrics
+  const {
+    data: timelineData,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(timelineUrl, swrFetcher);
 
-  const doc = data as any;
-  const sections = doc?.sections || [];
-  const chords = (doc?.chords || []) as { symbol: string; startBeat: number }[];
-  const lyrics = (doc?.lyrics || []) as {
+  // Normalize: prefer analyzed doc for raw structures, but if empty chords use timeline
+  const analyzed = docData as any;
+  const timeline = (timelineData as any)?.timeline;
+  const doc = analyzed || timeline || {};
+  const sections = analyzed?.sections?.length
+    ? analyzed.sections
+    : timeline?.sections || [];
+  const chords = (
+    analyzed?.chords?.length
+      ? analyzed.chords.map((c: any) => ({
+          symbol: c.symbol,
+          startBeat: c.startBeat ?? c.atBeat,
+        }))
+      : timeline?.chords || []
+  ) as { symbol: string; startBeat: number }[];
+  const lyrics = (
+    analyzed?.lyrics?.length ? analyzed.lyrics : timeline?.lyrics || []
+  ) as {
     text: string;
     ts_sec?: number | null;
     beat?: number | null;
   }[];
-  const issues: string[] = doc?.issues || [];
-  const timeSig: string = doc?.timeSignature || "4/4";
+  const issues: string[] = analyzed?.issues || [];
+  const timeSig: string =
+    analyzed?.timeSignature ||
+    (timeline?.timeSigDefault
+      ? `${timeline.timeSigDefault.num}/${timeline.timeSigDefault.den}`
+      : "4/4");
   const beatsPerBar = Number(timeSig?.split("/")[0] || "4") || 4;
 
   // visual quantize (no refetch): rounds startBeat in the view

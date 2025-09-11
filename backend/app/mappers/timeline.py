@@ -17,6 +17,17 @@ DEFAULT_BPM = 120.0
 DEFAULT_SIG = (4, 4)
 
 
+def _coalesce(*vals):
+    """Return the first value that is not None.
+
+    Unlike Python's `or`, this preserves falsy values like 0.0 which are valid timestamps.
+    """
+    for v in vals:
+        if v is not None:
+            return v
+    return None
+
+
 def _quantize(v: float, snap: float) -> float:
     if snap <= 0:
         return v
@@ -172,16 +183,14 @@ def to_timeline(raw_doc: Dict[str, Any], *, snap: float = 0.25) -> Tuple[SongTim
             at_beat_raw = float(c.get("startBeat") or 0.0)
         else:
             # Support multiple second-based start fields: start_sec, start_time (JCRD), time, startTime
-            at_beat_raw = _sec_to_beats(
-                float(
-                    c.get("start_sec")
-                    or c.get("start_time")
-                    or c.get("time")
-                    or c.get("startTime")
-                    or 0.0
-                ),
-                bpm,
+            at_sec_val = _coalesce(
+                c.get("start_sec"),
+                c.get("start_time"),
+                c.get("time"),
+                c.get("startTime"),
+                0.0,
             )
+            at_beat_raw = _sec_to_beats(float(at_sec_val), bpm)
         at_beat = _quantize(at_beat_raw, snap)
         at_sec = _beats_to_sec(at_beat, bpm)
         dur_beats = None
@@ -194,7 +203,8 @@ def to_timeline(raw_doc: Dict[str, Any], *, snap: float = 0.25) -> Tuple[SongTim
             if c.get("end_time") is not None and (
                 c.get("start_time") is not None or c.get("time") is not None
             ):
-                st_sec = float(c.get("start_time") or c.get("time"))
+                # Use first non-None source for start; preserve 0.0
+                st_sec = float(_coalesce(c.get("start_time"), c.get("time"), 0.0))
                 et_sec = float(c.get("end_time"))
                 dur_beats = _sec_to_beats(max(0.0, et_sec - st_sec), bpm)
             elif c.get("duration") is not None:
@@ -245,7 +255,8 @@ def to_timeline(raw_doc: Dict[str, Any], *, snap: float = 0.25) -> Tuple[SongTim
         if "beat" in l and l.get("beat") is not None:
             at_beat_raw = float(l.get("beat") or 0.0)
         else:
-            at_beat_raw = _sec_to_beats(float(l.get("timeSec") or l.get("ts_sec") or 0.0), bpm)
+            at_sec_val = _coalesce(l.get("timeSec"), l.get("ts_sec"), 0.0)
+            at_beat_raw = _sec_to_beats(float(at_sec_val), bpm)
         at_beat = _quantize(at_beat_raw, snap)
         at_sec = _beats_to_sec(at_beat, bpm)
         lyr_id = l.get("id") or ("b" + str(at_beat))
