@@ -106,48 +106,62 @@ export default function RecordPage() {
   }
 
   return (
-    <main style={{ padding: 24 }}>
-      <h1>Record</h1>
-      <div
-        style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 8 }}
-      >
-        <label>
-          Input:
-          <select
-            value={deviceId}
-            onChange={(e) => setDeviceId(e.target.value)}
-            style={{ marginLeft: 8 }}
-          >
-            <option value="">Default</option>
-            {devices.map((d) => (
-              <option key={d.deviceId} value={d.deviceId}>
-                {d.label || d.deviceId}
-              </option>
-            ))}
-          </select>
-        </label>
-        {!recording ? (
-          <button onClick={start}>Record</button>
-        ) : (
-          <button onClick={stop}>Stop</button>
-        )}
-        <Link href="/">Home</Link>
+    <main className="p-6">
+      <div className="flex items-center gap-2 mb-6">
+        <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[rec]</span>
+        <h1 className="font-typewriter text-black font-bold">Record</h1>
       </div>
-      <div style={{ marginTop: 16 }}>
+
+      <div className="bg-[#efe3cc] border border-black/15 rounded-[6px] p-3 shadow-[0_1px_0_rgba(0,0,0,.25)] mb-4">
+        <div className="flex items-center gap-3">
+          {recording && (
+            <span className="font-dymo bg-[#D64541] text-white rounded-[6px] px-2 py-0.5 animate-pulse">[rec]</span>
+          )}
+          <label className="text-sm">
+            Input:
+            <select
+              value={deviceId}
+              onChange={(e) => setDeviceId(e.target.value)}
+              className="bg-[#f6ead2] border border-black/20 rounded-sm px-2 py-1 text-sm ml-2"
+            >
+              <option value="">Default</option>
+              {devices.map((d) => (
+                <option key={d.deviceId} value={d.deviceId}>
+                  {d.label || d.deviceId}
+                </option>
+              ))}
+            </select>
+          </label>
+          {!recording ? (
+            <button
+              onClick={start}
+              className="ml-auto bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-3 py-1 uppercase tracking-wide hover:bg-[#2a2a2a]"
+            >
+              [arm]
+            </button>
+          ) : (
+            <button
+              onClick={stop}
+              className="ml-auto bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-3 py-1 uppercase tracking-wide hover:bg-[#2a2a2a]"
+            >
+              [stop]
+            </button>
+          )}
+          <Link href="/" className="btn-tape text-sm">Home</Link>
+        </div>
+      </div>
+
+      <div className="bg-[#efe3cc] border border-black/15 rounded-[6px] p-4 shadow-[0_1px_0_rgba(0,0,0,.25)]">
         <canvas
           ref={canvasRef}
           width={800}
           height={200}
-          style={{
-            border: "1px solid #1f2937",
-            background: "#0f172a",
-            borderRadius: 6,
-          }}
+          className="border border-black/20 bg-[#0f172a] rounded w-full"
         />
+        <p className="mt-2 text-sm text-black/60">
+          {recording ? "Recording…" : "Idle"}
+        </p>
       </div>
-      <p style={{ marginTop: 8, color: "#9aa3af" }}>
-        {recording ? "Recording…" : "Idle"}
-      </p>
     </main>
   );
 }

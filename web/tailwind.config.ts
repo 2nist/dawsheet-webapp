@@ -36,6 +36,9 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular"],
+        handwritten: ['var(--font-handwritten)', 'Sharpie-Regular', 'cursive'],
+        typewriter: ['var(--font-typewriter)', 'Tox Typewriter', 'monospace'],
+        dymo: ['var(--font-dymo)', 'Dymo', 'sans-serif'],
       },
     },
   },

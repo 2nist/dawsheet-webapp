@@ -52,10 +52,46 @@ def analyze_songdoc(jcrd_like: Dict[str, Any]) -> Dict[str, Any]:
             continue
         lyrics.append({"ts_sec": ln.get("ts_sec"), "text": ln.get("text")})
 
-    # Sections heuristic: every N bars or by gaps in chords
+    # If lyrics are not found in structured jcrd_like, try parsing from content string
+    if not lyrics and "content" in jcrd_like and isinstance(jcrd_like["content"], str):
+        lyrics = _parse_lyrics_from_content(jcrd_like["content"])
+
+    lyrics = []
+    lyr_in = jcrd_like.get("lyrics") or []
+    if isinstance(lyr_in, dict):
+        lyr_in = lyr_in.get("lines") or []
+    for ln in lyr_in:
+        if not isinstance(ln, dict):
+            continue
+        lyrics.append({"ts_sec": ln.get("ts_sec"), "text": ln.get("text")})
+
+    # If lyrics are not found in structured jcrd_like, try parsing from content string
+    if not lyrics and "content" in jcrd_like and isinstance(jcrd_like["content"], str):
+        lyrics = _parse_lyrics_from_content(jcrd_like["content"])
+
+    # Sections from input file, or heuristic if not present
     sections: List[Dict[str, Any]] = []
-    if chords_q:
-        # simple heuristic: new section every 32 beats (8 bars of 4/4), label alternates Verse/Chorus
+    input_sections = jcrd_like.get("sections")
+    if input_sections and isinstance(input_sections, list):
+        first_musical_section_start_beat = 0.0
+        # Find the start beat of the first non-silence section
+        for sec in input_sections:
+            if isinstance(sec, dict) and sec.get("name") != "silence":
+                first_musical_section_start_beat = seconds_to_beats(float(sec.get("start_time", 0.0)), bpm)
+                break
+
+        for sec in input_sections:
+            if not isinstance(sec, dict): continue
+            start_time = float(sec.get("start_time", 0.0))
+            end_time = float(sec.get("end_time", 0.0))
+            sections.append({
+                "name": sec.get("name", "section"),
+                "startBeat": seconds_to_beats(start_time, bpm) - first_musical_section_start_beat,
+                "lengthBeats": seconds_to_beats(end_time - start_time, bpm),
+                "color": "#5B8DEF",  # TODO: color map for section names
+            })
+    elif chords_q:
+        # fallback heuristic: new section every 32 beats (8 bars of 4/4), label alternates Verse/Chorus
         beats_per_section = 32 if time_sig.startswith("4/") else 24
         names = ["Verse", "Chorus"]
         start = 0.0
@@ -99,24 +135,14 @@ def analyze_from_content(title: str, artist: str, content: str, *, bpm: float = 
     """Heuristic analysis from saved content (No Reply-style).
     Assumptions: numeric group markers, chord lines above lyric lines, double-space between chords.
     """
-    # Fast path: if content itself looks like a JCRD-style JSON blob, parse and passthrough minimal fields
+    # Fast path: if content itself looks like a JCRD-style JSON blob, parse and passthrough to songdoc analyzer
     c_strip = (content or "").lstrip()
     if c_strip.startswith("{") and ("\"metadata\"" in c_strip or "\"chord_progression\"" in c_strip or "\"sections\"" in c_strip):
         import json
         try:
             obj = json.loads(content)
             if isinstance(obj, dict):
-                meta = obj.get("metadata") or {}
-                fast_bpm = meta.get("tempo") or meta.get("bpm") or obj.get("bpm") or bpm
-                fast_ts = meta.get("time_signature") or obj.get("timeSignature") or time_sig
-                return {
-                    **obj,
-                    "title": meta.get("title") or obj.get("title") or title,
-                    "artist": meta.get("artist") or obj.get("artist") or artist,
-                    # Normalize for mapper expectations
-                    "bpm": fast_bpm,
-                    "timeSignature": fast_ts,
-                }
+                return analyze_songdoc(obj)
         except Exception:
             # fall back to heuristic parsing
             pass

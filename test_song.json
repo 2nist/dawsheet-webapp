@@ -1,0 +1,19 @@
+{
+  "title": "Test Song",
+  "artist": "Test Artist",
+  "bpm": 120,
+  "key": "C",
+  "content": "This is a test song for import functionality",
+  "sections": [
+    {
+      "name": "Verse",
+      "chords": ["C", "Am", "F", "G"],
+      "lyrics": "Test lyrics for the verse section"
+    },
+    {
+      "name": "Chorus",
+      "chords": ["F", "C", "G", "Am"],
+      "lyrics": "Test lyrics for the chorus section"
+    }
+  ]
+}

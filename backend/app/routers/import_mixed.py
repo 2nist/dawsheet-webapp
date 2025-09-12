@@ -59,7 +59,7 @@ async def import_multi(
 							if title:
 								try:
 									# Attempt lyrics search even if artist is missing; provider will best-match
-									fetched = await search_timestamped_lyrics(title=title, artist=artist)
+									fetched = await search_timestamped_lyrics(title=title, artist=artist, timeout=3.0)
 									lines = (fetched or {}).get("lines") if isinstance(fetched, dict) else None
 								except Exception:
 									lines = None

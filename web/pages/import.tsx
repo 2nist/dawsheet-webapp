@@ -483,10 +483,7 @@ export default function ImportPage() {
             borderRadius: "var(--radius-lg)",
           }}
         >
-          <h2
-            className="text-2xl font-semibold"
-            style={{ fontFamily: "Poppins, var(--font-sans)" }}
-          >
+          <h2 className="font-typewriter text-black font-bold">
             Import
           </h2>
           <p className="mt-1" style={{ color: "#4b5563" }}>
@@ -494,7 +491,7 @@ export default function ImportPage() {
           </p>
 
           <section className="mt-4">
-            <h3 className="text-lg font-medium">Upload Files</h3>
+            <h3 className="font-typewriter text-black font-bold">Upload Files</h3>
             <input
               className="mt-2"
               type="file"
@@ -549,7 +546,7 @@ export default function ImportPage() {
           </section>
 
           <section className="mt-6">
-            <h3 className="text-lg font-medium">Paste Text</h3>
+            <h3 className="font-typewriter text-black font-bold">Paste Text</h3>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -618,7 +615,7 @@ export default function ImportPage() {
               className="card mt-4"
               style={{ background: "#fff", color: "#111" }}
             >
-              <div className="mb-2 text-lg font-medium">JSON preview</div>
+              <div className="mb-2 font-typewriter text-black font-bold">JSON preview</div>
               <div className="text-sm" style={{ color: "#4b5563" }}>
                 File: {jsonPreview?.filename} • Size: {jsonPreview?.size_bytes}{" "}
                 bytes
@@ -777,7 +774,7 @@ export default function ImportPage() {
               className="card mt-4"
               style={{ background: "#fff", color: "#111" }}
             >
-              <div className="mb-2 text-lg font-medium">Review & Edit</div>
+              <div className="mb-2 font-typewriter text-black font-bold">Review & Edit</div>
               {importErrors && (
                 <div className="text-sm mb-2" style={{ color: "#b91c1c" }}>
                   {importErrors.join("; ")}

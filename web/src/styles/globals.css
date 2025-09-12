@@ -1,4 +1,5 @@
 @import "./tokens.css";
+@import "./button-variants.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,9 +10,156 @@ body,
   height: 100%;
 }
 body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-sans);
+  background: #B79F7C;
+  color: #000000;
+  font-family: var(--font-typewriter, "Tox Typewriter", monospace);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  background-image:
+    /* High-contrast wrinkle texture patterns */
+    linear-gradient(45deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    /* Diagonal crease shadows */
+    linear-gradient(135deg, rgba(0, 0, 0, 0.07) 2px, transparent 2px),
+    linear-gradient(-135deg, rgba(0, 0, 0, 0.05) 2px, transparent 2px),
+    /* Major fold lines */
+    linear-gradient(23deg, rgba(0, 0, 0, 0.06) 1px, transparent 3px),
+    linear-gradient(67deg, rgba(0, 0, 0, 0.04) 1px, transparent 4px),
+    linear-gradient(156deg, rgba(0, 0, 0, 0.05) 1px, transparent 3px),
+    linear-gradient(89deg, rgba(0, 0, 0, 0.03) 1px, transparent 5px),
+    /* Paper fiber texture */
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0px, transparent 1px, rgba(0, 0, 0, 0.015) 2px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.015) 0px, transparent 1px, rgba(0, 0, 0, 0.01) 2px),
+    /* Original kraft dots */
+    radial-gradient(circle at 25% 25%, rgba(90, 70, 45, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(90, 70, 45, 0.08) 1px, transparent 1px);
+  background-size:
+    /* High-contrast wrinkles */
+    8px 8px,
+    12px 12px,
+    4px 4px,
+    6px 6px,
+    /* Diagonal creases */
+    16px 16px,
+    14px 14px,
+    /* Major fold lines */
+    24px 24px,
+    32px 32px,
+    28px 28px,
+    20px 20px,
+    /* Paper fiber */
+    3px 3px,
+    3px 3px,
+    /* Kraft dots */
+    18px 18px,
+    22px 22px;
+}
+
+/* Font utility classes */
+.font-handwritten {
+  font-family: var(--font-handwritten, "Sharpie-Regular", cursive);
+}
+
+.font-typewriter {
+  font-family: var(--font-typewriter, "Tox Typewriter", monospace);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.font-dymo {
+  font-family: var(--font-dymo, "Dymo", sans-serif);
+}
+
+/* DYMO Label Styles */
+.dymo-tab {
+  font-family: var(--font-dymo, "Dymo", sans-serif);
+  font-size: 42px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  padding: 8px 12px;
+  background: transparent;
+  color: #000000;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.dymo-tab:nth-child(1) { transform: rotate(-1.5deg); }
+.dymo-tab:nth-child(2) { transform: rotate(2.1deg); }
+.dymo-tab:nth-child(3) { transform: rotate(-0.8deg); }
+.dymo-tab:nth-child(4) { transform: rotate(1.3deg); }
+.dymo-tab:nth-child(5) { transform: rotate(-2.2deg); }
+.dymo-tab:nth-child(6) { transform: rotate(0.9deg); }
+.dymo-tab:nth-child(7) { transform: rotate(-1.1deg); }
+.dymo-tab:nth-child(8) { transform: rotate(1.7deg); }
+
+.dymo-tab:hover {
+  opacity: 0.7;
+}
+
+.dymo-tab.active {
+  opacity: 1;
+}
+
+.dymo-tab.record {
+  color: #000000;
+}
+
+.dymo-tab.record:hover {
+  opacity: 0.7;
+}
+
+.font-dymo {
+  font-family: var(--font-dymo, "Dymo", sans-serif);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Typewriter text styles - all body text should look uniform */
+p, div, span, input, textarea, label, li {
+  font-family: var(--font-typewriter, "Tox Typewriter", monospace);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+/* Headings use typewriter but slightly larger */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-typewriter, "Tox Typewriter", monospace);
+  color: #000000;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+
+h1 { font-size: 18px; font-weight: bold; }
+h2 { font-size: 16px; font-weight: bold; }
+h3 { font-size: 15px; font-weight: bold; }
+h4, h5, h6 { font-size: 14px; font-weight: bold; }
+
+/* Fun random strikethrough effect - vintage editing vibes */
+.typewriter-strike {
+  text-decoration: line-through;
+  text-decoration-color: #000000;
+  text-decoration-thickness: 1px;
+}
+
+/* Occasionally strike random words in typewriter text */
+.typewriter-text {
+  font-family: var(--font-typewriter, "Tox Typewriter", monospace);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: #000000;
 }
 
 .card {
@@ -20,6 +168,211 @@ body {
 }
 
 .btn {
-  @apply inline-flex items-center px-3 py-1.5 rounded text-black;
-  background-color: var(--primary);
+  @apply inline-flex items-center justify-center;
+  background-color: #E5D3B3;
+  font-family: var(--font-handwritten, "Sharpie-Regular", cursive);
+  font-weight: 400;
+  font-size: 24px;
+  color: #1a1a1a;
+  border: none;
+  padding: 12px 20px;
+  min-width: 80px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  /* Torn edges using clip-path */
+  clip-path: polygon(
+    2% 0%,
+    98% 0%,
+    100% 15%,
+    99% 35%,
+    100% 55%,
+    98% 75%,
+    100% 90%,
+    97% 100%,
+    3% 100%,
+    0% 85%,
+    1% 65%,
+    0% 45%,
+    2% 25%,
+    0% 10%
+  );
+
+  /* Tape texture using background patterns */
+  background-image:
+    linear-gradient(90deg, rgba(212, 194, 160, 0.3) 0px, transparent 1px),
+    linear-gradient(0deg, rgba(212, 194, 160, 0.2) 0px, transparent 1px),
+    radial-gradient(circle at 25% 25%, rgba(180, 150, 120, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(200, 170, 140, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 12px 12px, 10px 10px;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  background-color: #E0CBA8;
+  transform: translateY(-1px) rotate(0.5deg);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0) rotate(-0.5deg);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Masking tape button style with torn edges and texture */
+.btn-tape {
+  background-color: #E5D3B3;
+  font-family: var(--font-handwritten, "Sharpie-Regular", cursive);
+  font-weight: 400;
+  font-size: 24px;
+  color: #1a1a1a;
+  border: none;
+  padding: 12px 20px;
+  min-width: 80px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  /* Torn edges using clip-path */
+  clip-path: polygon(
+    2% 0%,
+    98% 0%,
+    100% 15%,
+    99% 35%,
+    100% 55%,
+    98% 75%,
+    100% 90%,
+    97% 100%,
+    3% 100%,
+    0% 85%,
+    1% 65%,
+    0% 45%,
+    2% 25%,
+    0% 10%
+  );
+
+  /* Tape texture using background patterns */
+  background-image:
+    linear-gradient(90deg, rgba(212, 194, 160, 0.3) 0px, transparent 1px),
+    linear-gradient(0deg, rgba(212, 194, 160, 0.2) 0px, transparent 1px),
+    radial-gradient(circle at 25% 25%, rgba(180, 150, 120, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(200, 170, 140, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 12px 12px, 10px 10px;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn-tape:hover {
+  background-color: #E0CBA8;
+  transform: translateY(-1px) rotate(0.5deg);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btn-tape:active {
+  transform: translateY(0) rotate(-0.5deg);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn-tape:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Compact masking tape buttons for shorter text */
+.btn-tape-sm {
+  background-color: #E5D3B3;
+  font-family: var(--font-handwritten, "Sharpie-Regular", cursive);
+  font-weight: 400;
+  font-size: 16px;
+  color: #1a1a1a;
+  border: none;
+  padding: 6px 12px;
+  min-width: 50px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  clip-path: polygon(
+    2% 0%, 98% 0%, 100% 15%, 99% 35%, 100% 55%, 98% 75%, 100% 90%, 97% 100%,
+    3% 100%, 0% 85%, 1% 65%, 0% 45%, 2% 25%, 0% 10%
+  );
+
+  background-image:
+    linear-gradient(90deg, rgba(212, 194, 160, 0.3) 0px, transparent 1px),
+    linear-gradient(0deg, rgba(212, 194, 160, 0.2) 0px, transparent 1px),
+    radial-gradient(circle at 25% 25%, rgba(180, 150, 120, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(200, 170, 140, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 12px 12px, 10px 10px;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Wide masking tape buttons for longer text */
+.btn-tape-wide {
+  background-color: #E5D3B3;
+  font-family: var(--font-handwritten, "Sharpie-Regular", cursive);
+  font-weight: 400;
+  font-size: 18px;
+  color: #1a1a1a;
+  border: none;
+  padding: 8px 20px;
+  min-width: 80px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  clip-path: polygon(
+    2% 0%, 98% 0%, 100% 15%, 99% 35%, 100% 55%, 98% 75%, 100% 90%, 97% 100%,
+    3% 100%, 0% 85%, 1% 65%, 0% 45%, 2% 25%, 0% 10%
+  );
+
+  background-image:
+    linear-gradient(90deg, rgba(212, 194, 160, 0.3) 0px, transparent 1px),
+    linear-gradient(0deg, rgba(212, 194, 160, 0.2) 0px, transparent 1px),
+    radial-gradient(circle at 25% 25%, rgba(180, 150, 120, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(200, 170, 140, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 12px 12px, 10px 10px;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }

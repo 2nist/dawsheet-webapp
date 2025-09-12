@@ -10,6 +10,7 @@ import { LyricLane } from "@/components/LyricLane";
 export default function SongDetailPage() {
   const router = useRouter();
   const { id } = router.query;
+  console.log("router.query.id:", id);
   const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
   const [zoom, setZoom] = React.useState(8); // px per beat
   const [grid, setGrid] = React.useState<"off" | "1/4" | "1/8">("1/4");
@@ -34,17 +35,26 @@ export default function SongDetailPage() {
     return `${apiBase}/v1/songs/${sid}/doc`;
   }, [id, apiBase]);
 
+  console.log("fetch url:", url);
+
   const { data, error, isLoading, mutate } = useSWR(url, swrFetcher);
 
   const doc = data as any;
-  const sections = doc?.sections || [];
-  const chords = (doc?.chords || []) as { symbol: string; startBeat: number }[];
-  const lyrics = (doc?.lyrics || []) as {
-    text: string;
-    ts_sec?: number | null;
-    beat?: number | null;
-  }[];
-  const issues: string[] = doc?.issues || [];
+  const sections = React.useMemo(() => doc?.sections || [], [doc]);
+  const chords = React.useMemo(
+    () => (doc?.chords || []) as { symbol: string; startBeat: number }[],
+    [doc]
+  );
+  const lyrics = React.useMemo(
+    () =>
+      (doc?.lyrics || []) as {
+        text: string;
+        ts_sec?: number | null;
+        beat?: number | null;
+      }[],
+    [doc]
+  );
+  const issues: string[] = React.useMemo(() => doc?.issues || [], [doc]);
   const timeSig: string = doc?.timeSignature || "4/4";
   const beatsPerBar = Number(timeSig?.split("/")[0] || "4") || 4;
 
@@ -239,7 +249,7 @@ export default function SongDetailPage() {
             <SectionRail
               sections={sections}
               zoom={zoom}
-              orientation="vertical"
+              orientation={sectionsOri}
               totalBeats={totalBeats}
             />
           </div>
@@ -249,7 +259,7 @@ export default function SongDetailPage() {
               beatsPerBar={beatsPerBar}
               totalBeats={totalBeats}
               zoom={zoom}
-              orientation="vertical"
+              orientation={rulerOri}
             />
           </div>
           {/* Chords column */}
@@ -259,7 +269,7 @@ export default function SongDetailPage() {
               zoom={zoom}
               beatsPerBar={beatsPerBar}
               totalBeats={totalBeats}
-              orientation="vertical"
+              orientation={chordsOri}
               editable={editMode}
               onChange={setChordsLive}
             />
@@ -271,7 +281,7 @@ export default function SongDetailPage() {
               zoom={zoom}
               beatsPerBar={beatsPerBar}
               totalBeats={totalBeats}
-              orientation="vertical"
+              orientation={lyricsOri}
               editable={editMode}
               onChange={setLyricsLive}
             />

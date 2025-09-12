@@ -37,36 +37,32 @@ export default function SongsPage() {
   };
 
   return (
-    <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h2 style={{ marginBottom: 12 }}>Songs</h2>
-      {isLoading && <div>Loading…</div>}
-      {error && <div style={{ color: "crimson" }}>Error: {String(error)}</div>}
+    <main className="p-6 max-w-4xl mx-auto font-typewriter">
+      <div className="flex items-center gap-2 mb-6">
+        <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[trk]</span>
+        <h2 className="font-typewriter text-black font-bold">Songs</h2>
+      </div>
+      {isLoading && <div className="font-typewriter">Loading songs from the archive...</div>}
+      {error && <div className="font-typewriter text-black mb-4">Error: {String(error)}</div>}
 
-      <section
-        style={{
-          margin: "16px 0",
-          padding: 12,
-          border: "1px solid #222",
-          borderRadius: 8,
-          background: "#0b1220",
-          color: "#e5e7eb",
-        }}
-      >
-        <h3 style={{ marginTop: 0 }}>Add Song</h3>
+      <section className="mb-6 p-4 border border-black/15 rounded-[6px] bg-[#efe3cc] text-black shadow-[0_1px_0_rgba(0,0,0,.25)]">
+        <h3 className="font-typewriter text-black font-bold mb-4 mt-0">Add New Song</h3>
         {errMsg && (
-          <div style={{ color: "#fca5a5", marginBottom: 8 }}>{errMsg}</div>
+          <div className="font-typewriter text-black mb-4">{errMsg}</div>
         )}
-        <form onSubmit={onCreate} style={{ display: "grid", gap: 8 }}>
+        <form onSubmit={onCreate} className="grid gap-4">
           <input
-            placeholder="Title"
+            placeholder="Song Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            className="p-3 border border-black/20 rounded bg-white font-typewriter text-black"
           />
           <input
-            placeholder="Artist"
+            placeholder="Artist Name"
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
+            className="p-3 border border-black/20 rounded bg-white font-typewriter text-black"
           />
           <textarea
             placeholder="Content (lyrics/chords)"
@@ -74,40 +70,30 @@ export default function SongsPage() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
-            style={{
-              background: "#111827",
-              color: "#e5e7eb",
-              borderRadius: 6,
-              padding: 8,
-              border: "1px solid #374151",
-            }}
+            className="p-3 border border-black/20 rounded bg-white font-typewriter resize-none text-black"
           />
-          <button type="submit" disabled={submitting}>
-            {submitting ? "Saving…" : "Create"}
+          <button type="submit" disabled={submitting} className="btn-tape-wide">
+            {submitting ? "SAVING..." : "CREATE SONG"}
           </button>
         </form>
       </section>
 
-      <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
-        {Array.isArray(data) &&
+      <ul className="list-none p-0 grid gap-3">
+        {Array.isArray(data) && data.length > 0 ? (
           data.map((s: any) => (
-            <li
-              key={s.id}
-              style={{
-                border: "1px solid #1f2937",
-                borderRadius: 8,
-                padding: 12,
-                background: "#0b1220",
-                color: "#e5e7eb",
-              }}
-            >
+            <li key={s.id} className="border border-black/15 rounded-[6px] p-3 bg-[#efe3cc] text-black shadow-[0_1px_0_rgba(0,0,0,.25)]">
               <SongItem
                 song={s}
                 apiBase={apiBase!}
                 onChanged={() => mutate(url)}
               />
             </li>
-          ))}
+          ))
+        ) : (
+          <li className="border border-black/15 rounded-[6px] p-6 bg-[#efe3cc] text-black text-center">
+            <p className="font-typewriter">No songs yet. Use the <span className="typewriter-strike">typewriter</span> form above to create your first song.</p>
+          </li>
+        )}
       </ul>
     </main>
   );
@@ -172,28 +158,33 @@ function SongItem({
 
   if (isEditing) {
     return (
-      <div style={{ display: "grid", gap: 8 }}>
-        {errMsg && <div style={{ color: "#fca5a5" }}>{errMsg}</div>}
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        <input value={artist} onChange={(e) => setArtist(e.target.value)} />
+      <div className="grid gap-4">
+        {errMsg && <div className="text-[#D64541] font-typewriter">{errMsg}</div>}
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Song Title"
+          className="p-3 border border-black/20 rounded bg-white font-typewriter text-black"
+        />
+        <input
+          value={artist}
+          onChange={(e) => setArtist(e.target.value)}
+          placeholder="Artist Name"
+          className="p-3 border border-black/20 rounded bg-white font-typewriter text-black"
+        />
         <textarea
           rows={6}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          style={{
-            background: "#0f172a",
-            color: "#e5e7eb",
-            borderRadius: 6,
-            padding: 8,
-            border: "1px solid #374151",
-          }}
+          placeholder="Content (lyrics/chords)"
+          className="p-3 border border-black/20 rounded bg-white font-typewriter resize-none text-black"
         />
-        <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={onSave} disabled={busy}>
-            {busy ? "Saving…" : "Save"}
+        <div className="flex gap-2">
+          <button onClick={onSave} disabled={busy} className="btn-tape-sm">
+            {busy ? "SAVING..." : "SAVE"}
           </button>
-          <button onClick={() => setIsEditing(false)} disabled={busy}>
-            Cancel
+          <button onClick={() => setIsEditing(false)} disabled={busy} className="btn-tape-sm">
+            CANCEL
           </button>
         </div>
       </div>
@@ -201,41 +192,37 @@ function SongItem({
   }
 
   return (
-    <div style={{ display: "grid", gap: 8 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-        }}
-      >
-        <div>
-          <strong>
-            <Link href={`/songs/${song.id}`}>{song.title}</Link>
-          </strong>{" "}
-          — {song.artist}
+    <div className="grid gap-2">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[trk]</span>
+          <strong className="font-typewriter">
+            <Link href={`/songs/${song.id}`} className="hover:underline text-black">
+              {/* Add occasional strikethrough for vintage feel */}
+              {Math.random() > 0.97 ? <span className="typewriter-strike">{song.title}</span> : song.title}
+            </Link>
+          </strong>
+          <span className="font-typewriter text-black">&nbsp;— {song.artist}</span>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <Link href={`/songs/${song.id}`} className="btn">
-            View
-          </Link>
-          <button onClick={() => setIsEditing(true)} disabled={busy}>
-            Edit
+        <div className="flex gap-2">
+          <Link href={`/songs/${song.id}`} className="btn-tape-sm">VIEW</Link>
+          <button onClick={() => setIsEditing(true)} disabled={busy} className="btn-tape-sm">
+            EDIT
           </button>
           <button
             onClick={onDelete}
             disabled={busy}
-            style={{ color: "#fca5a5" }}
+            className="btn-tape-sm text-[#D64541]"
           >
-            Delete
+            DEL
           </button>
           <button
             onClick={() => setExpanded((v) => !v)}
             aria-expanded={expanded}
             aria-controls={`song-${song.id}-content`}
+            className="btn-tape-sm"
           >
-            {expanded ? "Collapse" : "Expand"}
+            {expanded ? "HIDE" : "SHOW"}
           </button>
         </div>
       </div>
@@ -243,20 +230,12 @@ function SongItem({
       {expanded && (
         <pre
           id={`song-${song.id}-content`}
-          style={{
-            whiteSpace: "pre-wrap",
-            background: "#0f172a",
-            color: "#e5e7eb",
-            padding: 12,
-            borderRadius: 6,
-            border: "1px solid #1f2937",
-            marginTop: 4,
-          }}
+          className="whitespace-pre-wrap bg-[#1a1a1a] text-[#efe3cc] p-3 rounded-[6px] border border-black/20 mt-1 font-typewriter text-sm"
         >
           {song.content}
         </pre>
       )}
-      {errMsg && <div style={{ color: "#fca5a5" }}>{errMsg}</div>}
+      {errMsg && <div className="text-[#D64541] font-typewriter">{errMsg}</div>}
     </div>
   );
 }

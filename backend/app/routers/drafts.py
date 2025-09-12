@@ -54,7 +54,7 @@ async def get_draft(draft_id: int, session: AsyncSession = Depends(get_session))
         "lyrics": sd.lyrics or "",
     }
 
-def _infer_sections_with_lengths(raw_sections: list[dict]) -> list[dict]:
+def _infer_sections_with_lengths(raw_sections: list[dict], bpm: float | None) -> list[dict]:
     # Expect items like { name: str, start: number }
     sections = []
     if not raw_sections:
@@ -62,13 +62,21 @@ def _infer_sections_with_lengths(raw_sections: list[dict]) -> list[dict]:
     # Sort by start just in case
     ordered = sorted(raw_sections, key=lambda x: float(x.get("start") or 0))
     for i, s in enumerate(ordered):
-        start = float(s.get("start") or 0)
-        next_start = float(ordered[i + 1].get("start")) if i + 1 < len(ordered) and ordered[i + 1].get("start") is not None else None
-        length = (next_start - start) if (next_start is not None and next_start > start) else 8.0
+        start_sec = float(s.get("start") or 0)
+        start_beats = (start_sec * bpm / 60) if bpm else start_sec
+        next_start_sec = float(ordered[i + 1].get("start")) if i + 1 < len(ordered) and ordered[i + 1].get("start") is not None else None
+        
+        length_beats = 8.0  # Default length in beats
+        if next_start_sec is not None and next_start_sec > start_sec:
+            if bpm:
+                length_beats = (next_start_sec - start_sec) * bpm / 60
+            else:
+                length_beats = next_start_sec - start_sec
+
         sections.append({
             "name": s.get("name") or "Other",
-            "startBeat": start,
-            "lengthBeats": length,
+            "startBeat": start_beats,
+            "lengthBeats": length_beats,
             "source": "analysis",
         })
     return sections
@@ -110,12 +118,11 @@ async def get_draft_songdoc(draft_id: int, session: AsyncSession = Depends(get_s
             "timeSig": meta.get("timeSig"),
             "bpm": ({"value": float(sd.bpm)} if sd.bpm else None),
         },
-        "sections": _infer_sections_with_lengths(raw_sections),
+        "sections": _infer_sections_with_lengths(raw_sections, sd.bpm),
         "chords": [
             {
                 "symbol": c.get("symbol") or c.get("chord") or "",
-                "startBeat": float(c.get("startBeat") or c.get("start") or 0),
-                **({"lengthBeats": float(c.get("lengthBeats"))} if c.get("lengthBeats") is not None else {}),
+                "startBeat": (float(c.get("start")) * sd.bpm / 60) if sd.bpm and c.get("start") is not None else float(c.get("startBeat") or c.get("start") or 0),
                 "source": c.get("source") or "analysis",
             }
             for c in (chords or [])

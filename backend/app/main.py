@@ -5,7 +5,7 @@ from sqlalchemy import select
 import httpx
 
 from .config import settings
-from .database import get_session, engine, Base
+from .database import get_session, engine, Base, SessionLocal
 from . import models, schemas
 from .parser import parse_songs
 from .legacy.router import router as legacy_router
@@ -62,6 +62,15 @@ async def on_startup():
         except Exception:
             # Ignore errors in dev migration
             pass
+    
+    # Create a default user if one doesn't exist
+    async with SessionLocal() as session:
+        result = await session.execute(select(models.User).where(models.User.id == 1))
+        user = result.scalar_one_or_none()
+        if not user:
+            default_user = models.User(id=1, email="default@example.com")
+            session.add(default_user)
+            await session.commit()
 
 @app.get("/")
 async def health():
