@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "title": "Yesterday",
+    "artist": "The Beatles",
+    "album": "Help!",
+    "year": 1965,
+    "duration": 125
+  },
+  "chords": [
+    {"time": 0.0, "chord": "F"},
+    {"time": 3.0, "chord": "Em7"},
+    {"time": 6.0, "chord": "A7"},
+    {"time": 9.0, "chord": "Dm"},
+    {"time": 12.0, "chord": "Dm/C"},
+    {"time": 15.0, "chord": "Bb"},
+    {"time": 18.0, "chord": "C"},
+    {"time": 21.0, "chord": "F"},
+    {"time": 24.0, "chord": "F"},
+    {"time": 27.0, "chord": "Em7"},
+    {"time": 30.0, "chord": "A7"},
+    {"time": 33.0, "chord": "Dm"},
+    {"time": 36.0, "chord": "Dm/C"},
+    {"time": 39.0, "chord": "Bb"},
+    {"time": 42.0, "chord": "C"},
+    {"time": 45.0, "chord": "F"},
+    {"time": 48.0, "chord": "A7"},
+    {"time": 51.0, "chord": "Dm"},
+    {"time": 54.0, "chord": "C"},
+    {"time": 57.0, "chord": "Bb"},
+    {"time": 60.0, "chord": "F"}
+  ],
+  "lyrics": {
+    "verses": [
+      {
+        "time": 0.0,
+        "text": "Yesterday, all my troubles seemed so far away\nNow it looks as though they're here to stay\nOh, I believe in yesterday"
+      },
+      {
+        "time": 24.0,
+        "text": "Suddenly, I'm not half the man I used to be\nThere's a shadow hanging over me\nOh, yesterday came suddenly"
+      },
+      {
+        "time": 48.0,
+        "text": "Why she had to go, I don't know\nShe wouldn't say\nI said something wrong\nNow I long for yesterday"
+      }
+    ]
+  },
+  "structure": [
+    {"time": 0.0, "section": "verse", "label": "Verse 1"},
+    {"time": 24.0, "section": "verse", "label": "Verse 2"},
+    {"time": 48.0, "section": "bridge", "label": "Bridge"},
+    {"time": 72.0, "section": "verse", "label": "Verse 3"},
+    {"time": 96.0, "section": "outro", "label": "Outro"}
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "title": "Let It Be",
+    "artist": "The Beatles",
+    "album": "Let It Be",
+    "year": 1970,
+    "duration": 243
+  },
+  "chords": [
+    {"time": 0.0, "chord": "C"},
+    {"time": 4.0, "chord": "G"},
+    {"time": 8.0, "chord": "Am"},
+    {"time": 12.0, "chord": "F"},
+    {"time": 16.0, "chord": "C"},
+    {"time": 20.0, "chord": "G"},
+    {"time": 24.0, "chord": "F"},
+    {"time": 28.0, "chord": "C"},
+    {"time": 32.0, "chord": "C"},
+    {"time": 36.0, "chord": "G"},
+    {"time": 40.0, "chord": "Am"},
+    {"time": 44.0, "chord": "F"},
+    {"time": 48.0, "chord": "C"},
+    {"time": 52.0, "chord": "G"},
+    {"time": 56.0, "chord": "F"},
+    {"time": 60.0, "chord": "C"},
+    {"time": 64.0, "chord": "Am"},
+    {"time": 68.0, "chord": "G"},
+    {"time": 72.0, "chord": "F"},
+    {"time": 76.0, "chord": "C"}
+  ],
+  "lyrics": {
+    "verses": [
+      {
+        "time": 0.0,
+        "text": "When I find myself in times of trouble\nMother Mary comes to me\nSpeaking words of wisdom\nLet it be"
+      },
+      {
+        "time": 32.0,
+        "text": "And in my hour of darkness\nShe is standing right in front of me\nSpeaking words of wisdom\nLet it be"
+      },
+      {
+        "time": 64.0,
+        "text": "Let it be, let it be\nLet it be, let it be\nWhisper words of wisdom\nLet it be"
+      }
+    ]
+  },
+  "structure": [
+    {"time": 0.0, "section": "verse", "label": "Verse 1"},
+    {"time": 32.0, "section": "verse", "label": "Verse 2"},
+    {"time": 64.0, "section": "chorus", "label": "Chorus"},
+    {"time": 96.0, "section": "instrumental", "label": "Guitar Solo"},
+    {"time": 128.0, "section": "verse", "label": "Verse 3"},
+    {"time": 160.0, "section": "chorus", "label": "Final Chorus"}
+  ]
+}
