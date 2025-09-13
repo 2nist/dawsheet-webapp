@@ -122,10 +122,93 @@ export default function DesignPage() {
     { text: "Let it be", beat: 70 },
   ];
 
-  // Process real song data or use demo data
+  // Demo song data
+  const demoSongData = React.useMemo(() => {
+    const sid = Array.isArray(songId) ? songId[0] : songId;
+    
+    if (sid === "demo-let-it-be") {
+      return {
+        title: "Let It Be",
+        artist: "The Beatles",
+        bpm: 76,
+        timeSignature: "4/4",
+        sections: [
+          { id: "1", name: "Intro", startBeat: 0, lengthBeats: 16, color: "#8B5CF6" },
+          { id: "2", name: "Verse 1", startBeat: 16, lengthBeats: 32, color: "#5B8DEF" },
+          { id: "3", name: "Chorus", startBeat: 48, lengthBeats: 16, color: "#059669" },
+          { id: "4", name: "Verse 2", startBeat: 64, lengthBeats: 32, color: "#5B8DEF" },
+          { id: "5", name: "Chorus", startBeat: 96, lengthBeats: 16, color: "#059669" },
+          { id: "6", name: "Bridge", startBeat: 112, lengthBeats: 16, color: "#DC2626" },
+          { id: "7", name: "Outro", startBeat: 128, lengthBeats: 16, color: "#9333EA" },
+        ],
+        chords: [
+          { symbol: "C", startBeat: 16 },
+          { symbol: "G", startBeat: 20 },
+          { symbol: "Am", startBeat: 24 },
+          { symbol: "F", startBeat: 28 },
+          { symbol: "C", startBeat: 32 },
+          { symbol: "G", startBeat: 36 },
+          { symbol: "F", startBeat: 40 },
+          { symbol: "C", startBeat: 44 },
+          { symbol: "Am", startBeat: 48 },
+          { symbol: "G", startBeat: 52 },
+          { symbol: "F", startBeat: 56 },
+          { symbol: "C", startBeat: 60 },
+        ],
+        lyrics: [
+          { text: "When I find myself in times of trouble", ts_sec: 18.95, beat: null },
+          { text: "Mother Mary comes to me", ts_sec: 23.68, beat: null },
+          { text: "Speaking words of wisdom", ts_sec: 27.89, beat: null },
+          { text: "Let it be", ts_sec: 31.58, beat: null },
+          { text: "Let it be, let it be", ts_sec: 50.53, beat: null },
+          { text: "Let it be, let it be", ts_sec: 54.21, beat: null },
+          { text: "Whisper words of wisdom", ts_sec: 57.89, beat: null },
+          { text: "Let it be", ts_sec: 61.58, beat: null },
+        ],
+      };
+    }
+    
+    if (sid === "demo-hey-jude") {
+      return {
+        title: "Hey Jude",
+        artist: "The Beatles",
+        bpm: 75,
+        timeSignature: "4/4",
+        sections: [
+          { id: "1", name: "Intro", startBeat: 0, lengthBeats: 8, color: "#8B5CF6" },
+          { id: "2", name: "Verse 1", startBeat: 8, lengthBeats: 32, color: "#5B8DEF" },
+          { id: "3", name: "Chorus", startBeat: 40, lengthBeats: 24, color: "#059669" },
+          { id: "4", name: "Verse 2", startBeat: 64, lengthBeats: 32, color: "#5B8DEF" },
+          { id: "5", name: "Chorus", startBeat: 96, lengthBeats: 24, color: "#059669" },
+          { id: "6", name: "Bridge", startBeat: 120, lengthBeats: 16, color: "#DC2626" },
+          { id: "7", name: "Outro", startBeat: 136, lengthBeats: 40, color: "#9333EA" },
+        ],
+        chords: [
+          { symbol: "F", startBeat: 8 },
+          { symbol: "C", startBeat: 16 },
+          { symbol: "F", startBeat: 24 },
+          { symbol: "Bb", startBeat: 28 },
+          { symbol: "F", startBeat: 32 },
+          { symbol: "C", startBeat: 36 },
+          { symbol: "F", startBeat: 40 },
+        ],
+        lyrics: [
+          { text: "Hey Jude, don't make it bad", ts_sec: 8.0, beat: null },
+          { text: "Take a sad song and make it better", ts_sec: 12.8, beat: null },
+          { text: "Remember to let her into your heart", ts_sec: 19.2, beat: null },
+          { text: "Then you can start to make it better", ts_sec: 25.6, beat: null },
+        ],
+      };
+    }
+    
+    return null;
+  }, [songId]);
+
+  // Process real song data, demo song data, or use fallback demo data
   const sections: Section[] = React.useMemo(() => {
-    if (songData?.sections) {
-      return songData.sections.map((section: any, index: number) => ({
+    const dataSource = songData || demoSongData;
+    if (dataSource?.sections) {
+      return dataSource.sections.map((section: any, index: number) => ({
         id: section.id || String(index),
         name: section.name || `Section ${index + 1}`,
         startBeat: section.startBeat || 0,
@@ -134,21 +217,23 @@ export default function DesignPage() {
       }));
     }
     return demoSections;
-  }, [songData]);
+  }, [songData, demoSongData]);
 
   const chords: Chord[] = React.useMemo(() => {
-    if (songData?.chords) {
-      return songData.chords.map((chord: any) => ({
+    const dataSource = songData || demoSongData;
+    if (dataSource?.chords) {
+      return dataSource.chords.map((chord: any) => ({
         symbol: chord.symbol || "C",
         startBeat: chord.startBeat || 0,
       }));
     }
     return demoChords;
-  }, [songData]);
+  }, [songData, demoSongData]);
 
   const lyrics: Lyric[] = React.useMemo(() => {
-    if (songData?.lyrics) {
-      return songData.lyrics
+    const dataSource = songData || demoSongData;
+    if (dataSource?.lyrics) {
+      return dataSource.lyrics
         .map((lyric: any) => {
           let beat: number | null = null;
 
@@ -157,9 +242,9 @@ export default function DesignPage() {
             beat = lyric.beat;
           }
           // If we have ts_sec (timestamp from LRCLIB), convert to beats
-          else if (typeof lyric.ts_sec === "number" && songData.bpm) {
+          else if (typeof lyric.ts_sec === "number" && dataSource.bpm) {
             // Convert seconds to beats: (seconds * BPM) / 60
-            beat = Math.round((lyric.ts_sec * songData.bpm) / 60);
+            beat = Math.round((lyric.ts_sec * dataSource.bpm) / 60);
           }
           // If the text starts with timestamp format [mm:ss.xx], parse it
           else if (
@@ -167,7 +252,7 @@ export default function DesignPage() {
             lyric.text.match(/^\[\d+:\d+(\.\d+)?\]/)
           ) {
             const timestampMatch = lyric.text.match(/^\[(\d+):(\d+)(\.\d+)?\]/);
-            if (timestampMatch && songData.bpm) {
+            if (timestampMatch && dataSource.bpm) {
               const minutes = parseInt(timestampMatch[1]);
               const seconds = parseInt(timestampMatch[2]);
               const milliseconds = timestampMatch[3]
@@ -176,7 +261,7 @@ export default function DesignPage() {
               const totalSeconds = minutes * 60 + seconds + milliseconds;
 
               // Convert seconds to beats
-              beat = Math.round((totalSeconds * songData.bpm) / 60);
+              beat = Math.round((totalSeconds * dataSource.bpm) / 60);
 
               // Remove the timestamp from the text
               lyric.text = lyric.text.replace(/^\[\d+:\d+(\.\d+)?\]\s*/, "");
@@ -192,14 +277,15 @@ export default function DesignPage() {
         .filter((lyric: Lyric) => lyric.text && lyric.beat !== null);
     }
     return demoLyrics;
-  }, [songData]);
+  }, [songData, demoSongData]);
 
   const beatsPerBar = React.useMemo(() => {
-    if (songData?.timeSignature) {
-      return Number(songData.timeSignature.split("/")[0] || "4") || 4;
+    const dataSource = songData || demoSongData;
+    if (dataSource?.timeSignature) {
+      return Number(dataSource.timeSignature.split("/")[0] || "4") || 4;
     }
     return 4;
-  }, [songData]);
+  }, [songData, demoSongData]);
 
   const currentSection = sections[currentSectionIndex] || sections[0];
   const prevSection =
@@ -238,13 +324,17 @@ export default function DesignPage() {
     );
   }
 
-  if (error) {
+  if (error && songId && !songId.toString().startsWith('demo-')) {
     return (
       <div className="min-h-screen bg-[#efe3cc] text-black p-6">
         <div className="text-center">
           <div className="font-typewriter text-black font-bold mb-4">Error Loading Song</div>
           <div className="font-typewriter text-black mb-4">{String(error)}</div>
-          <div className="font-typewriter text-black">Falling back to demo data...</div>
+          <div className="font-typewriter text-black">
+            <Link href="/design" className="text-black hover:underline">
+              Go back to demo timeline
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -257,9 +347,9 @@ export default function DesignPage() {
         <div className="flex items-center gap-2">
           <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[trk]</span>
           <h1 className="font-typewriter text-black font-bold">
-            {songData ? (
+            {songData || demoSongData ? (
               <>
-                {songData.title} {songData.artist && `— ${songData.artist}`}
+                {(songData || demoSongData)?.title} {(songData || demoSongData)?.artist && `— ${(songData || demoSongData)?.artist}`}
               </>
             ) : (
               "Enhanced Timeline Design"
@@ -313,6 +403,20 @@ export default function DesignPage() {
             and click "View" on any song, then add "?view=design" to the URL, or
             add "?song=ID" to this page.
           </p>
+          <div className="flex gap-2 mb-3">
+            <Link
+              href="/design?song=demo-let-it-be"
+              className="btn-tape text-xs"
+            >
+              Try "Let It Be" Demo
+            </Link>
+            <Link
+              href="/design?song=demo-hey-jude"
+              className="btn-tape text-xs"
+            >
+              Try "Hey Jude" Demo
+            </Link>
+          </div>
           <p className="text-gray-400 text-sm">
             Currently showing demo data for demonstration purposes.
           </p>
@@ -633,26 +737,26 @@ export default function DesignPage() {
           </div>
 
           {/* Song Info */}
-          {songData && (
+          {(songData || demoSongData) && (
             <div className="bg-white border border-black/20 rounded p-4">
               <h3 className="font-typewriter text-black font-bold mb-3">Song Info</h3>
               <div className="space-y-2 text-sm font-typewriter text-black">
                 <div>
-                  <strong>Title:</strong> {songData.title}
+                  <strong>Title:</strong> {(songData || demoSongData)?.title}
                 </div>
-                {songData.artist && (
+                {(songData || demoSongData)?.artist && (
                   <div>
-                    <strong>Artist:</strong> {songData.artist}
+                    <strong>Artist:</strong> {(songData || demoSongData)?.artist}
                   </div>
                 )}
-                {songData.bpm && (
+                {(songData || demoSongData)?.bpm && (
                   <div>
-                    <strong>BPM:</strong> {songData.bpm}
+                    <strong>BPM:</strong> {(songData || demoSongData)?.bpm}
                   </div>
                 )}
-                {songData.timeSignature && (
+                {(songData || demoSongData)?.timeSignature && (
                   <div>
-                    <strong>Time Signature:</strong> {songData.timeSignature}
+                    <strong>Time Signature:</strong> {(songData || demoSongData)?.timeSignature}
                   </div>
                 )}
                 <div>
