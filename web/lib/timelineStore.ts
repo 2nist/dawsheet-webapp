@@ -92,7 +92,7 @@ export type TimelineState = {
   toggleEditLayout: () => void;
   toggleHelp: () => void;
   setTimeline: (
-    t: SongTimeline,
+    t: any,
     warnings?: { code: string; message: string }[]
   ) => void;
   setValidationErrors: (
@@ -131,12 +131,40 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
   setBeatsPerLine: (b) => set({ beatsPerLine: b }),
   toggleEditLayout: () => set((st) => ({ editLayout: !st.editLayout })),
   toggleHelp: () => set((st) => ({ help: !st.help })),
-  setTimeline: (t, warnings = []) =>
+  setTimeline: (t: any, warnings = []) => {
+    // Handle data that might already be in store format or need conversion
+    const convertedSections: Section[] = (t.sections || []).map((section: any, index: number) => ({
+      id: section.id || `section_${index}`,
+      name: section.name || section.label || `Section ${index + 1}`,
+      startBeat: section.startBeat !== undefined ? section.startBeat : (section.startSec ? section.startSec * 2 : 0),
+      lengthBeats: section.lengthBeats || 8,
+      color: section.color || "#e0e7ff",
+    }));
+
+    const convertedChords: Chord[] = (t.chords || []).map((chord: any, index: number) => ({
+      id: chord.id || `chord_${index}`,
+      symbol: chord.symbol,
+      startBeat: chord.startBeat !== undefined ? chord.startBeat : (chord.atBeat !== undefined ? chord.atBeat : (chord.atSec ? chord.atSec * 2 : 0)),
+      lengthBeats: chord.lengthBeats || chord.durationBeats || 2,
+    }));
+
+    const convertedLyrics: LyricLine[] = (t.lyrics || []).map((lyric: any, index: number) => ({
+      id: lyric.id || `lyric_${index}`,
+      text: lyric.text,
+      beat: lyric.beat !== undefined ? lyric.beat : (lyric.atBeat !== undefined ? lyric.atBeat : (lyric.atSec ? lyric.atSec * 2 : 0)),
+      row: lyric.row !== undefined ? lyric.row : index,
+    }));
+
     set({
       timeline: t,
       warnings,
+      sections: convertedSections,
+      chords: convertedChords,
+      lyrics: convertedLyrics,
+      euclids: [], // Reset euclids for now
       sectionChordSlices: sectionChordProgressions(t),
-    }),
+    });
+  },
   // Optionally compute and cache per-section chord progressions (derived view)
   setValidationErrors: (errs) => set({ validationErrors: errs }),
   setDataStatus: (st, err) => set({ dataStatus: st, dataError: err }),

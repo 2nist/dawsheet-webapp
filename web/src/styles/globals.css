@@ -58,6 +58,11 @@ body {
     22px 22px;
 }
 
+/* Transition for the cylindrical timeline content container */
+.timeline-content {
+  transition: transform 0.2s ease-out;
+}
+
 /* Font utility classes */
 .font-handwritten {
   font-family: var(--font-handwritten, "Sharpie-Regular", cursive);
@@ -307,6 +312,11 @@ h4, h5, h6 { font-size: 14px; font-weight: bold; }
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Timeline content helper */
+.timeline-content {
+  transition: transform 0.2s ease-out;
 }
 
 /* Compact masking tape buttons for shorter text */

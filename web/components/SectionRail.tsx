@@ -48,7 +48,7 @@ export function SectionRail({
 
   // horizontal default
   return (
-    <div className="relative w-full h-6 bg-slate-800 rounded">
+    <div className="relative w-full h-9 bg-slate-800 rounded">
       {sections?.map((s, i) => (
         <div
           key={i}
