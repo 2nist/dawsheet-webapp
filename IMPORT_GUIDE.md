@@ -14,7 +14,7 @@ The DAWSheet application now supports automatic import of `.jcrd.json` files (Be
   "metadata": {
     "title": "07 - Here_Comes_The_Sun",
     "artist": "The Beatles",
-    "album": "11 - Abbey_Road", 
+    "album": "11 - Abbey_Road",
     "tempo": 144,
     "time_signature": "4/4"
   },
@@ -60,7 +60,7 @@ The imported song displays in a four-rail synchronized timeline:
 
 - **Section Rail**: Song structure (intro, verse, chorus, bridge, outro)
 - **Timeline Rail**: Beat markers and time signature
-- **Chord Rail**: Chord progressions with symbols and timing  
+- **Chord Rail**: Chord progressions with symbols and timing
 - **Lyric Rail**: Timestamped lyrics from LRCLIB
 
 ## Backend Architecture
@@ -71,13 +71,13 @@ The imported song displays in a four-rail synchronized timeline:
 @app.post("/songs")
 async def create_song(song: dict):
     """Enhanced song creation with automatic LRCLIB lyrics fetching"""
-    
+
     # Check if this is a Beatles .jcrd.json file
     if "metadata" in song and song["metadata"].get("title"):
         # Clean title and artist
         clean_title = clean_title_for_lyrics(song["metadata"]["title"])
         clean_artist = normalize_artist_name(song["metadata"]["artist"])
-        
+
         # Auto-fetch LRCLIB lyrics
         if LYRICS_ENABLED:
             lyrics_result = await search_timestamped_lyrics(
@@ -100,7 +100,7 @@ if parsed_content.get("sections"):
             "lengthBeats": (section.get("end_time", 0) - section.get("start_time", 0)) * 2
         })
 
-# Convert chord progression  
+# Convert chord progression
 if parsed_content.get("chord_progression"):
     for chord in parsed_content["chord_progression"]:
         doc["chords"].append({
@@ -178,7 +178,7 @@ POST /songs (with metadata detection)
 Song stored with lyrics
     ↓ Timeline page request
 GET /v1/songs/{id}/doc
-    ↓ Beatles data conversion  
+    ↓ Beatles data conversion
 Timeline format with 4 rails
     ↓ React components
 Synchronized timeline display
@@ -187,7 +187,7 @@ Synchronized timeline display
 ## Key Features
 
 ✅ **Automatic LRCLIB Integration**: No manual lyrics search needed
-✅ **Smart Title Cleaning**: Handles track numbers and formatting  
+✅ **Smart Title Cleaning**: Handles track numbers and formatting
 ✅ **Synchronized Timeline**: All rails move together
 ✅ **Real Beatles Data**: Authentic chord progressions and structure
 ✅ **Interactive Navigation**: Drag and scroll controls

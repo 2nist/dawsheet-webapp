@@ -21,7 +21,7 @@ export default function Home() {
               Import Beatles .jcrd.json Files
             </h2>
             <p className="text-gray-600 mb-6">
-              Upload any Beatles chord progression file to see synchronized 
+              Upload any Beatles chord progression file to see synchronized
               sections, chords, and LRCLIB lyrics in an interactive timeline.
             </p>
             <FileImportButton onSuccess={() => router.push('/songs')} />
@@ -62,7 +62,7 @@ async def import_beatles_song(song_name: str):
         "yesterday": "05_-_Help!_13_-_Yesterday.jcrd.json",
         "let-it-be": "12_-_Let_It_Be_06_-_Let_It_Be.jcrd.json"
     }
-    
+
     if song_name in file_map:
         file_path = f"References/Beatles-Chords/{file_map[song_name]}"
         # Load and import the file
@@ -112,7 +112,7 @@ services:
 ## Default User Flow
 
 1. **User visits app** → Sees Beatles import interface
-2. **Clicks "Choose File"** → Browser opens to .jcrd.json files  
+2. **Clicks "Choose File"** → Browser opens to .jcrd.json files
 3. **Selects Beatles song** → Auto-imports with LRCLIB lyrics
 4. **Views timeline** → Sees complete 4-rail synchronized display
 5. **Explores controls** → Drag, zoom, navigate through song
@@ -123,7 +123,7 @@ services:
 # Start with Beatles import as default
 docker compose up -d
 
-# Import sample song programmatically  
+# Import sample song programmatically
 curl -X POST http://localhost:8000/import/beatles/here-comes-the-sun
 
 # View timeline directly

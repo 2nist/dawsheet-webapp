@@ -2,6 +2,7 @@ import useSWR, { mutate } from "swr";
 import Link from "next/link";
 import { putJSON, del, HttpError, postJSON } from "@/lib/api";
 import { useState, useEffect } from "react";
+import CompactSongImport from "@/components/CompactBeatsImport";
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
@@ -79,7 +80,6 @@ export default function LibraryPage() {
     return res.json();
   });
   const songs = data || [];
-  const [showImport, setShowImport] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
 
   // Prevent browser from opening files when dropped anywhere on the page
@@ -105,16 +105,8 @@ export default function LibraryPage() {
 
       {/* Import Section */}
       <div className="mb-6 p-4 border border-black/15 rounded-[6px] bg-white shadow-[0_1px_0_rgba(0,0,0,.25)]">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-typewriter text-black font-bold">Import Songs</h2>
-          <button
-            onClick={() => setShowImport(!showImport)}
-            className="btn-tape-sm"
-          >
-            {showImport ? "Hide Import" : "Show Import"}
-          </button>
-        </div>
-        {showImport && <ImportSection onImportComplete={() => { mutate(url, undefined, { revalidate: true }); }} />}
+        <h2 className="font-typewriter text-black font-bold mb-3">Import Songs</h2>
+        <CompactSongImport onSuccess={() => { mutate(url, undefined, { revalidate: true }); }} />
       </div>
 
       {/* Create New Song Section */}
@@ -295,271 +287,6 @@ function LibraryItem({
         </pre>
       )}
       {errMsg && <div className="font-typewriter text-black">{errMsg}</div>}
-    </div>
-  );
-}
-
-function ImportSection({ onImportComplete }: { onImportComplete: () => void }) {
-  const [jsonText, setJsonText] = useState("");
-  const [textInput, setTextInput] = useState("");
-  const [importing, setImporting] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleFileUpload = async (file: File) => {
-    setImporting(true);
-    setMessage("");
-
-    try {
-      const text = await file.text();
-
-      // Try to parse as JSON first
-      try {
-        JSON.parse(text);
-        // It's valid JSON, use JSON import
-        const response = await fetch(`${apiBase}/import/json?include_lyrics=true`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: text,
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          if (result.parsed_data) {
-            const combineResponse = await fetch(`${apiBase}/combine/jcrd-lyrics?save=true`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(result),
-            });
-
-            if (combineResponse.ok) {
-              setMessage(`✅ File "${file.name}" imported successfully!`);
-              onImportComplete();
-            } else {
-              setMessage("❌ Failed to combine and save");
-            }
-          } else {
-            setMessage(`✅ File "${file.name}" imported successfully!`);
-            onImportComplete();
-          }
-        } else {
-          setMessage("❌ JSON import failed");
-        }
-      } catch {
-        // Not valid JSON, treat as text
-        const response = await fetch(`${apiBase}/parse`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text }),
-        });
-
-        if (response.ok) {
-          setMessage(`✅ File "${file.name}" parsed and imported!`);
-          onImportComplete();
-        } else {
-          setMessage("❌ Text parse failed");
-        }
-      }
-    } catch (error) {
-      setMessage("❌ Error reading file: " + String(error));
-    } finally {
-      setImporting(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handleFileUpload(files[0]);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Only set dragging to false if we're leaving the drop zone itself
-    if (e.currentTarget === e.target) {
-      setIsDragging(false);
-    }
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileUpload(files[0]);
-    }
-  };
-
-  const handleJsonImport = async () => {
-    if (!jsonText.trim()) return;
-    setImporting(true);
-    setMessage("");
-
-    try {
-      const response = await fetch(`${apiBase}/import/json?include_lyrics=true`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: jsonText,
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        // If there are lyrics to combine, do the combine step
-        if (result.parsed_data) {
-          const combineResponse = await fetch(`${apiBase}/combine/jcrd-lyrics?save=true`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(result),
-          });
-
-          if (combineResponse.ok) {
-            setMessage("✅ JSON imported successfully!");
-            setJsonText("");
-            onImportComplete();
-          } else {
-            setMessage("❌ Failed to combine and save");
-          }
-        } else {
-          setMessage("✅ JSON imported successfully!");
-          setJsonText("");
-          onImportComplete();
-        }
-      } else {
-        setMessage("❌ Import failed");
-      }
-    } catch (error) {
-      setMessage("❌ Error: " + String(error));
-    } finally {
-      setImporting(false);
-    }
-  };
-
-  const handleTextImport = async () => {
-    if (!textInput.trim()) return;
-    setImporting(true);
-    setMessage("");
-
-    try {
-      const response = await fetch(`${apiBase}/parse`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: textInput }),
-      });
-
-      if (response.ok) {
-        setMessage("✅ Text parsed and imported!");
-        setTextInput("");
-        onImportComplete();
-      } else {
-        setMessage("❌ Parse failed");
-      }
-    } catch (error) {
-      setMessage("❌ Error: " + String(error));
-    } finally {
-      setImporting(false);
-    }
-  };
-
-  return (
-    <div className="grid gap-4">
-      {message && (
-        <div className="p-3 bg-white border border-black/20 rounded font-typewriter text-black">
-          {message}
-        </div>
-      )}
-
-      {/* Drag & Drop File Upload */}
-      <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-          isDragging
-            ? "border-black bg-white/50"
-            : "border-black/30 hover:border-black/50 hover:bg-white/20"
-        }`}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-      >
-        <div className="font-typewriter text-black">
-          <div className="text-2xl mb-2">📁</div>
-          {isDragging ? (
-            <div className="font-bold mb-2 text-green-600">Drop your file here!</div>
-          ) : (
-            <div className="font-bold mb-2">Drop files here to import</div>
-          )}
-          <div className="text-sm mb-4">Supports .json, .txt, or any text file</div>
-          <input
-            type="file"
-            accept=".json,.txt,.text,*"
-            onChange={handleFileSelect}
-            className="hidden"
-            id="file-upload"
-            disabled={importing}
-          />
-          <label
-            htmlFor="file-upload"
-            className="btn-tape-sm cursor-pointer inline-block"
-          >
-            {importing ? "Importing..." : "Or click to browse files"}
-          </label>
-        </div>
-      </div>
-
-      {/* JSON Import */}
-      <div className="grid gap-2">
-        <h3 className="font-typewriter text-black font-bold">Import JSON (Paste)</h3>
-        <textarea
-          value={jsonText}
-          onChange={(e) => setJsonText(e.target.value)}
-          placeholder="Paste JSON content here..."
-          rows={6}
-          className="w-full p-3 bg-white border border-black/20 rounded font-typewriter text-black text-sm"
-          disabled={importing}
-        />
-        <button
-          onClick={handleJsonImport}
-          disabled={importing || !jsonText.trim()}
-          className="btn-tape-sm"
-        >
-          {importing ? "Importing..." : "Import JSON"}
-        </button>
-      </div>
-
-      {/* Text Import */}
-      <div className="grid gap-2">
-        <h3 className="font-typewriter text-black font-bold">Import Text (Paste)</h3>
-        <textarea
-          value={textInput}
-          onChange={(e) => setTextInput(e.target.value)}
-          placeholder="Paste song text here..."
-          rows={4}
-          className="w-full p-3 bg-white border border-black/20 rounded font-typewriter text-black text-sm"
-          disabled={importing}
-        />
-        <button
-          onClick={handleTextImport}
-          disabled={importing || !textInput.trim()}
-          className="btn-tape-sm"
-        >
-          {importing ? "Parsing..." : "Parse & Import"}
-        </button>
-      </div>
     </div>
   );
 }

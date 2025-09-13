@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "title": "07 - Here_Comes_The_Sun",
+    "artist": "The Beatles",
+    "tempo": 144,
+    "time_signature": "4/4"
+  },
+  "sections": [
+    {
+      "name": "intro",
+      "start_time": 0,
+      "end_time": 10
+    }
+  ],
+  "chord_progression": [
+    {
+      "time": 0,
+      "chord": "A",
+      "duration": 2
+    }
+  ]
+}
