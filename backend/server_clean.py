@@ -22,3 +22,5 @@ async def get_songs():
 @app.get("/api/health")
 def health():
     return {"status": "healthy"}
+
+print("Server created successfully")

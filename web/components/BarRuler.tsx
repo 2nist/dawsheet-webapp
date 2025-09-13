@@ -60,7 +60,7 @@ export function BarRuler({
   const totalWidth = Math.max(0, totalBeats) * zoom;
   return (
     <div
-      className="relative h-6 bg-slate-800/60 rounded border border-slate-700 overflow-hidden"
+      className="relative h-12 bg-slate-800/60 rounded border border-slate-700 overflow-hidden"
       style={{ width: totalWidth ? `${totalWidth}px` : undefined }}
     >
       {/* baseline */}

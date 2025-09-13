@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { swrFetcher } from "@/lib/api";
@@ -7,423 +7,275 @@ import { ChordLane } from "@/components/ChordLane";
 import { BarRuler } from "@/components/BarRuler";
 import { LyricLane } from "@/components/LyricLane";
 
-export default function SongDetailPage() {
+const SongPage: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
-  console.log("router.query.id:", id);
   const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
-  const [zoom, setZoom] = React.useState(8); // px per beat
-  const [grid, setGrid] = React.useState<"off" | "1/4" | "1/8">("1/4");
-  // orientation toggles per lane
-  const [sectionsOri, setSectionsOri] = React.useState<
-    "horizontal" | "vertical"
-  >("horizontal");
-  const [rulerOri, setRulerOri] = React.useState<"horizontal" | "vertical">(
-    "horizontal"
-  );
-  const [chordsOri, setChordsOri] = React.useState<"horizontal" | "vertical">(
-    "horizontal"
-  );
-  const [lyricsOri, setLyricsOri] = React.useState<"horizontal" | "vertical">(
-    "horizontal"
-  );
-  const [editMode, setEditMode] = React.useState(false);
 
-  const url = React.useMemo(() => {
+  const [zoom, setZoom] = useState(8); // px per beat
+  const [playhead, setPlayhead] = useState(0); // Current playhead position in beats
+  const [isDragging, setIsDragging] = useState(false);
+  const [lastInteractionX, setLastInteractionX] = useState(0);
+
+  const url = useMemo(() => {
     if (!id) return null;
     const sid = Array.isArray(id) ? id[0] : id;
     return `${apiBase}/v1/songs/${sid}/doc`;
   }, [id, apiBase]);
 
-  console.log("fetch url:", url);
-
   const { data, error, isLoading, mutate } = useSWR(url, swrFetcher);
 
   const doc = data as any;
-  const sections = React.useMemo(() => doc?.sections || [], [doc]);
-  const chords = React.useMemo(
-    () => (doc?.chords || []) as { symbol: string; startBeat: number }[],
-    [doc]
-  );
-  const lyrics = React.useMemo(
-    () =>
-      (doc?.lyrics || []) as {
-        text: string;
-        ts_sec?: number | null;
-        beat?: number | null;
-      }[],
-    [doc]
-  );
-  const issues: string[] = React.useMemo(() => doc?.issues || [], [doc]);
+  const sections = useMemo(() => doc?.sections || [], [doc]);
+  const chords = useMemo(() => (doc?.chords || []) as { symbol: string; startBeat: number }[], [doc]);
+  const lyrics = useMemo(() => (doc?.lyrics || []) as { text: string; beat?: number | null }[], [doc]);
   const timeSig: string = doc?.timeSignature || "4/4";
   const beatsPerBar = Number(timeSig?.split("/")[0] || "4") || 4;
 
-  // visual quantize (no refetch): rounds startBeat in the view
-  const gridStep = grid === "off" ? 0 : grid === "1/4" ? 1 : 0.5;
-  const qChords = React.useMemo(() => {
-    if (!Array.isArray(chords)) return [] as typeof chords;
-    if (!gridStep) return chords;
-    return chords.map((c) => ({
-      ...c,
-      startBeat: Math.round(c.startBeat / gridStep) * gridStep,
-    }));
-  }, [chords, gridStep]);
+  const totalBeats = useMemo(() => {
+    if (!chords.length && !sections.length) return beatsPerBar * 16; // Default length
+    const lastChordBeat = chords[chords.length - 1]?.startBeat ?? 0;
+    const lastSectionBeat = sections[sections.length - 1]?.startBeat ?? 0;
+    const lastBeat = Math.max(lastChordBeat, lastSectionBeat) + beatsPerBar;
+    return Math.max(beatsPerBar, lastBeat);
+  }, [chords, sections, beatsPerBar]);
 
-  const totalBeats = React.useMemo(() => {
-    const last = (qChords[qChords.length - 1]?.startBeat ?? 0) + beatsPerBar;
-    return Math.max(beatsPerBar, last);
-  }, [qChords, beatsPerBar]);
+  const normalizeBeat = useCallback((b: number) => {
+    const tb = Math.max(1, totalBeats || 1);
+    return ((b % tb) + tb) % tb;
+  }, [totalBeats]);
 
-  // Lyrics search/attach helpers
-  const [searching, setSearching] = React.useState(false);
-  const [searchErr, setSearchErr] = React.useState<string | null>(null);
-  const [found, setFound] = React.useState<{
-    matched: boolean;
-    synced: boolean;
-    lines: { ts_sec: number | null; text: string }[];
-  } | null>(null);
+  // Cylindrical rotation boundaries
+  const ROTATION_BARS = 10;
+  const rotationBeats = ROTATION_BARS * beatsPerBar;
+  const cycles = Math.max(3, Math.ceil(rotationBeats / Math.max(1, totalBeats)));
+  const sideBeats = cycles * totalBeats;
+  const extendedTotalBeats = totalBeats + 2 * sideBeats;
 
-  async function searchLyrics() {
+  const rotatingContent = useMemo(() => {
+    if (!doc) return { sections: [], chords: [], lyrics: [] };
+
+    const rotatedSections: any[] = [];
+    const rotatedChords: any[] = [];
+    const rotatedLyrics: any[] = [];
+
+    for (let i = -cycles; i <= cycles; i++) {
+      const offset = i * totalBeats;
+      sections.forEach(section => rotatedSections.push({ ...section, startBeat: offset + section.startBeat }));
+      chords.forEach(chord => rotatedChords.push({ ...chord, startBeat: offset + chord.startBeat }));
+      lyrics.forEach(lyric => rotatedLyrics.push({ ...lyric, beat: offset + (lyric.beat || 0) }));
+    }
+
+    const shift = sideBeats;
+    return {
+      sections: rotatedSections.map(s => ({ ...s, startBeat: (s.startBeat || 0) + shift })),
+      chords: rotatedChords.map(c => ({ ...c, startBeat: (c.startBeat || 0) + shift })),
+      lyrics: rotatedLyrics.map(l => ({ ...l, beat: (l.beat || 0) + shift })),
+    };
+  }, [doc, sections, chords, lyrics, totalBeats, cycles, sideBeats]);
+
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const viewBeat = useMemo(() => normalizeBeat(playhead), [normalizeBeat, playhead]);
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const center = window.innerWidth / 2;
+    el.style.transform = `translateX(${center - (viewBeat + sideBeats) * zoom}px)`;
+  }, [viewBeat, sideBeats, zoom]);
+
+  // --- Consolidated Event Handlers ---
+  useEffect(() => {
+    const handleInteractionStart = (clientX: number) => {
+      setIsDragging(true);
+      setLastInteractionX(clientX);
+    };
+
+    const handleInteractionMove = (clientX: number) => {
+      setLastInteractionX(prevX => {
+        if (prevX === 0) return clientX; // Initial move after start
+        const deltaX = prevX - clientX; // Reversed for natural feel
+        const deltaBeats = deltaX / zoom;
+        setPlayhead(p => normalizeBeat(p + deltaBeats));
+        return clientX;
+      });
+    };
+
+    const handleInteractionEnd = () => {
+      setIsDragging(false);
+      setLastInteractionX(0);
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      handleInteractionStart(e.clientX);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleInteractionMove(e.clientX);
+      }
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleInteractionEnd();
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const deltaBeats = (e.deltaX / zoom) * 0.5 + (e.deltaY / zoom) * 0.1;
+      setPlayhead(prev => normalizeBeat(prev + deltaBeats));
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        e.preventDefault();
+        handleInteractionStart(e.touches[0].clientX);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1 && isDragging) {
+        e.preventDefault();
+        handleInteractionMove(e.touches[0].clientX);
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleInteractionEnd();
+      }
+    };
+
+    const eventOptions = { passive: false };
+    window.addEventListener('mousedown', handleMouseDown, eventOptions);
+    window.addEventListener('mousemove', handleMouseMove, eventOptions);
+    window.addEventListener('mouseup', handleMouseUp, eventOptions);
+    window.addEventListener('wheel', handleWheel, eventOptions);
+    window.addEventListener('touchstart', handleTouchStart, eventOptions);
+    window.addEventListener('touchmove', handleTouchMove, eventOptions);
+    window.addEventListener('touchend', handleTouchEnd, eventOptions);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isDragging, zoom, normalizeBeat]);
+
+
+  // --- Lyrics Search and Attach Logic ---
+  const [searching, setSearching] = useState(false);
+  const [searchErr, setSearchErr] = useState<string | null>(null);
+  const [foundLyrics, setFoundLyrics] = useState<any>(null);
+
+  const searchLyrics = useCallback(async () => {
     if (!doc) return;
     setSearching(true);
     setSearchErr(null);
-    setFound(null);
+    setFoundLyrics(null);
     try {
-      const title = encodeURIComponent(doc?.title || "");
+      const cleanTitle = (doc?.title || "")
+        .replace(/^\d+\s*-\s*/, '')
+        .replace(/_/g, ' ');
+
+      console.log(`Searching for lyrics with cleaned title: "${cleanTitle}"`);
+      const title = encodeURIComponent(cleanTitle);
       const artist = encodeURIComponent(doc?.artist || "");
-      const res = await fetch(
-        `${apiBase}/lyrics/search?title=${title}&artist=${artist}`
-      );
-      if (!res.ok) throw new Error(await res.text());
+      const res = await fetch(`${apiBase}/v1/lyrics/search?title=${title}&artist=${artist}`);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Lyric search failed:", res.status, errorText);
+        throw new Error(`[${res.status}] ${errorText}`);
+      }
       const data = await res.json();
-      setFound({
-        matched: !!data.matched,
-        synced: !!data.synced,
-        lines: (data.lines || []) as any,
-      });
+      console.log("--- Lyrics Search Result ---", data);
+      if (data.matched && data.lines?.length > 0) {
+        setFoundLyrics(data);
+      } else {
+        setSearchErr("No matching lyrics found.");
+      }
     } catch (e: any) {
-      setSearchErr(String(e));
+      console.error("An error occurred during lyric search:", e);
+      setSearchErr(e.message || String(e));
     } finally {
       setSearching(false);
     }
-  }
+  }, [doc, apiBase]);
 
-  async function attachLyrics() {
-    if (!id || !found) return;
+  const attachLyrics = useCallback(async (lyricsToAttach: any) => {
+    if (!id || !lyricsToAttach) return;
     const sid = Array.isArray(id) ? id[0] : id;
+    console.log("--- Attaching lyrics... ---");
     try {
-      const res = await fetch(`${apiBase}/songs/${sid}/attach-lyrics`, {
+      const res = await fetch(`${apiBase}/v1/songs/${sid}/attach-lyrics`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ lines: found.lines, mode: "append" }),
+        body: JSON.stringify({ lines: lyricsToAttach.lines, mode: "append" }),
       });
       if (!res.ok) throw new Error(await res.text());
-      // Refresh the analyzed doc to include newly attached lyrics
-      await mutate();
-      setFound(null);
+      await mutate(); // Refresh the song doc
+      setFoundLyrics(null);
+      console.log("--- Lyrics attached successfully ---");
     } catch (e: any) {
       alert(`Attach failed: ${String(e)}`);
+      console.error("Attach failed:", e);
     }
-  }
+  }, [id, apiBase, mutate]);
 
-  const [chordsLive, setChordsLive] = React.useState<typeof chords>([]);
-  const [lyricsLive, setLyricsLive] = React.useState<typeof lyrics>([]);
-  React.useEffect(() => {
-    setChordsLive(chords);
-  }, [chords]);
-  React.useEffect(() => {
-    setLyricsLive(lyrics);
-  }, [lyrics]);
+  useEffect(() => {
+    if (doc && !lyrics.length && !foundLyrics && !searching && !searchErr) {
+      searchLyrics();
+    }
+  }, [doc, lyrics.length, foundLyrics, searching, searchErr, searchLyrics]);
+
+  useEffect(() => {
+    if (foundLyrics) {
+      attachLyrics(foundLyrics);
+    }
+  }, [foundLyrics, attachLyrics]);
+
+
+  if (isLoading) return <div className="p-4 text-center">Loading song...</div>;
+  if (error) return <div className="p-4 text-center text-red-500">Error loading song: {error.message}</div>;
+  if (!doc) return <div className="p-4 text-center">Song not found.</div>;
 
   return (
-    <div className="p-4 space-y-4">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">
-            {doc?.title || "Song"}{" "}
-            <span className="text-slate-500">
-              {doc?.artist ? `— ${doc.artist}` : ""}
-            </span>
-          </h1>
-          <p className="text-sm text-slate-500">
-            {timeSig} • {doc?.bpm} bpm
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          {/* Quick link to the new App Router timeline view */}
-          {id && (
-            <a
-              href={`/songs/${Array.isArray(id) ? id[0] : id}/timeline`}
-              className="px-3 py-1 text-sm rounded border border-sky-500/40 bg-sky-700 hover:bg-sky-600"
-              title="Open the new Timeline view"
-            >
-              Open Timeline (new)
-            </a>
-          )}
-          <label className="text-sm">Zoom: {zoom}px/beat</label>
-          <input
-            type="range"
-            min={4}
-            max={24}
-            step={1}
-            value={zoom}
-            onChange={(e) => setZoom(parseInt(e.target.value, 10))}
-          />
-          <select
-            className="border rounded px-2 py-1 text-sm bg-slate-900 border-slate-700"
-            value={grid}
-            onChange={(e) => setGrid(e.target.value as any)}
-            title="Quantize preview (visual only)"
-          >
-            <option value="off">Grid: off</option>
-            <option value="1/4">Grid: 1/4</option>
-            <option value="1/8">Grid: 1/8</option>
-          </select>
-        </div>
-      </header>
-
-      {/* layout toggles */}
-      <div className="flex flex-wrap gap-2 text-xs items-center">
-        <label className="flex items-center gap-1">
-          Edit:
-          <input
-            type="checkbox"
-            checked={editMode}
-            onChange={(e) => setEditMode(e.target.checked)}
-          />
-        </label>
-        <label className="flex items-center gap-1">
-          Sections:
-          <select
-            className="bg-slate-900 border border-slate-700 rounded px-1 py-0.5"
-            value={sectionsOri}
-            onChange={(e) => setSectionsOri(e.target.value as any)}
-          >
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
-        </label>
-        <label className="flex items-center gap-1">
-          Ruler:
-          <select
-            className="bg-slate-900 border border-slate-700 rounded px-1 py-0.5"
-            value={rulerOri}
-            onChange={(e) => setRulerOri(e.target.value as any)}
-          >
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
-        </label>
-        <label className="flex items-center gap-1">
-          Chords:
-          <select
-            className="bg-slate-900 border border-slate-700 rounded px-1 py-0.5"
-            value={chordsOri}
-            onChange={(e) => setChordsOri(e.target.value as any)}
-          >
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
-        </label>
-        <label className="flex items-center gap-1">
-          Lyrics:
-          <select
-            className="bg-slate-900 border border-slate-700 rounded px-1 py-0.5"
-            value={lyricsOri}
-            onChange={(e) => setLyricsOri(e.target.value as any)}
-          >
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
-        </label>
-      </div>
-
-      {/* Vertical board (side-by-side columns) when any lane is vertical */}
-      {(sectionsOri === "vertical" ||
-        rulerOri === "vertical" ||
-        chordsOri === "vertical" ||
-        lyricsOri === "vertical") && (
-        <div className="flex gap-2">
-          {/* Sections column */}
-          <div className="flex-none" style={{ width: 72 }}>
-            <SectionRail
-              sections={sections}
-              zoom={zoom}
-              orientation={sectionsOri}
-              totalBeats={totalBeats}
-            />
-          </div>
-          {/* Ruler column */}
-          <div className="flex-none" style={{ width: 56 }}>
-            <BarRuler
-              beatsPerBar={beatsPerBar}
-              totalBeats={totalBeats}
-              zoom={zoom}
-              orientation={rulerOri}
-            />
-          </div>
-          {/* Chords column */}
-          <div className="flex-1">
-            <ChordLane
-              chords={chordsLive}
-              zoom={zoom}
-              beatsPerBar={beatsPerBar}
-              totalBeats={totalBeats}
-              orientation={chordsOri}
-              editable={editMode}
-              onChange={setChordsLive}
-            />
-          </div>
-          {/* Lyrics column */}
-          <div className="flex-1">
-            <LyricLane
-              lyrics={lyricsLive}
-              zoom={zoom}
-              beatsPerBar={beatsPerBar}
-              totalBeats={totalBeats}
-              orientation={lyricsOri}
-              editable={editMode}
-              onChange={setLyricsLive}
-            />
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div className="text-red-400">
-          Failed to load: {String((error as any)?.message || error)}
-        </div>
-      )}
-      {isLoading && <div className="text-slate-400">Loading…</div>}
-
-      {!!sections?.length && (
-        <div>
-          <h2 className="text-sm mb-1 text-slate-400">Sections</h2>
-          <SectionRail
-            sections={sections}
-            zoom={zoom}
-            orientation={sectionsOri}
-            totalBeats={totalBeats}
-          />
-        </div>
-      )}
-
-      <div>
-        <h2 className="text-sm mb-1 text-slate-400">Timeline</h2>
-        <BarRuler
-          beatsPerBar={beatsPerBar}
-          totalBeats={totalBeats}
-          zoom={zoom}
-          orientation={rulerOri}
-        />
-      </div>
-
-      <div>
-        <h2 className="text-sm mb-1 text-slate-400">Chords</h2>
-        <ChordLane
-          chords={qChords}
-          zoom={zoom}
-          beatsPerBar={beatsPerBar}
-          totalBeats={totalBeats}
-          orientation={chordsOri}
-        />
-      </div>
-
-      {/* Only show the attach/search panel when the doc has loaded and truly has no lyrics */}
-      {doc && (!lyrics || lyrics.length === 0) && (
-        <div className="p-3 rounded border border-slate-700 bg-slate-900">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-slate-300">No lyrics attached.</div>
-            <button
-              className="px-3 py-1 text-sm rounded bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/40"
-              onClick={searchLyrics}
-              disabled={searching || !doc?.title || !doc?.artist}
-              title={
-                !doc?.title || !doc?.artist
-                  ? "Needs title and artist to search"
-                  : "Search timestamped lyrics via LRCLIB"
-              }
-            >
-              {searching ? "Searching…" : "Search lyrics (LRCLIB)"}
-            </button>
-          </div>
-          {(!doc?.title || !doc?.artist) && (
-            <div className="mt-2 text-amber-300 text-xs">
-              Set both title and artist to enable lyrics search.
-            </div>
-          )}
-          {searchErr && (
-            <div className="mt-2 text-amber-300 text-sm">{searchErr}</div>
-          )}
-          {found && (
-            <div className="mt-3 text-sm">
-              <div className="mb-2 text-slate-300">
-                {found.matched ? (
-                  <>
-                    Found {found.lines.length} line
-                    {found.lines.length === 1 ? "" : "s"}
-                    {found.synced ? " (timestamped)" : " (plain)"}
-                  </>
-                ) : (
-                  <>No results</>
-                )}
+    <div className="fixed inset-0 bg-slate-900/50 overflow-hidden select-none touch-none">
+      <div className="absolute inset-0">
+        <div ref={contentRef} className="relative timeline-content z-20 h-full">
+          <div className="flex flex-col justify-center h-full space-y-1">
+            {!!rotatingContent.sections?.length && (
+              <div>
+                <SectionRail sections={rotatingContent.sections} zoom={zoom} totalBeats={extendedTotalBeats} />
               </div>
-              {found.lines.length > 0 && (
-                <>
-                  <div className="max-h-40 overflow-auto bg-slate-950/60 border border-slate-700 rounded p-2 text-slate-200">
-                    {found.lines.slice(0, 12).map((ln, i) => (
-                      <div key={i} className="truncate">
-                        {typeof ln.ts_sec === "number"
-                          ? `[${ln.ts_sec.toFixed(2)}] `
-                          : ""}
-                        {ln.text}
-                      </div>
-                    ))}
-                    {found.lines.length > 12 && (
-                      <div className="text-slate-500">…and more</div>
-                    )}
-                  </div>
-                  <div className="mt-2 flex gap-2">
-                    <button
-                      className="px-3 py-1 text-sm rounded bg-sky-700 hover:bg-sky-600 border border-sky-500/40"
-                      onClick={attachLyrics}
-                    >
-                      Attach to song
-                    </button>
-                  </div>
-                </>
-              )}
+            )}
+            <div>
+              <BarRuler beatsPerBar={beatsPerBar} totalBeats={extendedTotalBeats} zoom={zoom} />
             </div>
-          )}
+            <div>
+              <ChordLane chords={rotatingContent.chords} zoom={zoom} beatsPerBar={beatsPerBar} totalBeats={extendedTotalBeats} />
+            </div>
+            {!!rotatingContent.lyrics?.length && (
+              <div>
+                <LyricLane lyrics={rotatingContent.lyrics} zoom={zoom} beatsPerBar={beatsPerBar} totalBeats={extendedTotalBeats} />
+              </div>
+            )}
+          </div>
         </div>
-      )}
-      {!doc && !error && !isLoading && (
-        <div className="text-xs text-slate-400">Waiting for song data…</div>
-      )}
-
-      {!!lyrics?.length && (
-        <div>
-          <h2 className="text-sm mb-1 text-slate-400">Lyrics</h2>
-          <LyricLane
-            lyrics={lyrics}
-            zoom={zoom}
-            beatsPerBar={beatsPerBar}
-            totalBeats={totalBeats}
-            orientation={lyricsOri}
-          />
-        </div>
-      )}
-
-      {!!issues?.length && (
-        <div>
-          <h2 className="text-sm mb-1 text-slate-400">Issues</h2>
-          <ul className="list-disc ml-5 text-sm text-amber-300">
-            {issues.map((i, idx) => (
-              <li key={idx}>{i}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
+
+export default SongPage;

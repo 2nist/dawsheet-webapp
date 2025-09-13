@@ -5,7 +5,7 @@ from typing import Optional
 from ..services.lyrics_providers.lrclib import search_timestamped_lyrics
 from ..config import settings
 
-router = APIRouter(prefix="/lyrics", tags=["lyrics"])
+router = APIRouter(tags=["lyrics"])
 
 
 @router.get("/search")

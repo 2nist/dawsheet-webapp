@@ -10,6 +10,7 @@ import { TimelineHeader } from "@/components/timeline/TimelineHeader";
 import { SectionReader } from "@/components/timeline/SectionReader";
 import { InspectorPanel } from "@/components/timeline/InspectorPanel";
 import { SectionChordLyricChart } from "@/components/timeline/SectionChordLyricChart";
+import { CommandToolbar } from "@/components/CommandToolbar";
 import { FEATURE_SECTION_CHART } from "@/lib/featureFlags";
 
 export default function SongTimelinePage() {
@@ -94,44 +95,47 @@ export default function SongTimelinePage() {
   }, [id, apiBase, setData]);
 
   return (
-    <div className="p-4 space-y-4">
-      <TimelineHeader
-        meta={{ ...meta, title: meta?.title || timelineTitle(meta, id) }}
-      />
-      <StatusBanner id={id} />
-      {loading && <div className="text-xs text-slate-400">Loading…</div>}
-      {err && <div className="text-xs text-amber-400">{err}</div>}
-      <div className="grid grid-cols-12 gap-4 items-start">
-        <div className="col-span-8">
-          {dataStatus === "ok" && <SectionReader />}
-          {FEATURE_SECTION_CHART && dataStatus === "ok" && (
-            <div className="mt-6">
-              <details className="group" open>
-                <summary className="cursor-pointer select-none text-sm font-medium flex items-center gap-2">
-                  <span>Chord/Lyric Chart</span>
-                  <span className="text-[10px] text-slate-400 group-open:hidden">
-                    (expand)
-                  </span>
-                  <span className="text-[10px] text-slate-400 hidden group-open:inline">
-                    (collapse)
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <SectionChordLyricChart />
-                </div>
-              </details>
-            </div>
-          )}
-          {dataStatus === "ok" && (
-            <div className="mt-4 space-y-2 overflow-x-auto">
-              <SectionsLane />
-              <LyricsLane />
-              <ChordsLane />
-            </div>
-          )}
-        </div>
-        <div className="col-span-4">
-          {dataStatus === "ok" && <InspectorPanel />}
+    <div className="space-y-0">
+      <CommandToolbar />
+      <div className="p-4 space-y-4">
+        <TimelineHeader
+          meta={{ ...meta, title: meta?.title || timelineTitle(meta, id) }}
+        />
+        <StatusBanner id={id} />
+        {loading && <div className="text-xs text-slate-400">Loading…</div>}
+        {err && <div className="text-xs text-amber-400">{err}</div>}
+        <div className="grid grid-cols-12 gap-4 items-start">
+          <div className="col-span-8">
+            {dataStatus === "ok" && <SectionReader />}
+            {FEATURE_SECTION_CHART && dataStatus === "ok" && (
+              <div className="mt-6">
+                <details className="group" open>
+                  <summary className="cursor-pointer select-none text-sm font-medium flex items-center gap-2">
+                    <span>Chord/Lyric Chart</span>
+                    <span className="text-[10px] text-slate-400 group-open:hidden">
+                      (expand)
+                    </span>
+                    <span className="text-[10px] text-slate-400 hidden group-open:inline">
+                      (collapse)
+                    </span>
+                  </summary>
+                  <div className="mt-3">
+                    <SectionChordLyricChart />
+                  </div>
+                </details>
+              </div>
+            )}
+            {dataStatus === "ok" && (
+              <div className="mt-4 space-y-2 overflow-x-auto">
+                <SectionsLane />
+                <LyricsLane />
+                <ChordsLane />
+              </div>
+            )}
+          </div>
+          <div className="col-span-4">
+            {dataStatus === "ok" && <InspectorPanel />}
+          </div>
         </div>
       </div>
     </div>
