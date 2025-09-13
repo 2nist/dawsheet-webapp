@@ -31,6 +31,7 @@ function ViewTab() {
   const items: Array<{ label: string; href: string; functional: boolean }> = [
     { label: "Library", href: "/library", functional: true },
     { label: "Timeline", href: "/timeline", functional: true },
+    { label: "Design", href: "/design", functional: true },
     { label: "Record", href: "/record", functional: true },
     { label: "Editor", href: "/editor", functional: true },
   ];
