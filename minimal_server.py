@@ -1,5 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
+import httpx
+import re
+import json
 from typing import List, Dict, Any
 
 app = FastAPI(title="DAWSheet Minimal API")
@@ -48,9 +51,20 @@ app.add_middleware(
 def health():
     return {"ok": True}
 
+@app.get("/songs")
+def get_songs():
+    """Return list of all songs"""
+    return songs_storage
+
 @app.get("/v1/songs/{song_id}/doc")
 def get_song_doc(song_id: int):
     """Return song document data"""
+    # Find song in storage
+    for song in songs_storage:
+        if song.get("id") == song_id:
+            return song
+
+    # Return demo data if not found
     return {
         "id": song_id,
         "title": f"Song {song_id}",
@@ -58,37 +72,194 @@ def get_song_doc(song_id: int):
         "sections": []
     }
 
+# LRCLIB integration functions
+async def fetch_lyrics_from_lrclib(title: str, artist: str = "", album: str = "", duration_sec: int = None) -> Dict:
+    """Fetch timestamped lyrics from LRCLIB"""
+    try:
+        params = {
+            "track_name": title,
+            "artist_name": artist,
+        }
+        if album:
+            params["album_name"] = album
+        if duration_sec:
+            params["duration"] = str(duration_sec)
+
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get("https://lrclib.net/api/get", params=params)
+
+            if response.status_code == 404:
+                return {"source": "lrclib", "matched": False, "synced": False, "lines": []}
+
+            response.raise_for_status()
+            data = response.json()
+
+            # Parse LRC format if synced lyrics available
+            synced = bool(data.get("syncedLyrics"))
+            if synced:
+                lines = parse_lrc_text(data["syncedLyrics"])
+            else:
+                # Use plain lyrics without timestamps
+                lines = [
+                    {"ts_sec": None, "text": line.strip()}
+                    for line in (data.get("plainLyrics") or "").splitlines()
+                    if line.strip()
+                ]
+
+            return {
+                "source": "lrclib",
+                "matched": True,
+                "synced": synced,
+                "lines": lines,
+                "raw_data": data
+            }
+    except Exception as e:
+        print(f"LRCLIB fetch error: {e}")
+        return {"source": "lrclib", "matched": False, "synced": False, "lines": [], "error": str(e)}
+
+def parse_lrc_text(lrc_text: str) -> List[Dict]:
+    """Parse LRC format: [00:12.34] lyric line"""
+    lines = []
+    timestamp_pattern = re.compile(r'\[(\d{1,2}):(\d{2})(?:\.(\d{1,3}))?\]')
+
+    for line in lrc_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        matches = list(timestamp_pattern.finditer(line))
+        if matches:
+            # Extract timestamp
+            match = matches[0]
+            minutes = int(match.group(1))
+            seconds = int(match.group(2))
+            milliseconds = int(match.group(3) or 0)
+
+            # Convert to total seconds
+            ts_sec = minutes * 60 + seconds + (milliseconds / 1000)
+
+            # Extract text after timestamp
+            text = timestamp_pattern.sub('', line).strip()
+            if text:
+                lines.append({"ts_sec": ts_sec, "text": text})
+        else:
+            # Line without timestamp
+            if line:
+                lines.append({"ts_sec": None, "text": line})
+
+    return lines
+
 @app.post("/import/json")
-def import_json(json_data: Dict[str, Any], include_lyrics: bool = True):
-    """Handle JSON import requests"""
-    # Generate next ID
-    next_id = max([s.get("id", 0) for s in songs_storage], default=0) + 1
+async def import_json_with_lyrics(file: UploadFile = File(...), include_lyrics: bool = Query(default=True)):
+    """Enhanced JSON import with LRCLIB lyrics integration"""
+    try:
+        # Read and parse JSON file
+        content = await file.read()
+        json_data = json.loads(content.decode('utf-8'))
 
-    # Extract song data from JSON
-    title = json_data.get("title", "Imported Song")
-    artist = json_data.get("artist", "Unknown Artist")
-    content = str(json_data)  # Store the full JSON as content
+        # Extract metadata
+        metadata = json_data.get("metadata", {})
+        title = metadata.get("title", "") or json_data.get("title", "")
+        artist = metadata.get("artist", "") or json_data.get("artist", "")
 
-    # Create new song
-    new_song = {
-        "id": next_id,
-        "title": title,
-        "artist": artist,
-        "content": content,
-        "bpm": json_data.get("bpm", 120),
-        "key": json_data.get("key", "C"),
-        "created_at": "2024-01-01T00:00:00Z"
-    }
+        # Generate next ID
+        next_id = max([s.get("id", 0) for s in songs_storage], default=0) + 1
 
-    # Add to storage
-    songs_storage.append(new_song)
+        # Fetch lyrics if requested and we have title
+        lyrics_data = None
+        if include_lyrics and title:
+            print(f"Fetching lyrics for: {title} by {artist}")
+            lyrics_data = await fetch_lyrics_from_lrclib(title, artist)
 
-    return {
-        "success": True,
-        "message": "JSON imported successfully",
-        "song_id": next_id,
-        "parsed_data": json_data if include_lyrics else None
-    }
+        # Process song data
+        song_data = {
+            "id": next_id,
+            "title": title or f"Imported Song {next_id}",
+            "artist": artist or "Unknown Artist",
+            "bpm": json_data.get("bpm") or metadata.get("bpm", 120),
+            "time_signature": json_data.get("time_signature") or metadata.get("time_signature", "4/4"),
+            "key": json_data.get("key") or metadata.get("key", "C"),
+            "sections": json_data.get("sections", []),
+            "chords": json_data.get("chord_progression", []) or json_data.get("chords", []),
+            "lyrics": lyrics_data.get("lines", []) if lyrics_data else [],
+            "raw_json": json_data,
+            "created_at": "2024-01-01T00:00:00Z"
+        }
+
+        # Add to storage
+        songs_storage.append(song_data)
+
+        # Return comprehensive result
+        result = {
+            "success": True,
+            "message": "JSON imported successfully with lyrics",
+            "song_id": next_id,
+            "filename": file.filename,
+            "title": song_data["title"],
+            "artist": song_data["artist"],
+            "sections_count": len(song_data["sections"]),
+            "chords_count": len(song_data["chords"]),
+            "lyrics_count": len(song_data["lyrics"]),
+            "lyrics_synced": lyrics_data.get("synced", False) if lyrics_data else False,
+            "preview": song_data
+        }
+
+        if lyrics_data:
+            result["lyrics_source"] = lyrics_data.get("source")
+            result["lyrics_matched"] = lyrics_data.get("matched")
+
+        return result
+
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
+
+@app.post("/combine/jcrd-lyrics")
+async def combine_jcrd_lyrics(payload: Dict[str, Any], save: bool = Query(default=True)):
+    """Combine JCRD data with lyrics from LRCLIB"""
+    try:
+        jcrd = payload.get("jcrd", {})
+        title = payload.get("title") or jcrd.get("metadata", {}).get("title", "")
+        artist = payload.get("artist") or jcrd.get("metadata", {}).get("artist", "")
+        include_lyrics = payload.get("include_lyrics", True)
+
+        # Fetch lyrics if needed
+        lyrics_data = None
+        if include_lyrics and title:
+            lyrics_data = await fetch_lyrics_from_lrclib(title, artist)
+
+        # Combine data
+        combined = {
+            "title": title,
+            "artist": artist,
+            "jcrd": jcrd,
+            "lyrics": lyrics_data.get("lines", []) if lyrics_data else [],
+            "combined_at": "2024-01-01T00:00:00Z"
+        }
+
+        if save:
+            # Generate ID and save
+            next_id = max([s.get("id", 0) for s in songs_storage], default=0) + 1
+            song_data = {
+                "id": next_id,
+                "title": title,
+                "artist": artist,
+                "content": json.dumps(combined),
+                "bpm": jcrd.get("bpm", 120),
+                "key": jcrd.get("key", "C"),
+                "sections": jcrd.get("sections", []),
+                "chords": jcrd.get("chord_progression", []),
+                "lyrics": combined["lyrics"],
+                "created_at": "2024-01-01T00:00:00Z"
+            }
+            songs_storage.append(song_data)
+            combined["song_id"] = next_id
+
+        return combined
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Combine failed: {str(e)}")
 
 @app.options("/combine/jcrd-lyrics")
 def combine_options():

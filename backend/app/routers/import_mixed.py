@@ -58,8 +58,15 @@ async def import_multi(
 							lines = None
 							if title:
 								try:
+									# Import title cleaning utilities
+									from ..utils.lyrics import clean_title_for_lyrics, normalize_artist_name
+
+									# Clean title and artist for better lyrics matching
+									clean_title = clean_title_for_lyrics(title)
+									clean_artist = normalize_artist_name(artist)
+
 									# Attempt lyrics search even if artist is missing; provider will best-match
-									fetched = await search_timestamped_lyrics(title=title, artist=artist, timeout=3.0)
+									fetched = await search_timestamped_lyrics(title=clean_title, artist=clean_artist, timeout=3.0)
 									lines = (fetched or {}).get("lines") if isinstance(fetched, dict) else None
 								except Exception:
 									lines = None

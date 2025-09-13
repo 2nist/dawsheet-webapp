@@ -1,19 +1,7 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import Link from "next/link";
 
 export default function HomePage() {
-  const router = useRouter();
-
-  // Auto-redirect to library after 2 seconds, or user can click
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/songs');
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [router]);
-
   return (
     <main className="min-h-screen p-6 flex items-center justify-center font-typewriter">
       <div className="max-w-2xl w-full">
@@ -37,14 +25,14 @@ export default function HomePage() {
                 NEW SONG
               </Link>
 
-              <Link href="/import" className="btn-tape-wide">
+              <Link href="/import-unified" className="btn-tape-wide">
                 IMPORT
               </Link>
             </div>
 
             <div className="mt-6 p-3 border border-black/10 rounded bg-white/50">
-              <p className="font-typewriter text-black">
-                Redirecting to Library in 2 seconds...
+              <p className="font-typewriter text-black text-sm">
+                Welcome! Choose an option above to get started, or drag files onto the [trk] logo for quick import.
               </p>
             </div>
           </div>

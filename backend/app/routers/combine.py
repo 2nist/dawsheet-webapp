@@ -41,11 +41,18 @@ async def combine_jcrd_lyrics(
     # Auto-fetch lyrics if requested to include and no lines provided
     if include_lyrics and not lines:
         if settings.LYRICS_PROVIDER_ENABLED:
+            from ..utils.lyrics import clean_title_for_lyrics, normalize_artist_name
+
             title = (payload.get("title") or jcrd.get("metadata", {}).get("title") or "").strip()
             artist = (payload.get("artist") or jcrd.get("metadata", {}).get("artist") or "").strip()
+
             if title:
+                # Clean title and artist for better lyrics matching
+                clean_title = clean_title_for_lyrics(title)
+                clean_artist = normalize_artist_name(artist)
+
                 try:
-                    fetched = await search_timestamped_lyrics(title=title, artist=artist)
+                    fetched = await search_timestamped_lyrics(title=clean_title, artist=clean_artist)
                     if fetched and isinstance(fetched.get("lines"), list):
                         lines = fetched["lines"]
                 except Exception:

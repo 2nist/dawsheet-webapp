@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "title": "07 - Can't_Buy_Me_Love",
+    "artist": "The_Beatles",
+    "tempo": 120,
+    "time_signature": "4/4"
+  },
+  "chord_progression": [
+    {"time": 0.0, "chord": "C", "duration": 2.0},
+    {"time": 2.0, "chord": "F", "duration": 2.0}
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "title": "Imagine",
+  "artist": "John Lennon",
+  "bpm": 76,
+  "timeSignature": "4/4",
+  "sections": [
+    {
+      "name": "Verse",
+      "startBeat": 0,
+      "lengthBeats": 32
+    },
+    {
+      "name": "Chorus",
+      "startBeat": 32,
+      "lengthBeats": 16
+    }
+  ],
+  "chords": [
+    {
+      "symbol": "C",
+      "startBeat": 0
+    },
+    {
+      "symbol": "F",
+      "startBeat": 8
+    },
+    {
+      "symbol": "C",
+      "startBeat": 16
+    },
+    {
+      "symbol": "G",
+      "startBeat": 24
+    }
+  ]
+}

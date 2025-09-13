@@ -2,11 +2,14 @@ import useSWR, { mutate } from "swr";
 import { swrFetcher, postJSON, putJSON, del, HttpError } from "../lib/api";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import SimpleImport from "../components/FileImportButton";
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 const fetcher = swrFetcher;
 
 export default function SongsPage() {
+  const router = useRouter();
   const url = `${apiBase}/songs`;
   const { data, error, isLoading } = useSWR(url, fetcher);
   const [title, setTitle] = useState("");
@@ -38,10 +41,11 @@ export default function SongsPage() {
 
   return (
     <main className="p-6 max-w-4xl mx-auto font-typewriter">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[trk]</span>
+      <div className="flex items-center justify-between mb-6">
         <h2 className="font-typewriter text-black font-bold">Songs</h2>
+        <SimpleImport onSuccess={() => mutate(url)} />
       </div>
+
       {isLoading && <div className="font-typewriter">Loading songs from the archive...</div>}
       {error && <div className="font-typewriter text-black mb-4">Error: {String(error)}</div>}
 
@@ -195,7 +199,6 @@ function SongItem({
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[trk]</span>
           <strong className="font-typewriter">
             <Link href={`/songs/${song.id}`} className="hover:underline text-black">
               {/* Add occasional strikethrough for vintage feel */}

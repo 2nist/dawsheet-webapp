@@ -1,0 +1,2 @@
+This is a test file for drag and drop functionality.
+You can drag this file from your file explorer to test the drag-drop feature.

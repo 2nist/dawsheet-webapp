@@ -1,0 +1,19 @@
+{
+  "title": "Hey Jude",
+  "artist": "The Beatles",
+  "bpm": 72,
+  "key": "F",
+  "content": "A classic Beatles song",
+  "sections": [
+    {
+      "name": "Verse",
+      "chords": ["F", "C", "C7", "F"],
+      "lyrics": "Hey Jude, don't make it bad"
+    },
+    {
+      "name": "Chorus",
+      "chords": ["Bb", "F", "C", "F"],
+      "lyrics": "Na na na na-na-na-na"
+    }
+  ]
+}

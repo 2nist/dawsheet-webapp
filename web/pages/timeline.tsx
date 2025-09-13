@@ -85,7 +85,6 @@ export default function TimelinePage() {
   return (
     <main className="p-6 min-h-screen bg-[#efe3cc]">
       <div className="flex items-center gap-2 mb-6">
-        <span className="font-dymo bg-[#1a1a1a] text-[#efe3cc] rounded-[6px] px-2 py-0.5">[trk]</span>
         <h1 className="font-typewriter text-black font-bold">Timeline Editor</h1>
       </div>
 
